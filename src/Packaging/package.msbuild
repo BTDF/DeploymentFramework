@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Deployment Framework for BizTalk 5.0
+    Copyright (C) 2004-2012 Thomas F. Abraham and Scott Colestock
+    
+    This source file is subject to the Microsoft Public License (Ms-PL).
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="PackageToolsSource;BuildAddin;BuildInstaller">
+  <UsingTask AssemblyFile="..\Framework\DeploymentFramework.BuildTasks.dll" TaskName="MakeFilesWriteable" />
+
+  <PropertyGroup>
+    <Version>5_0_RTW</Version>
+    <InstallerVersion>5.0.100.0</InstallerVersion>
+    <ProductID>ee294f30-d38f-4274-bdcf-f94c0d2a4a32</ProductID>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MsiFile Include="..\Installer\bin\release\DeploymentFrameworkForBizTalk.msi" />
+  </ItemGroup>
+
+  <Target Name="BuildAddin">
+    <MSBuild Projects="..\VisualStudioAddIn\VisualStudioAddIn.sln" Properties="Configuration=Release;Platform=Any CPU" Targets="Rebuild" />
+  </Target>
+
+  <Target Name="BuildInstaller">
+    <MSBuild Projects="..\Installer\BizTalkDeploymentFrameworkInstaller.sln" Properties="Configuration=Release;Platform=x86;ProductVersionFull=$(InstallerVersion);ProductID=$(ProductID)" Targets="Rebuild" />
+    <Copy SourceFiles="@(MsiFile)" DestinationFiles="@(MsiFile->'Staging\%(filename)V$(Version)%(extension)')" />
+  </Target>
+
+  <Target Name="PackageToolsSource">
+    <MakeFilesWriteable InputFiles="Staging\ToolsSource.zip" />
+    <Delete Files="Staging\ToolsSource.zip" />
+    <Exec Command="7za a -r -tzip Staging\ToolsSource.zip ..\Tools\* -x!*.suo -x!obj -x!bin -x!*.user -x!*.vssscc -x!*.scc" />
+  </Target>
+</Project>

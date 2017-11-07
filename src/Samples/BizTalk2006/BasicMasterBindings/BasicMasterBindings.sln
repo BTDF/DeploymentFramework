@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{EF7E3281-CD33-11D4-8326-00C04FA0CE8D}") = "BasicMasterBindings", "BasicMasterBindings\BasicMasterBindings.btproj", "{850AFEB4-3732-441C-A21F-F8FF95070ACA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{76F22FD1-4486-4C62-92C6-D40A4B0B97BE}"
+	ProjectSection(SolutionItems) = preProject
+		BasicMasterBindings.Deployment\BuildDebugMsi.bat = BasicMasterBindings.Deployment\BuildDebugMsi.bat
+		BasicMasterBindings.Deployment\BuildReleaseMsi.bat = BasicMasterBindings.Deployment\BuildReleaseMsi.bat
+		BasicMasterBindings.Deployment\BasicMasterBindings.Deployment.btdfproj = BasicMasterBindings.Deployment\BasicMasterBindings.Deployment.btdfproj
+		BasicMasterBindings.Deployment\InstallWizard.xml = BasicMasterBindings.Deployment\InstallWizard.xml
+		BasicMasterBindings.Deployment\License.rtf = BasicMasterBindings.Deployment\License.rtf
+		BasicMasterBindings.Deployment\PortBindings.xml = BasicMasterBindings.Deployment\PortBindings.xml
+		BasicMasterBindings.Deployment\UnInstallWizard.xml = BasicMasterBindings.Deployment\UnInstallWizard.xml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|.NET = Debug|.NET
+		Release|.NET = Release|.NET
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{850AFEB4-3732-441C-A21F-F8FF95070ACA}.Debug|.NET.ActiveCfg = Debug|.NET
+		{850AFEB4-3732-441C-A21F-F8FF95070ACA}.Debug|.NET.Build.0 = Debug|.NET
+		{850AFEB4-3732-441C-A21F-F8FF95070ACA}.Release|.NET.ActiveCfg = Release|.NET
+		{850AFEB4-3732-441C-A21F-F8FF95070ACA}.Release|.NET.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

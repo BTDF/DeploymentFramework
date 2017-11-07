@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{EF7E3281-CD33-11D4-8326-00C04FA0CE8D}") = "HelloWorld", "HelloWorld\HelloWorld.btproj", "{5A1DEAD1-F639-463B-A4DD-8E643F158B27}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{76F22FD1-4486-4C62-92C6-D40A4B0B97BE}"
+	ProjectSection(SolutionItems) = preProject
+		HelloWorld.Deployment\BuildDebugMsi.bat = HelloWorld.Deployment\BuildDebugMsi.bat
+		HelloWorld.Deployment\BuildReleaseMsi.bat = HelloWorld.Deployment\BuildReleaseMsi.bat
+		HelloWorld.Deployment\HelloWorld.Deployment.btdfproj = HelloWorld.Deployment\HelloWorld.Deployment.btdfproj
+		HelloWorld.Deployment\InstallWizard.xml = HelloWorld.Deployment\InstallWizard.xml
+		HelloWorld.Deployment\License.rtf = HelloWorld.Deployment\License.rtf
+		HelloWorld.Deployment\PortBindings.xml = HelloWorld.Deployment\PortBindings.xml
+		HelloWorld.Deployment\UnInstallWizard.xml = HelloWorld.Deployment\UnInstallWizard.xml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|.NET = Debug|.NET
+		Release|.NET = Release|.NET
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5A1DEAD1-F639-463B-A4DD-8E643F158B27}.Debug|.NET.ActiveCfg = Debug|.NET
+		{5A1DEAD1-F639-463B-A4DD-8E643F158B27}.Debug|.NET.Build.0 = Debug|.NET
+		{5A1DEAD1-F639-463B-A4DD-8E643F158B27}.Release|.NET.ActiveCfg = Release|.NET
+		{5A1DEAD1-F639-463B-A4DD-8E643F158B27}.Release|.NET.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

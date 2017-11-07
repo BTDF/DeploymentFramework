@@ -1,0 +1,1 @@
+"..\..\..\Framework\DeployTools\SSOSettingsFileImport.exe" ESB.Resolver.Sso /settingsFile:TestSettings.xml

@@ -1,5 +1,0 @@
-<project name="CopyDeployResults.build">
-	<property name="now" value="${datetime::now()}"/>
-	 <copy file="DeployResults\DeployResults.txt" 
-		tofile="DeployResults\DeployResults_${environment::get-machine-name()}_${string::pad-left(datetime::get-month(now),2,'0')}${string::pad-left(datetime::get-day(now),2,'0')}${datetime::get-year(now)}_${string::pad-left(datetime::get-hour(now),2,'0')}${string::pad-left(datetime::get-minute(now),2,'0')}.txt"/>
-</project>

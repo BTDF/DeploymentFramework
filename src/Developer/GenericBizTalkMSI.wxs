@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Deployment Framework for BizTalk 5.0
+    Copyright (C) 2004-2012 Thomas F. Abraham and Scott Colestock
+    
+    This source file is subject to the Microsoft Public License (Ms-PL).
+-->
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+  <Product UpgradeCode="$(var.ProductUpgradeCode)"
+           Name="$(var.ProductName) $(var.ProductVersion)"
+           Id="$(var.ProductId)"
+           Version="$(var.ProductVersion)"
+           Manufacturer="$(var.Manufacturer)"
+           Language="1033">
+
+    <Package Id="*"
+             Description="$(var.PackageDescription)"
+             Comments="$(var.PackageComments)"
+             Manufacturer="$(var.Manufacturer)"
+             InstallerVersion="200"
+             Languages="1033"
+             Compressed="yes"/>
+
+    <?include $(var.ContentsIncludePath) ?>
+
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+    <WixVariable Id="WixUISupportPerUser" Value="0" />
+
+    <SetProperty Id="DEPLOYMENTDIR" Value="[INSTALLDIR]\Deployment" Sequence="execute" After="InstallInitialize"/>
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+    <Property Id="LicenseAccepted" Value="1" />
+
+    <!-- Set up for checkbox to auto-start deploy script at end of install wizard -->
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Start deploying to BizTalk when I click Finish" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALTEXT" Value="***IMPORTANT***: Application deployment IS NOT COMPLETE. The application must be deployed into BizTalk. Check the box below to begin deployment immediately, or use the link on the Start menu." />
+    <CustomAction
+      Id="LaunchApplication"
+      ExeCommand='CMD.EXE /C ""Deployment\Framework\DeployTools\UacElevate.exe" "Deployment\Framework\ServerDeployWizardMSI.bat" $(var.ProjectFilename)"'
+      Directory="INSTALLDIR" Impersonate="yes" Return="check" />
+
+    <UI>
+      <UIRef Id="WixUI_InstallDir" />
+
+      <Publish Dialog="ExitDialog"
+          Control="Finish"
+          Event="DoAction"
+          Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
+    </UI>
+
+    <Property Id='ALLUSERS' Value='1' />
+    
+    <!-- Version Upgrade Logic -->
+    <Upgrade Id="$(var.ProductUpgradeCode)">
+      <!-- Check for an older installed version and allow it to be automatically uninstalled
+            and the new version installed in its place. -->
+      <UpgradeVersion
+        Minimum="0.0.0" IncludeMinimum="yes" Maximum="$(var.ProductVersion)" IncludeMaximum="no" Property="NEWERPRODUCTFOUND" />
+      
+      <!-- Check for a newer installed version -->
+      <UpgradeVersion Minimum="$(var.ProductVersion)" IncludeMinimum="yes" OnlyDetect="yes" Property="NEWERVERSIONDETECTED" />
+    </Upgrade>
+
+    <Condition Message="A later version of $(var.ProductName) is already installed. Setup will now exit.">
+      NOT NEWERVERSIONDETECTED OR Installed
+    </Condition>
+    
+    <InstallExecuteSequence>
+      <RemoveExistingProducts After="InstallInitialize"/>
+    </InstallExecuteSequence>
+    <!-- Version Upgrade Logic -->
+
+    <Media Id="1" EmbedCab="yes" Cabinet="BizTalkSolution.cab" />
+  </Product>
+</Wix>

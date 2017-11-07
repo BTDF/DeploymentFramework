@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Deployment Framework for BizTalk 5.0
+    Copyright (C) 2004-2012 Thomas F. Abraham and Scott Colestock
+    
+    This source file is subject to the Microsoft Public License (Ms-PL).
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  <?define ProductVersion="5.0" ?>
+
+  <Product Id="$(var.ProductID)" Name="Deployment Framework for BizTalk $(var.ProductVersion) RTW"
+           Language="1033" Version="$(var.ProductVersionFull)" Manufacturer="Abraham/Colestock" UpgradeCode="a0550f65-4338-4892-884e-594593e8b4f7">
+		<Package InstallerVersion="200" Compressed="yes" />
+
+		<Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
+
+    <UIRef Id="WixUI_Mondo" />
+    
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+    <WixVariable Id="WixUISupportPerUser" Value="0" />
+    
+    <Property Id="ESBTOOLKIT20_DIR" Secure="yes">
+      <RegistrySearch Id="ESBTOOLKIT20_DIR_REG" Root="HKLM" Key="SOFTWARE\Microsoft\BizTalk ESB Toolkit\2.0" Name="InstallPath" Type="directory" />
+    </Property>
+
+    <Property Id="ESBTOOLKIT21_DIR" Secure="yes">
+      <RegistrySearch Id="ESBTOOLKIT21_DIR_REG" Root="HKLM" Key="SOFTWARE\Microsoft\BizTalk ESB Toolkit\2.1" Name="InstallPath" Type="directory" />
+    </Property>
+
+    <Property Id="ARPHELPLINK" Value="http://biztalkdeployment.codeplex.com" />
+    <Property Id="ARPURLINFOABOUT" Value="http://biztalkdeployment.codeplex.com" />
+
+    <Property Id='ALLUSERS' Value='1' Secure="yes" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="BaseProduct" Name="Deployment Framework for BizTalk">
+          <Directory Id="INSTALLLOCATION" Name="$(var.ProductVersion)" />
+				</Directory>
+			</Directory>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="Deployment Framework for BizTalk $(var.ProductVersion)"/>
+      </Directory>
+    </Directory>
+
+    <FeatureRef Id="RuntimeFeature" />
+    <FeatureRef Id="DevToolsFeature" />
+    <FeatureRef Id="SamplesFeature" />
+    <FeatureRef Id="VS2005IntegrationFeature" />
+    <FeatureRef Id="VS2008IntegrationFeature" />
+    <FeatureRef Id="VS2010IntegrationFeature" />
+    <FeatureRef Id="ToolsSourceFeature" />
+    <FeatureRef Id="EsbToolkit20IntegrationFeature" />
+    <FeatureRef Id="EsbToolkit21IntegrationFeature" />
+
+    <PropertyRef Id="BTS_PRODUCTNAME" />
+    <PropertyRef Id="WIX_DIR_COMMON_DOCUMENTS"/>
+
+    <UIRef Id="VS2005UI" />
+    <UIRef Id="VS2008UI" />
+    <UIRef Id="VS2010UI" />
+
+    <Condition Message="Microsoft BizTalk Server 2006, 2006 R2, 2009 or 2010 is required to install this product.">
+      Installed OR BTS_PRODUCTNAME
+    </Condition>
+
+    <InstallUISequence>
+      <Custom Action="WixCloseApplications" Before="AppSearch"/>
+    </InstallUISequence>
+    
+    <!-- Ensure that Visual Studio isn't running. -->
+    <util:CloseApplication
+      Id="CloseVSIDE" Description="Please close all running instances of Microsoft Visual Studio, then restart the installer."
+      Property="VSRUNNING" Target="DEVENV.exe" CloseMessage="no" ElevatedCloseMessage="no" RebootPrompt="no" />
+
+    <Condition Message="Please close all running instances of Microsoft Visual Studio, then restart the installer.">
+      <![CDATA[NOT VSRUNNING]]>
+    </Condition>
+
+    <!-- Version Upgrade -->
+    <!-- Leaving disabled because upgrading caused files to be missing from the GAC. Known MSI upgrade issue
+         but don't have time to deal with it. -->
+    <!--<MajorUpgrade
+      DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit." MigrateFeatures="no" />-->
+  </Product>
+
+  <Fragment>
+    <UI>
+      <DialogRef Id="FilesInUse" />
+      <DialogRef Id="MsiRMFilesInUse" />
+    </UI>
+  </Fragment>
+
+  <Fragment>
+    <Property Id="BTS_PRODUCTNAME" Secure="yes">
+      <RegistrySearch Id="SearchForBT2010ProductName" Root="HKLM" Key="SOFTWARE\Microsoft\BizTalk Server\3.0" Name="ProductName" Type="raw" />
+    </Property>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="INSTALLLOCATION">
+      <Directory Id="Framework" Name="Framework" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="Framework">
+      <Directory Id="DeployTools" Name="DeployTools" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="DeployTools">
+      <Directory Id="NUnitSubset" Name="NUnitSubset" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="ProgramFilesFolder">
+      <Directory Id="MSBuild" Name="MSBuild" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="MSBuild">
+      <Directory Id="MSBDeploymentFrameworkForBizTalk" Name="DeploymentFrameworkForBizTalk" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="MSBDeploymentFrameworkForBizTalk">
+      <Directory Id="MSBDeploymentFrameworkForBizTalkProduct" Name="$(var.ProductVersion)" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="TARGETDIR">
+      <Directory Id="CommonAppDataFolder" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="CommonAppDataFolder">
+      <Directory Id="Microsoft" Name="Microsoft" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="Microsoft">
+      <Directory Id="VisualStudio" Name="VisualStudio" />
+    </DirectoryRef>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="TARGETDIR">
+      <Component Id="RegistryEntries" Guid="*">
+        <RegistryKey Root="HKLM" Key="Software\DeploymentFrameworkForBizTalk\5.0" Action="createAndRemoveOnUninstall">
+          <RegistryValue Name="InstallPath" Type="string" Value="[INSTALLLOCATION]"/>
+        </RegistryKey>
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+
+  <?include RuntimeComponents.wxi ?>
+  <?include DeveloperTools.wxi ?>
+  <?include Samples.wxi ?>
+  <?include ToolsSource.wxi ?>
+  <?include VS2005Integration.wxi ?>
+  <?include VS2008Integration.wxi ?>
+  <?include VS2010Integration.wxi ?>
+  <?include ESBToolkit20Integration.wxi ?>
+  <?include ESBToolkit21Integration.wxi ?>
+
+</Wix>

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<brl xmlns="http://schemas.microsoft.com/businessruleslanguage/2002">
+  <ruleset name="Company.FindCustomer">
+    <version major="1" minor="2" description="" modifiedby="ABC\tabraham" date="2009-12-07T13:03:35.2987619-06:00" />
+    <version major="1" minor="0" description="" modifiedby="ABC\tabraham" date="2009-12-07T13:03:40.7990083-06:00" />
+    <configuration />
+    <bindings>
+      <xmldocument ref="xml_34" doctype="ReconcileShipment" instances="16" selectivity="1" instance="0">
+        <selector>/*[local-name()='ReconcileShipment' and namespace-uri()='http://Company.com/XML/1.3']/*[local-name()='AppArea' and namespace-uri()='http://Company.com/XML/1.3']/*[local-name()='BreStateCode' and namespace-uri()='http://Company.com/XML/1.3']</selector>
+        <schema>C:\Common\Schemas\ReconcileShipment.xsd</schema>
+      </xmldocument>
+      <xmldocument ref="xml_31" doctype="ReconcileShipment" instances="16" selectivity="1" instance="0">
+        <selector>/*[local-name()='ReconcileShipment' and namespace-uri()='http://Company.com/XML/1.3']/*[local-name()='AppArea' and namespace-uri()='http://Company.com/XML/1.3']</selector>
+        <schema>C:\Common\Schemas\ReconcileShipment.xsd</schema>
+      </xmldocument>
+      <xmldocument ref="xml_32" doctype="ReconcileShipment" instances="16" selectivity="1" instance="0">
+        <selector>/*[local-name()='ReconcileShipment' and namespace-uri()='http://Company.com/XML/1.3']/*[local-name()='AppArea' and namespace-uri()='http://Company.com/XML/1.3']/*[local-name()='BrePolicyCode' and namespace-uri()='http://Company.com/XML/1.3']</selector>
+        <schema>C:\Common\Schemas\ReconcileShipment.xsd</schema>
+      </xmldocument>
+    </bindings>
+    <rule name="ReturnApproved" priority="2000" active="true">
+      <if>
+        <compare operator="equal">
+          <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+          <lhs>
+            <constant>
+              <string>1</string>
+            </constant>
+          </lhs>
+          <rhs>
+            <constant>
+              <string>1</string>
+            </constant>
+          </rhs>
+        </compare>
+      </if>
+      <then>
+        <function>
+          <vocabularylink uri="53f460e6-9784-445a-89c9-3b04d5bcc091" element="d7d54dba-f39c-40f0-97ba-c815c9663dba" />
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='BrePolicyCode' and namespace-uri()='http://Company.com/XML/1.3']</field>
+            <fieldalias />
+            <argument>
+              <constant>
+                <string>002</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+        <function>
+          <vocabularylink uri="53f460e6-9784-445a-89c9-3b04d5bcc091" element="b682cb00-f6fa-42f3-9015-ad24cc6a72dc" />
+          <xmldocumentmember xmldocumentref="xml_32" type="string" sideeffects="true">
+            <field>@*[local-name()='listId' and namespace-uri()='']</field>
+            <fieldalias>@listId</fieldalias>
+            <argument>
+              <constant>
+                <string>1062</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+        <function>
+          <vocabularylink uri="53f460e6-9784-445a-89c9-3b04d5bcc091" element="5f0caae4-b9d7-4030-bb13-6bf4497c2972" />
+          <xmldocumentmember xmldocumentref="xml_32" type="string" sideeffects="true">
+            <field>@*[local-name()='shortDscr' and namespace-uri()='']</field>
+            <fieldalias>@shortDscr</fieldalias>
+            <argument>
+              <constant>
+                <string>ResolveCustomer</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+        <function>
+          <vocabularylink uri="53f460e6-9784-445a-89c9-3b04d5bcc091" element="1bab1d10-b3c8-490b-8087-da1d095700c0" />
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='BreStateCode' and namespace-uri()='http://Company.com/XML/1.3']</field>
+            <fieldalias />
+            <argument>
+              <constant>
+                <string>001</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+        <function>
+          <vocabularylink uri="53f460e6-9784-445a-89c9-3b04d5bcc091" element="cc0c25b7-f764-408c-87b6-7c64e1898535" />
+          <xmldocumentmember xmldocumentref="xml_34" type="string" sideeffects="true">
+            <field>@*[local-name()='listId' and namespace-uri()='']</field>
+            <fieldalias>@listId</fieldalias>
+            <argument>
+              <constant>
+                <string>1060</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+        <function>
+          <vocabularylink uri="53f460e6-9784-445a-89c9-3b04d5bcc091" element="663882a6-034b-4435-900a-35ec3b20d5f3" />
+          <xmldocumentmember xmldocumentref="xml_34" type="string" sideeffects="true">
+            <field>@*[local-name()='shortDscr' and namespace-uri()='']</field>
+            <fieldalias>@shortDscr</fieldalias>
+            <argument>
+              <constant>
+                <string>Approved</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+        <update>
+          <vocabularylink uri="aee857f2-09d5-4615-a96c-87041791ec42" element="57517cc6-6bb7-46eb-99eb-a1fdddd5d2f6" />
+          <object>
+            <reference>
+              <xmldocumentref ref="xml_31" />
+            </reference>
+          </object>
+        </update>
+      </then>
+    </rule>
+  </ruleset>
+  <ruleset name="Company.FindCustomer2">
+    <version major="1" minor="2" description="" modifiedby="ABC\tabraham" date="2009-12-07T13:03:35.2987619-06:00" />
+    <version major="1" minor="0" description="" modifiedby="ABC\tabraham" date="2009-12-07T13:03:40.7990083-06:00" />
+    <configuration />
+    <bindings>
+      <xmldocument ref="xml_34" doctype="ReconcileShipment" instances="16" selectivity="1" instance="0">
+        <selector>/*[local-name()='ReconcileShipment' and namespace-uri()='http://Company.com/XML/1.3']/*[local-name()='AppArea' and namespace-uri()='http://Company.com/XML/1.3']/*[local-name()='BreStateCode' and namespace-uri()='http://Company.com/XML/1.3']</selector>
+        <schema>C:\Common\Schemas\ReconcileShipment.xsd</schema>
+      </xmldocument>
+      <xmldocument ref="xml_31" doctype="ReconcileShipment" instances="16" selectivity="1" instance="0">
+        <selector>/*[local-name()='ReconcileShipment' and namespace-uri()='http://Company.com/XML/1.3']/*[local-name()='AppArea' and namespace-uri()='http://Company.com/XML/1.3']</selector>
+        <schema>C:\Common\Schemas\ReconcileShipment.xsd</schema>
+      </xmldocument>
+      <xmldocument ref="xml_32" doctype="ReconcileShipment" instances="16" selectivity="1" instance="0">
+        <selector>/*[local-name()='ReconcileShipment' and namespace-uri()='http://Company.com/XML/1.3']/*[local-name()='AppArea' and namespace-uri()='http://Company.com/XML/1.3']/*[local-name()='BrePolicyCode' and namespace-uri()='http://Company.com/XML/1.3']</selector>
+        <schema>C:\Common\Schemas\ReconcileShipment.xsd</schema>
+      </xmldocument>
+    </bindings>
+    <rule name="ReturnApproved" priority="2000" active="true">
+      <if>
+        <compare operator="equal">
+          <vocabularylink uri="3f0e9bcc-6212-4e6a-853c-e517f157a626" element="05703dd9-1111-40b8-890d-ad7bfc45a925" />
+          <lhs>
+            <constant>
+              <string>1</string>
+            </constant>
+          </lhs>
+          <rhs>
+            <constant>
+              <string>1</string>
+            </constant>
+          </rhs>
+        </compare>
+      </if>
+      <then>
+        <function>
+          <vocabularylink uri="53f460e6-9784-445a-89c9-3b04d5bcc091" element="d7d54dba-f39c-40f0-97ba-c815c9663dba" />
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='BrePolicyCode' and namespace-uri()='http://Company.com/XML/1.3']</field>
+            <fieldalias />
+            <argument>
+              <constant>
+                <string>002</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+        <function>
+          <vocabularylink uri="53f460e6-9784-445a-89c9-3b04d5bcc091" element="b682cb00-f6fa-42f3-9015-ad24cc6a72dc" />
+          <xmldocumentmember xmldocumentref="xml_32" type="string" sideeffects="true">
+            <field>@*[local-name()='listId' and namespace-uri()='']</field>
+            <fieldalias>@listId</fieldalias>
+            <argument>
+              <constant>
+                <string>1062</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+        <function>
+          <vocabularylink uri="53f460e6-9784-445a-89c9-3b04d5bcc091" element="5f0caae4-b9d7-4030-bb13-6bf4497c2972" />
+          <xmldocumentmember xmldocumentref="xml_32" type="string" sideeffects="true">
+            <field>@*[local-name()='shortDscr' and namespace-uri()='']</field>
+            <fieldalias>@shortDscr</fieldalias>
+            <argument>
+              <constant>
+                <string>ResolveCustomer</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+        <function>
+          <vocabularylink uri="53f460e6-9784-445a-89c9-3b04d5bcc091" element="1bab1d10-b3c8-490b-8087-da1d095700c0" />
+          <xmldocumentmember xmldocumentref="xml_31" type="string" sideeffects="true">
+            <field>*[local-name()='BreStateCode' and namespace-uri()='http://Company.com/XML/1.3']</field>
+            <fieldalias />
+            <argument>
+              <constant>
+                <string>001</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+        <function>
+          <vocabularylink uri="53f460e6-9784-445a-89c9-3b04d5bcc091" element="cc0c25b7-f764-408c-87b6-7c64e1898535" />
+          <xmldocumentmember xmldocumentref="xml_34" type="string" sideeffects="true">
+            <field>@*[local-name()='listId' and namespace-uri()='']</field>
+            <fieldalias>@listId</fieldalias>
+            <argument>
+              <constant>
+                <string>1060</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+        <function>
+          <vocabularylink uri="53f460e6-9784-445a-89c9-3b04d5bcc091" element="663882a6-034b-4435-900a-35ec3b20d5f3" />
+          <xmldocumentmember xmldocumentref="xml_34" type="string" sideeffects="true">
+            <field>@*[local-name()='shortDscr' and namespace-uri()='']</field>
+            <fieldalias>@shortDscr</fieldalias>
+            <argument>
+              <constant>
+                <string>Approved</string>
+              </constant>
+            </argument>
+          </xmldocumentmember>
+        </function>
+        <update>
+          <vocabularylink uri="aee857f2-09d5-4615-a96c-87041791ec42" element="57517cc6-6bb7-46eb-99eb-a1fdddd5d2f6" />
+          <object>
+            <reference>
+              <xmldocumentref ref="xml_31" />
+            </reference>
+          </object>
+        </update>
+      </then>
+    </rule>
+  </ruleset>
+</brl>

@@ -1,0 +1,7 @@
+BAM.sln
+PipelineComponents\PipelineComponents.csproj
+Services\Services.btproj
+Services\Properties
+Pipelines\Pipelines.btproj
+Pipelines\Properties
+Pipelines\BAMInbound.btp

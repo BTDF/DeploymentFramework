@@ -1,0 +1,779 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Include xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="INSTALLLOCATION">
+            <Directory Id="dir3AF37EFF6B69CFA7A5013836AC9766DF" Name="Samples">
+                <Directory Id="dirB970E1DC8CB992D1ADB5C626ECB60011" Name="BizTalk2006">
+                    <Directory Id="dir99D20520F2EC43E2B6249889808E566B" Name="Advanced">
+                        <Component Id="cmp07C0F3295207055BA64FE9FFBAD9BA45" Guid="{47483FFE-70FD-474C-9548-DAB6275B1FBD}">
+                            <File Id="filCBC428E54F1AEB25DD02C6FBAFBC707C" KeyPath="yes" Source="..\Samples\BizTalk2006\Advanced\Advanced.sln" />
+                        </Component>
+                        <Component Id="cmpC59EB6946A5A43AEC5C5650A852AC4E4" Guid="{B2C157A4-9C70-4264-A5DC-9C3AE428FCDF}">
+                            <File Id="fil19E13D7251C92764AE5DE33435B1C6BC" KeyPath="yes" Source="..\Samples\BizTalk2006\Advanced\PrepareSample.bat" />
+                        </Component>
+                        <Component Id="cmpE2F3BB910B151291A52313DB81CD570E" Guid="{33964E82-F8E2-4289-93DC-26E770B65484}">
+                            <File Id="fil4F91526309F2FB046EA56B3930077E10" KeyPath="yes" Source="..\Samples\BizTalk2006\Advanced\PrepareSampleExclude.txt" />
+                        </Component>
+                        <Directory Id="dir3C914840D307CB3C692BA4708835330F" Name="Components">
+                            <Component Id="cmp05F9F70472708AE184F6089FCCC19372" Guid="{63CEACBD-069B-49E5-AD00-4357C5B19461}">
+                                <File Id="filECD0E368BA5923ABF30D2F7AB1D6284D" KeyPath="yes" Source="..\Samples\BizTalk2006\Advanced\Components\Components.csproj" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir21164C7FB387047F5E59B849342784DF" Name="DeploymentTest">
+                            <Component Id="cmpD3B514283C1A01EA01C507A212C00E8C" Guid="{EA25638C-75EF-4B98-8B03-F6A8CF1E7054}">
+                                <File Id="fil0AC46FAE37F695CD57DE9BE5B8FEF637" KeyPath="yes" Source="..\Samples\BizTalk2006\Advanced\DeploymentTest\DeploymentTest.csproj" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir2CA88C7C5012F7AF98EEC5DFD1E7BDFD" Name="Orchestrations">
+                            <Component Id="cmpF4FE86335AA0FFB142BE96739CBBF6D9" Guid="{EFAD0E9A-30B1-495E-A5CA-8C460A2A1FF3}">
+                                <File Id="fil9CAB5BBFBDDE476B05ED14158CC90415" KeyPath="yes" Source="..\Samples\BizTalk2006\Advanced\Orchestrations\Orchestrations.btproj" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir16691E35BAAFC87EB823F8B67DED8EA6" Name="Schemas">
+                            <Component Id="cmp970D13C03EDF13EA1610930CABE2962B" Guid="{D96C33DB-22B6-4138-8DC9-CCC913A155E8}">
+                                <File Id="fil786B01DC3C109D37CEDA7AF1392863A7" KeyPath="yes" Source="..\Samples\BizTalk2006\Advanced\Schemas\Schemas.btproj" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir2CFFA5C8C0C73FFF6654A640C500CDD9" Name="Transforms">
+                            <Component Id="cmp2995A4DD5D72F135955AE4655F7A7C33" Guid="{DB7CBDE7-C673-45CB-8348-FE93164B91E7}">
+                                <File Id="fil70766F129A885645B754A8739370A88F" KeyPath="yes" Source="..\Samples\BizTalk2006\Advanced\Transforms\Transforms.btproj" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir869D23E9B4BCB1B0DA82B42E769EA9F2" Name="VDir_Advanced">
+                            <Component Id="cmp062855E4598E5489FFA0F26F3C7929AB" Guid="{FBB3DD96-7BF2-48AA-AE1D-911804A41F8F}">
+                                <File Id="filF37C4100650B354E6F265B51675C4E33" KeyPath="yes" Source="..\Samples\BizTalk2006\Advanced\VDir_Advanced\BTSHTTPReceive.dll" />
+                            </Component>
+                        </Directory>
+                    </Directory>
+                    <Directory Id="dir18638019B5DAE71C9D3D213F1B5A41AC" Name="Bam">
+                        <Component Id="cmp6534D9F3876938653BA1A7EB9A75A639" Guid="{A6B42494-8CF5-4F51-A7B2-CBA5E5B95AA5}">
+                            <File Id="fil4E6491CD2499AD8CFE4515640B6B397D" KeyPath="yes" Source="..\Samples\BizTalk2006\Bam\Bam.sln" />
+                        </Component>
+                        <Component Id="cmp5276A10D34691C94D8B19B659E5225C0" Guid="{C499B30B-7CFE-405E-ABFC-FF5B419C323B}">
+                            <File Id="filAEECD7A8E519198C45A92545E778FB89" KeyPath="yes" Source="..\Samples\BizTalk2006\Bam\PrepareSample.bat" />
+                        </Component>
+                        <Component Id="cmpBE03C5999E5A2DE7D9708CBCBFADDDE4" Guid="{A7F4215F-D762-4A4A-B15A-640774E15A0B}">
+                            <File Id="fil382D9A716FB551872D76D5A5E9F71B4C" KeyPath="yes" Source="..\Samples\BizTalk2006\Bam\PrepareSampleExclude.txt" />
+                        </Component>
+                        <Directory Id="dir970BA4E8C0A61C63F5E207D6902B1272" Name="PipelineComponents">
+                            <Component Id="cmp3EB85378AC09E08115B05FCC9D94CD09" Guid="{B7C179D3-D311-4469-A1A5-E85C14CFFCF0}">
+                                <File Id="fil022E491E63BE5A19D89FA61E9C8B06D3" KeyPath="yes" Source="..\Samples\BizTalk2006\Bam\PipelineComponents\PipelineComponents.csproj" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirA85F21CF11699380CAFCCF419697E98D" Name="Pipelines">
+                            <Component Id="cmpD01F69D0AECD7107CBEF8AF9A3A5C69F" Guid="{414D1FAC-C9C4-46FD-8E3D-ED3A68B877B4}">
+                                <File Id="fil89CE8E115230E4CC645FEB1151C35564" KeyPath="yes" Source="..\Samples\BizTalk2006\Bam\Pipelines\BAMInbound.btp" />
+                            </Component>
+                            <Component Id="cmpE29ABCAF8115F4F8BB689A2CD7E9C52F" Guid="{56EC7296-6CF1-4720-BF35-9FDAF93FA3FE}">
+                                <File Id="fil3B8A1A84F16F6EB3BA2C1BEE1F346B2F" KeyPath="yes" Source="..\Samples\BizTalk2006\Bam\Pipelines\Pipelines.btproj" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirCC127551A37678F2DA979BD1FC63B1D6" Name="Services">
+                            <Component Id="cmpAB1CC22F66B5F390235A33087F82CFB7" Guid="{975A1158-B559-4772-A1D9-AEA57A544838}">
+                                <File Id="filF616B91B9123DBD6ED391A4F1D8C0AE3" KeyPath="yes" Source="..\Samples\BizTalk2006\Bam\Services\Services.btproj" />
+                            </Component>
+                        </Directory>
+                    </Directory>
+                    <Directory Id="dir790774616EEE10879C0EEEC8FE384AB8" Name="BasicMasterBindings">
+                        <Component Id="cmp6D9A74E7DBC3C8F0C16304EB005F3CD8" Guid="{214673AC-4A68-4DF6-BED5-52D9B28F1864}">
+                            <File Id="fil1C5EBD323E8FDB5353E76C560ACE204A" KeyPath="yes" Source="..\Samples\BizTalk2006\BasicMasterBindings\BasicMasterBindings.sln" />
+                        </Component>
+                        <Component Id="cmpBAF8EC3ECF3BAB5EB59F0A9F3CF98D80" Guid="{16A98978-1E95-4342-9306-5B3CF846143A}">
+                            <File Id="filB8F3CD5C46F2949C552A3C6813CDCB20" KeyPath="yes" Source="..\Samples\BizTalk2006\BasicMasterBindings\PrepareSample.bat" />
+                        </Component>
+                        <Component Id="cmpF1CF0582512390DFF6FD290F70065042" Guid="{B2941DD7-932E-4DF9-B495-094175797786}">
+                            <File Id="fil1BFB59B93F4C5B98A4A0349BE76A6547" KeyPath="yes" Source="..\Samples\BizTalk2006\BasicMasterBindings\PrepareSampleExclude.txt" />
+                        </Component>
+                        <Directory Id="dir8EC988A83CFD38FA32B14E5D64A14288" Name="BasicMasterBindings">
+                            <Component Id="cmp81F686E2AC62D91F929817BED1026BA4" Guid="{A4AC30A2-D15C-4A88-96E3-C8A76FBCE049}">
+                                <File Id="filE1A3DDE09C094E3C10881C5A0B7D20BE" KeyPath="yes" Source="..\Samples\BizTalk2006\BasicMasterBindings\BasicMasterBindings\BasicMasterBindings.btproj" />
+                            </Component>
+                        </Directory>
+                    </Directory>
+                    <Directory Id="dir72D02B1BF5309571C3539C439B9A25F9" Name="HelloWorld">
+                        <Component Id="cmp54B70A7FE3499064218575990D576C0C" Guid="{47D4FD2E-FF76-4B22-A812-EF7F21349D27}">
+                            <File Id="filFBA8CF0C10C221B8EACB20D4B78FCD00" KeyPath="yes" Source="..\Samples\BizTalk2006\HelloWorld\HelloWorld.sln" />
+                        </Component>
+                        <Component Id="cmp6B581F2C69C11B61EAE1B5AE809DDBB7" Guid="{4FBCEF1C-3F99-4EAF-98DE-684D5BE1705B}">
+                            <File Id="filE9600C03BA648619BF299F3DE3DE10C1" KeyPath="yes" Source="..\Samples\BizTalk2006\HelloWorld\PrepareSample.bat" />
+                        </Component>
+                        <Component Id="cmp6A185FF01181C0231B858A2CD1D120AF" Guid="{74B6E91D-0E34-4C0B-B3A7-E1FE3D7F1C27}">
+                            <File Id="fil666E369C5CB1883BB7047C02C5F56FFC" KeyPath="yes" Source="..\Samples\BizTalk2006\HelloWorld\PrepareSampleExclude.txt" />
+                        </Component>
+                        <Directory Id="dirACD9E7F216000E535EBD5A1E09140990" Name="HelloWorld">
+                            <Component Id="cmp8E0D17466A9EF697500B5426718C9AF2" Guid="{F87770D7-C9B2-4654-B569-C9543C7236AF}">
+                                <File Id="fil9E1C59B107EED4060B7A8C3225113ED1" KeyPath="yes" Source="..\Samples\BizTalk2006\HelloWorld\HelloWorld\HelloWorld.btproj" />
+                            </Component>
+                        </Directory>
+                    </Directory>
+                </Directory>
+                <Directory Id="dirA18996D2D6838440D7B969FF8956113F" Name="BizTalk2009">
+                    <Directory Id="dirFFA585210A6202986E40FB20D8E8DF33" Name="Advanced">
+                        <Component Id="cmp2D5C1BE2A6B2B2F2B6B27E2C65387E22" Guid="{56D72D99-B4C6-4789-992B-2F490E4D63FB}">
+                            <File Id="fil2B60E98DF29609E9ADE3E65393507B73" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\AdditionalXmlToPreprocess.xml" />
+                        </Component>
+                        <Component Id="cmp4163A267376991741E9FB88552C87ECA" Guid="{7F2685DA-DB4A-4BC1-BB40-E34295EFDF8C}">
+                            <File Id="fil995F3DE47EBE3D28456E6109B516FEC1" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Advanced.chm" />
+                        </Component>
+                        <Component Id="cmpA63801BCCB8F368FF40E1FE9B5462CE0" Guid="{32ABE0A5-7E11-4328-94D0-C01FE1BCC628}">
+                            <File Id="fil92372A984E4DA60CE44016D86AD0136F" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Advanced.sln" />
+                        </Component>
+                        <Component Id="cmpD2502269C32425D8AD48163FFF7FBCA2" Guid="{3A3902D9-A645-46FB-9A5C-FBCCB5442B50}">
+                            <File Id="fil473F432A447F66885CA5AE8BE1FD8F60" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Advanced.snk" />
+                        </Component>
+                        <Component Id="cmp8C7638F43701C68E9EADD86F90FEC628" Guid="{F0A67A47-A0D7-4333-B898-85D5FD6A9D98}">
+                            <File Id="fil9D9F4590BACC93711B2705F8DB7E0CFC" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\DeploymentFramework.Samples.Advanced.log4net" />
+                        </Component>
+                        <Directory Id="dir7EA87A4767B7CEB5DC2F3E1E926815F0" Name="Components">
+                            <Component Id="cmp7AEF0DCA7EDDA3E29AF9E18508A18AAE" Guid="{46D249CC-D66B-4A79-A727-A406E1897194}">
+                                <File Id="fil17C1197D4B50B18981770F9C29D6191E" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Components\Components.csproj" />
+                            </Component>
+                            <Component Id="cmp676ECA994525AD5C3BF63CD82FD9629F" Guid="{0FE5C8B7-ED35-4654-8816-A848C29D87AB}">
+                                <File Id="filE5F8FC246AFE7BF8B07EA40DAAA4DCD0" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Components\EmbeddedResourceCache.cs" />
+                            </Component>
+                            <Component Id="cmpD0486E4BD7E8EE4FFE4933A72C299CDA" Guid="{778E9A15-912F-4D50-94A8-0D2D75B52ECE}">
+                                <File Id="fil0D5491BBD6E749FC76B1E73D292FC3F8" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Components\MyClass.cs" />
+                            </Component>
+                            <Component Id="cmp61FB6CE9837A0112E28F5D2B44125906" Guid="{4C261BAA-247C-44ED-894C-171B21D5B5DC}">
+                                <File Id="filCF3A281271C3DB83FF0DA231BCA53D11" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Components\S3_output.xml" />
+                            </Component>
+                            <Directory Id="dir4BB963D8036DC35324D8915BB4BA3649" Name="Properties">
+                                <Component Id="cmp249AAEC9467B7E2CB03AA18DD8F96BF8" Guid="{76643840-204C-4A86-A0AC-3856D7B0323E}">
+                                    <File Id="fil3641C4B805EA1F250E40EC53E1305BDB" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Components\Properties\AssemblyInfo.cs" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="dir41273DEEA717AC9357E058117A8BABDB" Name="Deployment">
+                            <Component Id="cmp6D6BCE046786A345ED6FEEA8C38DD015" Guid="{14CFA26E-2501-4C19-8604-73CA34B42513}">
+                                <File Id="fil45B8AFDD63FBA24F0702502C9F378902" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Deployment\BuildDebugMsi.bat" />
+                            </Component>
+                            <Component Id="cmp484CE768A72745E2CC0AEBE0BB2A782F" Guid="{DFBA429B-8905-4B17-A7B4-0DEBF89213BE}">
+                                <File Id="fil17572DA570C68C5A498C9DEE3AE891F1" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Deployment\BuildReleaseMsi.bat" />
+                            </Component>
+                            <Component Id="cmp7A2506FFA9D4602FB8B11FEDF4160D72" Guid="{EDED598C-F68B-4ECC-921D-E3F32C264E32}">
+                                <File Id="fil54A7C239E23455BA9B1FC4356088DE29" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Deployment\Deployment.btdfproj" />
+                            </Component>
+                            <Component Id="cmp2CAB23332252415D690272E34F6CAD66" Guid="{1752D50D-9F01-4937-B1C6-2F3A8181CEB2}">
+                                <File Id="filD12EBE6F93E7C0B126AFC591E2A4A4AC" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Deployment\InstallWizard.xml" />
+                            </Component>
+                            <Component Id="cmp46C232842F6C75FCDAC0241B09D17B33" Guid="{9DD9271B-DAA9-42DE-8C2A-7F312BB15C3C}">
+                                <File Id="fil1AB2A7070C4C95F7945A91103C41D1AC" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Deployment\License.rtf" />
+                            </Component>
+                            <Component Id="cmp4C1F7550AA0EB6E3CCD26892695CC027" Guid="{5C8377E4-83A8-4FCF-8C43-265F87278350}">
+                                <File Id="fil69F3ED802E4FDE2DB38C48C45A868860" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Deployment\PortBindingsMaster.xml" />
+                            </Component>
+                            <Component Id="cmp009B9C1BC7704D29007987F1E24F431F" Guid="{709872C0-F876-482A-B367-ED334A03462A}">
+                                <File Id="filFA5EEEC7C974DB81D643F3EC2685F8A7" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Deployment\UnInstallWizard.xml" />
+                            </Component>
+                            <Directory Id="dirCA97003D69C4DC393A5ED46A6FFAB193" Name="EnvironmentSettings">
+                                <Component Id="cmp34DB7AB68F42BF86BEE056F3AD615727" Guid="{D35616D2-538E-44ED-B357-1B14DB31BAEF}">
+                                    <File Id="fil06017A894F54D067BBC8BD259741C336" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Deployment\EnvironmentSettings\SettingsFileGenerator.xml" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="dir6FAA31EA3A9A4225C023E3241E31F98A" Name="DeploymentTest">
+                            <Component Id="cmpCA1816595A3BFF685CDA173EB8DD95D2" Guid="{60460261-4D68-4660-BC9B-30D7828A373C}">
+                                <File Id="fil1F6A8230795F8BA0588A96E5E25C4E94" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\DeploymentTest\app.config" />
+                            </Component>
+                            <Component Id="cmp378576E3B8E1119B3CA2D1CFEE2BDF13" Guid="{9B1361F7-43B3-4A21-9F3E-CDBD59856A48}">
+                                <File Id="filCCC9A3C5BBE541F0D8CFDA0B6854B283" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\DeploymentTest\DeploymentTest.csproj" />
+                            </Component>
+                            <Component Id="cmp4C3D8CEF9D2B9A5DE06DC9CE51040BAD" Guid="{033CEE38-8DC9-4C9D-BA0C-F7AE8DEFBE7B}">
+                                <File Id="fil538065785A2E95AC264AE030E30B2FB9" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\DeploymentTest\NUnitUtilityMethods.cs" />
+                            </Component>
+                            <Component Id="cmpD803EA25A93730BAF97FBE82270DCA2C" Guid="{1CC834C8-FED2-43FD-88AD-699C3B0A3493}">
+                                <File Id="fil4D62BFB6BA78DA3F3DF6CC3A79FF363A" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\DeploymentTest\VerifyDeployment.cs" />
+                            </Component>
+                            <Directory Id="dir8A83593FF9D6F58A5718369FF4317B8A" Name="Properties">
+                                <Component Id="cmpE4A1FBB2471433973ED1BDD3250587A3" Guid="{7C7F4BD2-D4B0-47AD-BA66-51F94E8D296C}">
+                                    <File Id="filE76C20106FA978230718C9A7A09813BD" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\DeploymentTest\Properties\AssemblyInfo.cs" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="dirFDBC76668AC2699310BDE9AC2D381976" Name="ExternalReferences">
+                            <Component Id="cmp4C61F37900A5014828231F87BF062B5F" Guid="{B61CA9E6-4AAA-4440-8327-9553F7E4BA2C}">
+                                <File Id="fil62BD5C263B1A8D59DADE430852033588" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\ExternalReferences\log4net.dll" />
+                            </Component>
+                            <Component Id="cmpA4E9C63112C845C24780A2D42C4BC48A" Guid="{23297E0C-F711-4029-A39D-C18B169598E2}">
+                                <File Id="fil7922B5D5F14C47992A497D0AE9979A26" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\ExternalReferences\log4net.Ext.Serializable.dll" />
+                            </Component>
+                            <Component Id="cmp2E7F18FFFE59E870A5037855CEDE8C6A" Guid="{F8358491-A61F-4410-BAA9-5D89B7A38E82}">
+                                <File Id="filB52563E2A67309CBA3A97631BF37ABDC" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\ExternalReferences\nunit.framework.dll" />
+                            </Component>
+                            <Component Id="cmp53D580EC46DE2C33A0ED87ACF79DD07B" Guid="{D0A6A839-B6B2-4C59-BB6B-215B92DB38D8}">
+                                <File Id="filD30FE2F524A201149B531730E2C51592" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\ExternalReferences\SSOSettingsFileReader.dll" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir358F9CC5C8FDAA7E936621B6BE613FA2" Name="Orchestrations">
+                            <Component Id="cmpC2DCEFA52C9DDAE03AF5583985B9D1EE" Guid="{5D03E411-A663-414B-847C-ADD93587C941}">
+                                <File Id="filE5D6AD9EC76829588BCF22B14982ACF6" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Orchestrations\CalledOrch.odx" />
+                            </Component>
+                            <Component Id="cmpF2FC1E2ECE01B6C6CCFEC3C40389992E" Guid="{32D851EC-DAF0-4A48-B3D6-E2C27330DFE4}">
+                                <File Id="fil4435831B5EB8E1D9FE17C058FEF3D71F" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Orchestrations\Echo.odx" />
+                            </Component>
+                            <Component Id="cmpE65A0E590F3DE931B63E94BD5582E1AF" Guid="{7FCC56F6-7FFF-4C1E-9016-8D16730F7D59}">
+                                <File Id="fil516A7B4B65BAC686558D798A278FFE82" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Orchestrations\Orchestrations.btproj" />
+                            </Component>
+                            <Component Id="cmp507EB0D4A86BA5F38EFD456CBF68B5A1" Guid="{49C08BD9-F177-4E09-9F56-8DB82112E2DC}">
+                                <File Id="fil92E5A9EB4992B40DE29ACC4A129299F6" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Orchestrations\TopLevelOrch.odx" />
+                            </Component>
+                            <Directory Id="dir0AD3F3F01D7DE2F1CC54D0F647FD1932" Name="Properties">
+                                <Component Id="cmp68F64A452A998EB0E9081909A326B18B" Guid="{792C033D-7BB9-49EA-A9E8-37A35ED4EA2B}">
+                                    <File Id="fil2B00736B631FC83025BD506D01D7F735" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Orchestrations\Properties\AssemblyInfo.cs" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="dir33B2D6AD811B40FE3D03D79EC7F914BA" Name="Schemas">
+                            <Component Id="cmp3111D082F8940DE5B0D3460194C68A44" Guid="{2974DFB9-D438-4AC1-95A0-E19D7698C2CE}">
+                                <File Id="filD47B0315E5C0CB396A1480F9F9D55449" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Schemas\PropertySchema.xsd" />
+                            </Component>
+                            <Component Id="cmp74EEE42D4E8D4E4D3DDF68784FCF1DB6" Guid="{489C4179-13AC-4A51-A935-5C401FA4751D}">
+                                <File Id="fil406ED7B7FA9DD2C456F537DAEE1CEC00" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Schemas\S1.xsd" />
+                            </Component>
+                            <Component Id="cmp8AAE9A30DFA2590FD5045077BFDFE534" Guid="{4CB0A45C-DEE5-4366-94F9-51A9D3F694EE}">
+                                <File Id="fil62892919399F6479BA772F2FC4AA1E24" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Schemas\S2.xsd" />
+                            </Component>
+                            <Component Id="cmp6AB1B6B6AB2D7D88E6C8D82D8F52126B" Guid="{B5562EB1-53B9-4881-A2AE-E07160C567DE}">
+                                <File Id="filB09B59F0B3C124963AB00E90986D2A59" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Schemas\S3.xsd" />
+                            </Component>
+                            <Component Id="cmp7A19E0514234744628CDE238BB7806F6" Guid="{A0F7A770-A1C9-4EAD-96FE-9B52F8EF355F}">
+                                <File Id="filEF50B4286D454EBA4A48140C1DF8A8A6" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Schemas\Schemas.btproj" />
+                            </Component>
+                            <Directory Id="dir0F778058D724F92CA16267F00E0D332A" Name="Properties">
+                                <Component Id="cmpAF35D766F6CB63D54ECCA53633BA8B54" Guid="{E28EF1E5-1FFA-4E36-AA3E-2E1F59AC164E}">
+                                    <File Id="filB33E1FE4D417411D4878B005BEFEDC04" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Schemas\Properties\AssemblyInfo.cs" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="dirDCEE26FD6062D7C4F410EFC1AB66BF55" Name="TestFiles">
+                            <Component Id="cmp7D6198022C3D9DFCC0B0B68058691A58" Guid="{26A56FDF-060D-485F-86BC-9C22B535C9B8}">
+                                <File Id="fil151C5203055035CFFDD2E5DEAB0C5997" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\TestFiles\S1_output.xml" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirFFACC7AF7D0DD0DA6167B495A100AFF3" Name="Transforms">
+                            <Component Id="cmp0243AADB35AF88408332F81447691FB9" Guid="{5C1DFF4E-A53C-4677-8E56-6A911BBD7D70}">
+                                <File Id="filE76817B1EBAF241BA411743BA28CCB13" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Transforms\SampleMap.btm" />
+                            </Component>
+                            <Component Id="cmpE06A0CCAB6F1A6EB5FF65BCD9446AAEB" Guid="{66C3433A-B876-42AD-A512-E39962252434}">
+                                <File Id="fil335554273BD6C5E47D446CE21E76B003" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Transforms\Transforms.btproj" />
+                            </Component>
+                            <Directory Id="dir245634C0E716DA76A41993D7D925027E" Name="Properties">
+                                <Component Id="cmp81B9A009510A289A8B31B5CE42EE7D03" Guid="{4605C53B-493A-4163-BD8D-CFD228135B5E}">
+                                    <File Id="filEA382A1C57527CC8D1B3C0FF02EFF526" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Transforms\Properties\AssemblyInfo.cs" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="dir73341F22D1133447BE9C90A17B9BE9AA" Name="VDir_Advanced">
+                            <Component Id="cmp8BF2C489E50B3E1EFCC293E842FE6C92" Guid="{C0176551-DD68-46A3-96AD-92A1073D2D43}">
+                                <File Id="fil204E63FA77D01F19729B41B4079CF711" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\VDir_Advanced\BTSHTTPReceive.dll" />
+                            </Component>
+                        </Directory>
+                    </Directory>
+                    <Directory Id="dir952BA5F3E562ED562179C1A01D029864" Name="Bam">
+                        <Component Id="cmpD0CBD1C1AA8F86307120FFA135C2A0CD" Guid="{8389CD93-E9A8-47FA-AF15-4C42F696651E}">
+                            <File Id="filE48F3564A82E76D47EF0509D4A8ABF38" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\BAM.sln" />
+                        </Component>
+                        <Component Id="cmpEC01B1D8DBBB1EFAA3B4DC83D828EA31" Guid="{0B9E83D2-6ACD-4123-849A-0358262483E4}">
+                            <File Id="filB3A608E2407034184B3056D87792F783" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\BAM.snk" />
+                        </Component>
+                        <Directory Id="dir262B5E8E5231341E2892743672F34FF0" Name="BAM">
+                            <Component Id="cmp4082F39D9E58B67B156A36529FA55FDF" Guid="{0299D58C-C257-4F7F-A051-A13E36E62B16}">
+                                <File Id="fil50707B22A366918BB751B7894BA683C7" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\BAM\Bam.btt" />
+                            </Component>
+                            <Component Id="cmpC5FF8AD2F4F9A613F77F96E3F0E2AD36" Guid="{62D1389F-005C-42CF-A36D-58E6B78A5BF3}">
+                                <File Id="filF7B1F50E8AB3949FE79332B15EC671EE" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\BAM\Bam.xls" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir057399AB2A9CD021ECE6B89A056822C9" Name="Deployment">
+                            <Component Id="cmpEB295AA3C176E8646A9DB6153F265DCC" Guid="{446BEBA1-CE64-4C79-ADC5-4D986487B198}">
+                                <File Id="fil6CAF744736D0BDD7E2F512542CF79F85" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Deployment\BuildDebugMsi.bat" />
+                            </Component>
+                            <Component Id="cmp6A846D003C7963CCBE503B3780FFD707" Guid="{37A55598-C4B6-403C-B803-09553AA763A5}">
+                                <File Id="fil864ADF7524614CA27A6FE4BA5A951264" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Deployment\BuildReleaseMsi.bat" />
+                            </Component>
+                            <Component Id="cmpD3406CB154D9D535BCFACDD913B12B30" Guid="{1680220F-BAD4-46C2-9AEF-C56E4E5F9EC9}">
+                                <File Id="fil2E6F02F7EF86A869048F79E2C5D7DF21" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Deployment\Deployment.btdfproj" />
+                            </Component>
+                            <Component Id="cmp4D4920E11814F467C3701F9C711FA94A" Guid="{33EAD55E-DD8E-4593-8C6A-BF23A08105B9}">
+                                <File Id="fil74382ACD728FF47C5D2A08FC554495FD" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Deployment\InstallWizard.xml" />
+                            </Component>
+                            <Component Id="cmpFF91D526A4EDBD9AC45F770CA9B00F75" Guid="{A0D2A785-7D13-4A1D-9DF4-FAC47E6CFBB9}">
+                                <File Id="fil736DDFCB83A42098845D80EF8C2951D9" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Deployment\License.rtf" />
+                            </Component>
+                            <Component Id="cmp557C546CD3DABE06E6F7B6C9A73E1E18" Guid="{37E36DB0-8EC5-4974-AF31-0B3C21B4F00A}">
+                                <File Id="filEEF19C40E793E3FBAD1D82012A7A5EE2" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Deployment\PortBindingsMaster.xml" />
+                            </Component>
+                            <Component Id="cmpA43E84EAC838EDA615B750F62DEA0DF4" Guid="{F10C2470-B0CB-4F05-BA25-76F46A762E61}">
+                                <File Id="fil4F2BFF06AD0510653EF4FD143959BC81" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Deployment\UnInstallWizard.xml" />
+                            </Component>
+                            <Directory Id="dirCE1128085AC8D61779203C95E768BABC" Name="EnvironmentSettings">
+                                <Component Id="cmp45B7E1EC7841C24068BBB3C98F355F08" Guid="{05ED2DD5-54F9-4E87-B900-ED624EADB543}">
+                                    <File Id="filB5B39DB45F1F332CBA693576B1C700C4" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Deployment\EnvironmentSettings\SettingsFileGenerator.xml" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="dir04768EB0E690FF16B7F54D43BA460E9E" Name="PipelineComponents">
+                            <Component Id="cmpA04AC8BE63C6A1577AF07F8C7171AAFF" Guid="{2F704D73-CC3F-4E37-B024-FBCD8340EEF1}">
+                                <File Id="fil5342FDD23A39A92B09776202E86041BC" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\PipelineComponents\AssemblyInfo.cs" />
+                            </Component>
+                            <Component Id="cmp619302188ED97B8F1AC137B0C9AD21F1" Guid="{F3A9FAB8-49A3-4C22-8AEC-B7EB49C65CF6}">
+                                <File Id="filCB8186BC1E5F12118BF4A27CD6526D3C" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\PipelineComponents\BAMMessagePartPLComponent.cs" />
+                            </Component>
+                            <Component Id="cmp23390C190AA9502E2AA1D33F9B68B243" Guid="{B2818AC0-D201-4F10-A7B8-72699D6A185C}">
+                                <File Id="fil4CCC1237E2C6DED222BED9838B24A3EB" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\PipelineComponents\PipelineComponents.csproj" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirB0FE539AEC15F56D797071D6F605A6E9" Name="Pipelines">
+                            <Component Id="cmpEB7FA973ED25D240F5B74C70C0ED6F87" Guid="{45CE1EF3-8C9E-4992-A58C-A1F4515D7837}">
+                                <File Id="fil8662BFEC4387735C85B6E9DFF936DD9D" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Pipelines\BAMInbound.btp" />
+                            </Component>
+                            <Component Id="cmp5FAFADD65A8E8A67ACA773C6C7DEC60F" Guid="{0760CA8A-4E5C-4812-867F-29CEFE957D02}">
+                                <File Id="fil771A9E6C8E344839A8D95155C64BAFE4" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Pipelines\Pipelines.btproj" />
+                            </Component>
+                            <Directory Id="dir6E364AE6F5C2388E5305C578E04BF646" Name="Properties">
+                                <Component Id="cmp006177743DE635A9DF7BA9E26894A356" Guid="{3191053F-6D31-4B09-AACF-26B7BA2593CE}">
+                                    <File Id="fil0E9FF7E1FB6B297EB5D82E53B27592F2" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Pipelines\Properties\AssemblyInfo.cs" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="dir76E66E7047A46ABC84DDE60952F8DADE" Name="Services">
+                            <Component Id="cmp04FC5A1012CC496CD529BA4F1DF5FB23" Guid="{EE68C5C0-90B3-466D-90CA-B1F40BA45025}">
+                                <File Id="fil372C95067F9711B7E36F57D594C24CB8" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Services\BAMPartSchema.xsd" />
+                            </Component>
+                            <Component Id="cmpFB53840C8658C508C4A627C8B1BF2644" Guid="{F55D0713-242A-4A99-9B1F-09B88858BBA5}">
+                                <File Id="fil8A2A6C5B1B4528EEAAAAD99D9DE8307E" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Services\Orchestration1.odx" />
+                            </Component>
+                            <Component Id="cmp42E91FBFD4CB2DB7DB9A49782DF1941D" Guid="{9D40CA62-2F81-4824-BC2C-3998162646B5}">
+                                <File Id="filF967873E814B1329A4AA6D56546D7F33" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Services\PropertySchema.xsd" />
+                            </Component>
+                            <Component Id="cmpEEFDBD44D1F7FBF7E7D582A52047189A" Guid="{F0C6E0CB-AB49-478D-BE55-BDCCCF4D6EF7}">
+                                <File Id="fil809436BE4024CA565F420A271FD5F3E7" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Services\Schema1.xsd" />
+                            </Component>
+                            <Component Id="cmp91B147696F619D3971D8543BD7218B6D" Guid="{9F7BA106-DC3B-4B74-8C8A-DF7C828929B3}">
+                                <File Id="filC1E343BEF3FD35C10BB57A1EF7B2C4DA" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Services\Schema2.xsd" />
+                            </Component>
+                            <Component Id="cmp3C8598EEB96C4B40910D2AD6AD7467C2" Guid="{EBBEE78A-9D4D-4F2C-8843-393A6A7EA077}">
+                                <File Id="fil9B9F610394383E9C339516C80C4FC982" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Services\Services.btproj" />
+                            </Component>
+                            <Component Id="cmp56239CB3BA1D03F4F620D37286FD33B4" Guid="{110E3ECF-3D72-449C-B64B-B1F5C0032813}">
+                                <File Id="fil0EA86214F8C71C08C5D69B2FE3AE7A9F" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Services\Transform_1.btm" />
+                            </Component>
+                            <Directory Id="dir694D2855986661636BCF465A19CCE133" Name="Properties">
+                                <Component Id="cmpF22BA8A40FE2C6044530E239277E3402" Guid="{7C0A1F76-5EF9-470C-A2A2-477061FBE847}">
+                                    <File Id="fil96EADAABFCB1DFC96876B8C26DF0B012" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Services\Properties\AssemblyInfo.cs" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="dir1E0DBEC2B25BA66D2004F481718F3C3D" Name="TestFiles">
+                            <Component Id="cmp8967CB01E7AE61D50EA9A83DAF254C09" Guid="{32B94676-1C4F-4554-B958-4DE19BC2221A}">
+                                <File Id="filE4FE055366A0B4AB59645891B552B687" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\TestFiles\InputMessage01.xml" />
+                            </Component>
+                            <Component Id="cmp6D0E1AB81F2594A515854C6AA147342D" Guid="{EF1A6B06-DA7A-4353-A1F1-0CFA606497E7}">
+                                <File Id="fil428873E632212EB1B5A4C4BE5ABCC03F" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\TestFiles\InputMessage02.xml" />
+                            </Component>
+                            <Component Id="cmp772BF5D3E605B8B2BE33A4DEB8AE0F92" Guid="{B5778B3F-55A4-4FCC-98CE-F1DACE02260B}">
+                                <File Id="fil782A2B65CFA97BD96EA2F8D92D3E6510" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\TestFiles\InputMessage03.xml" />
+                            </Component>
+                            <Component Id="cmp8055052D82AB508654F4F9E5B392782D" Guid="{AC8C4761-85F7-4721-BA03-4FD5C9387ADE}">
+                                <File Id="fil3E807BBD68ED94AF0095DCA29BD26DD8" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\TestFiles\InputMessage04.xml" />
+                            </Component>
+                            <Component Id="cmpF3615C60B0924FBA9955F2ECBE06398E" Guid="{861AA848-F3AF-4FA0-BA13-A4E602C51F99}">
+                                <File Id="fil02A7C111712B8FB2ED1839CD5D46521C" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\TestFiles\InputMessage05.xml" />
+                            </Component>
+                            <Component Id="cmp3E4FB13C6E59716EDAF62ACCE9BAF779" Guid="{8B3E1A65-67B6-4960-97D1-6C271FA7C534}">
+                                <File Id="fil38B51389B2476F5DD8C0E2F722F562B8" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\TestFiles\InputMessage06.xml" />
+                            </Component>
+                            <Component Id="cmp53DC20CA2726B4CD496FEBB2BB5786C5" Guid="{5B9B315A-8288-481A-9858-4B645B6CA2CF}">
+                                <File Id="fil727A81CADF2E0844CCBF33B8354B5D79" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\TestFiles\InputMessage07.xml" />
+                            </Component>
+                            <Component Id="cmp28275415046587BB861E1277E28F5BAB" Guid="{8EFAB6B4-8E48-4FF7-A707-D60455C83601}">
+                                <File Id="fil3E068BD5A6383C53E777FA63EA09106E" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\TestFiles\InputMessage08.xml" />
+                            </Component>
+                            <Component Id="cmpAD371979EB35F0EDD4FE01E684B6A44D" Guid="{2DFC10B7-19E4-4BF4-ABA9-6C87AB97703E}">
+                                <File Id="filCBAA7D33EFC19C323966E6EC67446A02" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\TestFiles\InputMessage09.xml" />
+                            </Component>
+                            <Component Id="cmp629D37A94E83299EB728B1428372F29C" Guid="{DEACE8FA-361F-4DE7-91FB-985EF4D364F4}">
+                                <File Id="fil121C50A119EBF1451787FDA594326ADD" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\TestFiles\InputMessage10.xml" />
+                            </Component>
+                        </Directory>
+                    </Directory>
+                    <Directory Id="dir547AC688E71EDE396C98524458B85CDF" Name="BasicMasterBindings">
+                        <Component Id="cmpF59B5AF8C5C8A77A1F4753D522F06419" Guid="{1B70E8FB-2426-43BF-BFE5-EE46B07D910A}">
+                            <File Id="fil7EE19834625A47F4AB5F0B86104A21AC" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings.sln" />
+                        </Component>
+                        <Component Id="cmp5BF3610D67B1B04A2EC6B65767369E64" Guid="{8A23B963-6F8F-4C0F-AE89-8E68F3368516}">
+                            <File Id="fil0C7A456FC4B8C35D1D366670929DDE24" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings.snk" />
+                        </Component>
+                        <Directory Id="dirB7AC2EA65B79373B6A98ECF7B7FE51C2" Name="BasicMasterBindings">
+                            <Component Id="cmp99401106573DAC59262B069044039391" Guid="{6344116E-53C5-4FEB-B9B6-C2B624815BD3}">
+                                <File Id="fil1506573BBD9C61D9AD779A642C63F3EB" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings\BasicMasterBindings.btproj" />
+                            </Component>
+                            <Component Id="cmpB685EE141413B3C93437F53A7F756406" Guid="{DD0F53F6-8018-4430-8D55-002547716E4F}">
+                                <File Id="fil13F7C1E1EEA8261676D3618C6D2B2454" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings\HelloOrchestration.odx" />
+                            </Component>
+                            <Component Id="cmpCFDE5BDC4786B283DAD04881DAB09AB5" Guid="{C596DBFA-0CAA-4EA3-B775-0073B79E6020}">
+                                <File Id="fil44F381A226F0E54E27A1F19F5FF8F874" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings\InvoiceSchema.xsd" />
+                            </Component>
+                            <Component Id="cmpB66050EBA20223A54E73C025168B6EB7" Guid="{2AFC8B45-369E-463E-B0FB-7157CF824542}">
+                                <File Id="filB4E1D5FDA275F8E49DC67D36A1B2BE94" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings\POSchema.xsd" />
+                            </Component>
+                            <Component Id="cmpFD3A1E1B6D56BDDE57643DD6F40ADBB4" Guid="{8F150170-1D8C-4F7B-87C1-D3D7FE142CD5}">
+                                <File Id="fil1E398DF33BCD7517E6E4CA446B6F888F" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings\POToInvoice.btm" />
+                            </Component>
+                            <Directory Id="dir29846C8CA1202ACC16D9AFEAE8A0A05D" Name="Properties">
+                                <Component Id="cmp184B6AEB4270D1AFC02DADDE2CF6A0BE" Guid="{0F2323F8-81BB-4329-97BD-E49503CD8FE7}">
+                                    <File Id="fil8AF49F43DAC2AF952C8F50E7AAF3A3F1" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings\Properties\AssemblyInfo.cs" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="dir89FF86B72EF70A7924D210FC2577A3D4" Name="BasicMasterBindings.Deployment">
+                            <Component Id="cmp511AF053296EE63C5ECEF73BFE96665C" Guid="{FD06AE1C-09DA-46F9-B2A6-7CCE35D4BC55}">
+                                <File Id="fil64F399A977730908B67C710BB857E62D" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings.Deployment\BasicMasterBindings.Deployment.btdfproj" />
+                            </Component>
+                            <Component Id="cmpD974CACDA7FD92BEE0F23B760B64D5CA" Guid="{EBA6D78F-7C79-4441-A618-4D91C9C49E26}">
+                                <File Id="filC8A0C1DA0D980E84B7CA095654F82EF0" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings.Deployment\BuildDebugMsi.bat" />
+                            </Component>
+                            <Component Id="cmp4D6BBB997EF907AD52C142C906F3CAD2" Guid="{CAD25DAA-AA08-48A8-B68F-BF6C6ABA4173}">
+                                <File Id="fil397C970500762A7129480E01E8755363" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings.Deployment\BuildReleaseMsi.bat" />
+                            </Component>
+                            <Component Id="cmp4BB022418D7874FA0848A95612118DB7" Guid="{7B0C918F-7CB8-4382-A439-3EF404C11B84}">
+                                <File Id="fil6D930C57B3B1263F6D9D2AE2BB1D9160" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings.Deployment\InstallWizard.xml" />
+                            </Component>
+                            <Component Id="cmp2E2878CF3486D3F154379C7AA78F54DD" Guid="{558D5B94-CD14-472E-B6CD-DC0A4A35F58E}">
+                                <File Id="filC042CC1B4E5AFC5C0B6D40AEBC008AB1" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings.Deployment\License.rtf" />
+                            </Component>
+                            <Component Id="cmp4C925032EEB766B192C3CB58B9244D5D" Guid="{EBA30299-C53A-40AC-99E2-BC9D8C5912A7}">
+                                <File Id="fil7A57665574153E2FBC1B6A40463189F9" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings.Deployment\PortBindingsMaster.xml" />
+                            </Component>
+                            <Component Id="cmp4C2D493D4E1CB20CA7BB20F8DEAC8528" Guid="{4976034F-0813-4764-9FFD-F1FFE3A134A3}">
+                                <File Id="filA248D40BE5D43E6352577C4D8333B5A2" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings.Deployment\UnInstallWizard.xml" />
+                            </Component>
+                            <Directory Id="dirEF6A34738E08CE013DC03A4D6B363808" Name="EnvironmentSettings">
+                                <Component Id="cmp379B5C0D8CF71ECF63238B563BBFC7C5" Guid="{8E04F4F4-0A0A-48FA-B3DC-6DE6FC03EF5E}">
+                                    <File Id="fil31CA888150FE37210DE118D58F7EB46D" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings.Deployment\EnvironmentSettings\SettingsFileGenerator.xml" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="dirD69772554C721E8FF782111226368A50" Name="TestFiles">
+                            <Component Id="cmp8F2D32AD6C743F559C23673D35704E0A" Guid="{29DBD770-1573-4383-AA8E-6B4147007999}">
+                                <File Id="fil24FB586307A329D47169A24F194322C9" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\TestFiles\SamplePOInput.xml" />
+                            </Component>
+                        </Directory>
+                    </Directory>
+                    <Directory Id="dir7DFF75EFFADA8CC83BF0A36BD2D1B200" Name="ESBToolkitSSOResolver">
+                        <Component Id="cmpB7B3E0D62E1A5DAF4C5A734B4B785783" Guid="{0414ECDF-DC9E-4AC8-856F-604269B3400E}">
+                            <File Id="fil0C17C1C3FD42D70EA1CDB4B988475AFB" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver.sln" />
+                        </Component>
+                        <Component Id="cmp0C10690807EEBA64105243783EEBFA75" Guid="{5325477E-7B3B-4985-BFBE-460359588177}">
+                            <File Id="fil29C0DD6C6CEAD910DF2BD6C0CBDE0ABF" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver.snk" />
+                        </Component>
+                        <Directory Id="dir3EE46541DF4F9741EA33D5CC12A759E9" Name="ESBToolkitSSOResolver">
+                            <Component Id="cmpF4923A19E83210F1FB8C0950A019FF55" Guid="{D507C967-15FE-4362-843F-C0DDC7985441}">
+                                <File Id="fil8B8E39EA0D4AD75EA4EA87556830442E" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver\ESBToolkitSSOResolver.btproj" />
+                            </Component>
+                            <Component Id="cmp0F45E12BFAA17D39C1B6161E3FF0D411" Guid="{A80C4B1B-3B6E-4D95-9B20-3234E1F87388}">
+                                <File Id="fil94758A84F2A2AD81BCD72BC647124964" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver\InvoiceSchema.xsd" />
+                            </Component>
+                            <Component Id="cmpD8853D7742DB7E475862A1AF492ABA99" Guid="{406BDC83-91B0-45A5-A96F-C833F3538DC6}">
+                                <File Id="filC3AB7A9AC641E68D2608F6267EEEC2FB" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver\POSchema.xsd" />
+                            </Component>
+                            <Component Id="cmp6F83472DF84E86D6CB187DA40A56963B" Guid="{CCC8A924-EBB8-495C-A85B-966CCC97CF66}">
+                                <File Id="fil8715E38FA7DE333C573017EB7863122F" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver\POToInvoice.btm" />
+                            </Component>
+                            <Directory Id="dirC51EE2FCEFE3B22CE39581280D895D49" Name="Properties">
+                                <Component Id="cmp892345C42A1DA83B14B96B60114C0FA5" Guid="{35CC3BC6-C548-41FE-999F-F30A8A7CA4C0}">
+                                    <File Id="filEE2A9E04F539F24414D3C93C4F5990DB" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver\Properties\AssemblyInfo.cs" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="dir5AA2DCEE97DF9A2FBA3A252246F7C78F" Name="ESBToolkitSSOResolver.Deployment">
+                            <Component Id="cmpC3045AEE54C39C555D12F6899779A047" Guid="{75740C57-FCF6-49CF-8C2D-9CCB843D5D15}">
+                                <File Id="fil7C5611FB8F2F707BF485F33A6D2E37B2" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Deployment\BuildDebugMsi.bat" />
+                            </Component>
+                            <Component Id="cmp05028274E6F61F370E1DC66180228A0B" Guid="{C289B98D-0814-4D71-A4DB-481909210140}">
+                                <File Id="fil146F90D5825517FC244AA4352C0A1AE2" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Deployment\BuildReleaseMsi.bat" />
+                            </Component>
+                            <Component Id="cmp6D20C7F8478D4AA694B3609F8982DBB9" Guid="{408172DF-8CBD-48C2-B9BA-EAB6D5E23A35}">
+                                <File Id="fil0E99289A46CCDEEDB8B1299A6223A5C0" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Deployment\ESBToolkitSSOResolver.Deployment.btdfproj" />
+                            </Component>
+                            <Component Id="cmpE897B9E70BF0341FAA2870390CC77C95" Guid="{5B181E72-DA2E-4DF0-9742-46112B4FF26E}">
+                                <File Id="filEAA4A1B1214B9C1FD6A9213BDA391F87" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Deployment\InstallWizard.xml" />
+                            </Component>
+                            <Component Id="cmpCC3A85533CA658F3E75EEE5EE1535C49" Guid="{8A786B75-4697-446E-8129-3AE1356D537D}">
+                                <File Id="fil4718778603CC92EFDFDA37A020944D18" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Deployment\License.rtf" />
+                            </Component>
+                            <Component Id="cmp2F52890E41A50C62823B6FF1BAA7D104" Guid="{1B64D9F5-1B4B-4DCB-880F-46EBDF948BAB}">
+                                <File Id="filD4D67B85A4D5E5E27FEA1B8F005210ED" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Deployment\PortBindingsMaster.xml" />
+                            </Component>
+                            <Component Id="cmpF9DFB20CE7839328D19C9DD04D4583C2" Guid="{3FD760CF-0CA3-4E87-AB52-5F062246C027}">
+                                <File Id="fil04F267A50D277ABF5C06583ACFB767BA" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Deployment\UnInstallWizard.xml" />
+                            </Component>
+                            <Directory Id="dir417F636A012A8FC46E7E0D87312C92E8" Name="EnvironmentSettings">
+                                <Component Id="cmpC83CE32A6F4D0AA093AAA43C9A581AE1" Guid="{B3A8B8B5-58CB-43BC-A962-EA302D7A32EB}">
+                                    <File Id="fil68A3FEE9D4C57FFA3A92E34B9DBDC9B0" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Deployment\EnvironmentSettings\SettingsFileGenerator.xml" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="dirB7E10B9B2D417943212F01A9998FCAF6" Name="ESBToolkitSSOResolver.Itineraries">
+                            <Component Id="cmp946994ABBDFFA72BCC9C16D38A696F72" Guid="{DFAC79D9-5E8C-4F97-8042-D322E11B79B6}">
+                                <File Id="filEAB238170695CCE9492A981FE82FBD60" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Itineraries\ESBToolkitSSOResolver.Itineraries.csproj" />
+                            </Component>
+                            <Component Id="cmpB188E9B2620EFAC4DF37C08A37CF6568" Guid="{866E9DFE-A5CE-400C-86E6-190F6F0E02FF}">
+                                <File Id="fil94A1EFDCCE68A6CF6FA8A498B36CA125" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Itineraries\ESBToolkitSSOResolver.itinerary" />
+                            </Component>
+                            <Component Id="cmp2D1CD0132B2210F0892492F319295CEE" Guid="{2E4D1A8B-F676-4B70-A054-07593706F012}">
+                                <File Id="fil0B0A71D25869DD3657ABC6F7FAB6D70D" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Itineraries\ESBToolkitSSOResolver.itinerary.diagram" />
+                            </Component>
+                            <Component Id="cmpCC325AFBDFC89897225A3A61E9DAFE7C" Guid="{16C21887-0D82-4165-BB44-FCA5B80C6696}">
+                                <File Id="filA2C868A19A9B560FE46726455B9BEEBC" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Itineraries\ESBToolkitSSOResolver.xml" />
+                            </Component>
+                            <Directory Id="dir11B6DD11D7DFC1754A43DBAA5486C0D8" Name="Properties">
+                                <Component Id="cmpD100B065EC54DE0CB6F604ABC2A4DED9" Guid="{35E3477C-E81B-413B-9D45-3035EBD6122E}">
+                                    <File Id="fil51EBA2A1AD8A62F763BF8A63B54379DF" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Itineraries\Properties\AssemblyInfo.cs" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="dir9459CFC467E34E4EDF0F5A71B9A56D14" Name="TestFiles">
+                            <Component Id="cmp9A8489EB26EF7C60FC107D92ED043AD1" Guid="{B7A582D0-7B50-438A-85E0-4B2E5BF9184D}">
+                                <File Id="fil40D7C06BDA5686A21C9A479300805755" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\TestFiles\SamplePOInput.xml" />
+                            </Component>
+                        </Directory>
+                    </Directory>
+                    <Directory Id="dirDA9218C65E64F65883858630FF566A5C" Name="HelloWorld">
+                        <Component Id="cmpCE946C6C7941B80F885174736FF6B89C" Guid="{F8F079D9-341A-415F-96C7-27C2716A9C80}">
+                            <File Id="filA66CF7DAD21E23BA2BF5D2E253A32873" KeyPath="yes" Source="..\Samples\BizTalk2009\HelloWorld\HelloWorld.sln" />
+                        </Component>
+                        <Component Id="cmpA9942EB4E882E3CB0C2497FE9F632DB9" Guid="{730AD64B-97D2-43DA-8703-FBACA2693D51}">
+                            <File Id="fil3BE823C23AD1FF1875E0CD670ABCE703" KeyPath="yes" Source="..\Samples\BizTalk2009\HelloWorld\HelloWorld.snk" />
+                        </Component>
+                        <Directory Id="dir33AAAB832A32F54C9E2EA327CA682665" Name="HelloWorld">
+                            <Component Id="cmp56183F26C93A0A84246CC0F0EDCF4A32" Guid="{0122EB6D-40AF-44AE-9472-6F7ADFA208CA}">
+                                <File Id="filA35D87549141279AB0D4210B6180BCA3" KeyPath="yes" Source="..\Samples\BizTalk2009\HelloWorld\HelloWorld\HelloOrchestration.odx" />
+                            </Component>
+                            <Component Id="cmpBDBBD336F3124FB827EF1CCD766C9C30" Guid="{CEFCBA67-124D-4014-8EED-9493DF3A2CCD}">
+                                <File Id="filB4314796CEDC27994E3B7C6B31B5151F" KeyPath="yes" Source="..\Samples\BizTalk2009\HelloWorld\HelloWorld\HelloWorld.btproj" />
+                            </Component>
+                            <Component Id="cmp612BCB0C8CDBC6B3A7B340FFB0A36F47" Guid="{A2A0FA1C-6F95-4EE8-B6E2-C65C15A53F9C}">
+                                <File Id="fil62E46846C0CA0557A57B0EEE81FF4285" KeyPath="yes" Source="..\Samples\BizTalk2009\HelloWorld\HelloWorld\InvoiceSchema.xsd" />
+                            </Component>
+                            <Component Id="cmp181622136D13BD6F14CC8851893299AF" Guid="{8CB982CC-9FAA-49FC-8A83-AFF9B34ACEEB}">
+                                <File Id="fil1CA052A867E3A4362E3C9DE0108ED5D8" KeyPath="yes" Source="..\Samples\BizTalk2009\HelloWorld\HelloWorld\POSchema.xsd" />
+                            </Component>
+                            <Component Id="cmp11BE47F3596EED6209DC4538B61F1F98" Guid="{CCA0F033-3CA8-4638-8338-16F5B88915DB}">
+                                <File Id="fil0706FB11BF4F95B176A22ED3E4B1C7B7" KeyPath="yes" Source="..\Samples\BizTalk2009\HelloWorld\HelloWorld\POToInvoice.btm" />
+                            </Component>
+                            <Directory Id="dir37C91B4121C8F75CF546E5F75C564B2E" Name="Properties">
+                                <Component Id="cmp4C2B31D97726D45787CA2E4CFACD5B12" Guid="{B2EBDD67-8F84-4ABD-9608-182D7D747BA4}">
+                                    <File Id="fil71208E040F2176B6D213D907CAEFBA88" KeyPath="yes" Source="..\Samples\BizTalk2009\HelloWorld\HelloWorld\Properties\AssemblyInfo.cs" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="dir5C2B88F17095FE9EDA3DBBC623E3CA65" Name="HelloWorld.Deployment">
+                            <Component Id="cmp84BDB8150F97B567251F55D58B6A9C4B" Guid="{B440CC61-28AA-4ED7-95D2-396214B50CB6}">
+                                <File Id="fil57EE08DA9739FE0C5B29B86501225BBA" KeyPath="yes" Source="..\Samples\BizTalk2009\HelloWorld\HelloWorld.Deployment\BuildDebugMsi.bat" />
+                            </Component>
+                            <Component Id="cmp529B3101229339130585F81A1807A93F" Guid="{C2E3C204-D1F4-4C99-83FC-F0AF6CE5C29F}">
+                                <File Id="fil014721129CB24F6B8EC4ACE81FA2C6ED" KeyPath="yes" Source="..\Samples\BizTalk2009\HelloWorld\HelloWorld.Deployment\BuildReleaseMsi.bat" />
+                            </Component>
+                            <Component Id="cmp4AB4157BFA9E10473AA2B8CED8D0D20E" Guid="{5BF03926-890E-4915-8EA6-A06DEB7D3093}">
+                                <File Id="fil10DFD3544DEBA844F9E8AFC45FC2352B" KeyPath="yes" Source="..\Samples\BizTalk2009\HelloWorld\HelloWorld.Deployment\HelloWorld.Deployment.btdfproj" />
+                            </Component>
+                            <Component Id="cmp7D534566AA02F63574A55A6D86841731" Guid="{9BBCA5FD-7835-4F2B-9AAD-85E7A0A0418F}">
+                                <File Id="fil6CD5AD90519FD5A01E5DBC141DE0BA28" KeyPath="yes" Source="..\Samples\BizTalk2009\HelloWorld\HelloWorld.Deployment\InstallWizard.xml" />
+                            </Component>
+                            <Component Id="cmp18E6805D226EFF09ED9A245D0D99525E" Guid="{23AC499D-941C-4D00-9BD2-E56CFCA3411F}">
+                                <File Id="fil85EE2B3D06ED8FA68E1252FBA19E4B0B" KeyPath="yes" Source="..\Samples\BizTalk2009\HelloWorld\HelloWorld.Deployment\License.rtf" />
+                            </Component>
+                            <Component Id="cmp623E3065E7ED696E1B8399C7C71D37D9" Guid="{E0207AAD-439E-481B-9E9D-08721B6CC7FC}">
+                                <File Id="filF29BFABD11A286AD724E33ABB8752993" KeyPath="yes" Source="..\Samples\BizTalk2009\HelloWorld\HelloWorld.Deployment\PortBindings.xml" />
+                            </Component>
+                            <Component Id="cmp886145BBC14E8A5180F97855501F0483" Guid="{58E67850-7020-4A5D-95B4-0D97D3D8AC6F}">
+                                <File Id="fil2223E0AB4218AF9D272458E3D5016C7D" KeyPath="yes" Source="..\Samples\BizTalk2009\HelloWorld\HelloWorld.Deployment\UnInstallWizard.xml" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir3F076E38B9B9B790E437A883F4F1C214" Name="TestFiles">
+                            <Component Id="cmp52B300E975F3AD33E579D140237E0EFC" Guid="{5D35C8E3-A5E7-4CD3-AF47-2DD29694219A}">
+                                <File Id="filE7D2D291F44415CFB746778D0C6DCFFD" KeyPath="yes" Source="..\Samples\BizTalk2009\HelloWorld\TestFiles\SamplePOInput.xml" />
+                            </Component>
+                        </Directory>
+                    </Directory>
+                </Directory>
+                <Directory Id="dir78E22395068F4D3610482AD8CB9727A1" Name="TeamBuild">
+                    <Component Id="cmpF0069F75434DCD04095FBFC1EC165A9C" Guid="{7D555B22-FD77-4F4F-A761-7E748165FE39}">
+                        <File Id="fil4C07E64EC9346B6703DBE1D845DD875D" KeyPath="yes" Source="..\Samples\TeamBuild\TFSBuild.proj" />
+                    </Component>
+                    <Component Id="cmp0252AC176B3C22E01F33ACF361131F21" Guid="{B2EAE1CF-BB70-4CF8-BCB1-D9DAA7DCCB11}">
+                        <File Id="filF7CE2A36CDFA7CFA5707969CEF0F9D23" KeyPath="yes" Source="..\Samples\TeamBuild\TFSBuild.rsp" />
+                    </Component>
+                    <Component Id="cmp71C864E24FC2428499EF617149FA17E8" Guid="{41AC58D5-BF5B-429E-8C05-648FD5FEB825}">
+                      <File Id="fil4ABA80C7F3B942FD9D8C8B58DE3D4FC0" KeyPath="yes" Source="..\Samples\TeamBuild\BTDFDefaultTemplate.xaml" />
+                    </Component>
+                </Directory>
+            </Directory>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="SampleComponents">
+            <ComponentRef Id="cmp07C0F3295207055BA64FE9FFBAD9BA45" />
+            <ComponentRef Id="cmpC59EB6946A5A43AEC5C5650A852AC4E4" />
+            <ComponentRef Id="cmpE2F3BB910B151291A52313DB81CD570E" />
+            <ComponentRef Id="cmp05F9F70472708AE184F6089FCCC19372" />
+            <ComponentRef Id="cmpD3B514283C1A01EA01C507A212C00E8C" />
+            <ComponentRef Id="cmpF4FE86335AA0FFB142BE96739CBBF6D9" />
+            <ComponentRef Id="cmp970D13C03EDF13EA1610930CABE2962B" />
+            <ComponentRef Id="cmp2995A4DD5D72F135955AE4655F7A7C33" />
+            <ComponentRef Id="cmp062855E4598E5489FFA0F26F3C7929AB" />
+            <ComponentRef Id="cmp6534D9F3876938653BA1A7EB9A75A639" />
+            <ComponentRef Id="cmp5276A10D34691C94D8B19B659E5225C0" />
+            <ComponentRef Id="cmpBE03C5999E5A2DE7D9708CBCBFADDDE4" />
+            <ComponentRef Id="cmp3EB85378AC09E08115B05FCC9D94CD09" />
+            <ComponentRef Id="cmpD01F69D0AECD7107CBEF8AF9A3A5C69F" />
+            <ComponentRef Id="cmpE29ABCAF8115F4F8BB689A2CD7E9C52F" />
+            <ComponentRef Id="cmpAB1CC22F66B5F390235A33087F82CFB7" />
+            <ComponentRef Id="cmp6D9A74E7DBC3C8F0C16304EB005F3CD8" />
+            <ComponentRef Id="cmpBAF8EC3ECF3BAB5EB59F0A9F3CF98D80" />
+            <ComponentRef Id="cmpF1CF0582512390DFF6FD290F70065042" />
+            <ComponentRef Id="cmp81F686E2AC62D91F929817BED1026BA4" />
+            <ComponentRef Id="cmp54B70A7FE3499064218575990D576C0C" />
+            <ComponentRef Id="cmp6B581F2C69C11B61EAE1B5AE809DDBB7" />
+            <ComponentRef Id="cmp6A185FF01181C0231B858A2CD1D120AF" />
+            <ComponentRef Id="cmp8E0D17466A9EF697500B5426718C9AF2" />
+            <ComponentRef Id="cmp2D5C1BE2A6B2B2F2B6B27E2C65387E22" />
+            <ComponentRef Id="cmp4163A267376991741E9FB88552C87ECA" />
+            <ComponentRef Id="cmpA63801BCCB8F368FF40E1FE9B5462CE0" />
+            <ComponentRef Id="cmpD2502269C32425D8AD48163FFF7FBCA2" />
+            <ComponentRef Id="cmp8C7638F43701C68E9EADD86F90FEC628" />
+            <ComponentRef Id="cmp7AEF0DCA7EDDA3E29AF9E18508A18AAE" />
+            <ComponentRef Id="cmp676ECA994525AD5C3BF63CD82FD9629F" />
+            <ComponentRef Id="cmpD0486E4BD7E8EE4FFE4933A72C299CDA" />
+            <ComponentRef Id="cmp61FB6CE9837A0112E28F5D2B44125906" />
+            <ComponentRef Id="cmp249AAEC9467B7E2CB03AA18DD8F96BF8" />
+            <ComponentRef Id="cmp6D6BCE046786A345ED6FEEA8C38DD015" />
+            <ComponentRef Id="cmp484CE768A72745E2CC0AEBE0BB2A782F" />
+            <ComponentRef Id="cmp7A2506FFA9D4602FB8B11FEDF4160D72" />
+            <ComponentRef Id="cmp2CAB23332252415D690272E34F6CAD66" />
+            <ComponentRef Id="cmp46C232842F6C75FCDAC0241B09D17B33" />
+            <ComponentRef Id="cmp4C1F7550AA0EB6E3CCD26892695CC027" />
+            <ComponentRef Id="cmp009B9C1BC7704D29007987F1E24F431F" />
+            <ComponentRef Id="cmp34DB7AB68F42BF86BEE056F3AD615727" />
+            <ComponentRef Id="cmpCA1816595A3BFF685CDA173EB8DD95D2" />
+            <ComponentRef Id="cmp378576E3B8E1119B3CA2D1CFEE2BDF13" />
+            <ComponentRef Id="cmp4C3D8CEF9D2B9A5DE06DC9CE51040BAD" />
+            <ComponentRef Id="cmpD803EA25A93730BAF97FBE82270DCA2C" />
+            <ComponentRef Id="cmpE4A1FBB2471433973ED1BDD3250587A3" />
+            <ComponentRef Id="cmp4C61F37900A5014828231F87BF062B5F" />
+            <ComponentRef Id="cmpA4E9C63112C845C24780A2D42C4BC48A" />
+            <ComponentRef Id="cmp2E7F18FFFE59E870A5037855CEDE8C6A" />
+            <ComponentRef Id="cmp53D580EC46DE2C33A0ED87ACF79DD07B" />
+            <ComponentRef Id="cmpC2DCEFA52C9DDAE03AF5583985B9D1EE" />
+            <ComponentRef Id="cmpF2FC1E2ECE01B6C6CCFEC3C40389992E" />
+            <ComponentRef Id="cmpE65A0E590F3DE931B63E94BD5582E1AF" />
+            <ComponentRef Id="cmp507EB0D4A86BA5F38EFD456CBF68B5A1" />
+            <ComponentRef Id="cmp68F64A452A998EB0E9081909A326B18B" />
+            <ComponentRef Id="cmp3111D082F8940DE5B0D3460194C68A44" />
+            <ComponentRef Id="cmp74EEE42D4E8D4E4D3DDF68784FCF1DB6" />
+            <ComponentRef Id="cmp8AAE9A30DFA2590FD5045077BFDFE534" />
+            <ComponentRef Id="cmp6AB1B6B6AB2D7D88E6C8D82D8F52126B" />
+            <ComponentRef Id="cmp7A19E0514234744628CDE238BB7806F6" />
+            <ComponentRef Id="cmpAF35D766F6CB63D54ECCA53633BA8B54" />
+            <ComponentRef Id="cmp7D6198022C3D9DFCC0B0B68058691A58" />
+            <ComponentRef Id="cmp0243AADB35AF88408332F81447691FB9" />
+            <ComponentRef Id="cmpE06A0CCAB6F1A6EB5FF65BCD9446AAEB" />
+            <ComponentRef Id="cmp81B9A009510A289A8B31B5CE42EE7D03" />
+            <ComponentRef Id="cmp8BF2C489E50B3E1EFCC293E842FE6C92" />
+            <ComponentRef Id="cmpD0CBD1C1AA8F86307120FFA135C2A0CD" />
+            <ComponentRef Id="cmpEC01B1D8DBBB1EFAA3B4DC83D828EA31" />
+            <ComponentRef Id="cmp4082F39D9E58B67B156A36529FA55FDF" />
+            <ComponentRef Id="cmpC5FF8AD2F4F9A613F77F96E3F0E2AD36" />
+            <ComponentRef Id="cmpEB295AA3C176E8646A9DB6153F265DCC" />
+            <ComponentRef Id="cmp6A846D003C7963CCBE503B3780FFD707" />
+            <ComponentRef Id="cmpD3406CB154D9D535BCFACDD913B12B30" />
+            <ComponentRef Id="cmp4D4920E11814F467C3701F9C711FA94A" />
+            <ComponentRef Id="cmpFF91D526A4EDBD9AC45F770CA9B00F75" />
+            <ComponentRef Id="cmp557C546CD3DABE06E6F7B6C9A73E1E18" />
+            <ComponentRef Id="cmpA43E84EAC838EDA615B750F62DEA0DF4" />
+            <ComponentRef Id="cmp45B7E1EC7841C24068BBB3C98F355F08" />
+            <ComponentRef Id="cmpA04AC8BE63C6A1577AF07F8C7171AAFF" />
+            <ComponentRef Id="cmp619302188ED97B8F1AC137B0C9AD21F1" />
+            <ComponentRef Id="cmp23390C190AA9502E2AA1D33F9B68B243" />
+            <ComponentRef Id="cmpEB7FA973ED25D240F5B74C70C0ED6F87" />
+            <ComponentRef Id="cmp5FAFADD65A8E8A67ACA773C6C7DEC60F" />
+            <ComponentRef Id="cmp006177743DE635A9DF7BA9E26894A356" />
+            <ComponentRef Id="cmp04FC5A1012CC496CD529BA4F1DF5FB23" />
+            <ComponentRef Id="cmpFB53840C8658C508C4A627C8B1BF2644" />
+            <ComponentRef Id="cmp42E91FBFD4CB2DB7DB9A49782DF1941D" />
+            <ComponentRef Id="cmpEEFDBD44D1F7FBF7E7D582A52047189A" />
+            <ComponentRef Id="cmp91B147696F619D3971D8543BD7218B6D" />
+            <ComponentRef Id="cmp3C8598EEB96C4B40910D2AD6AD7467C2" />
+            <ComponentRef Id="cmp56239CB3BA1D03F4F620D37286FD33B4" />
+            <ComponentRef Id="cmpF22BA8A40FE2C6044530E239277E3402" />
+            <ComponentRef Id="cmp8967CB01E7AE61D50EA9A83DAF254C09" />
+            <ComponentRef Id="cmp6D0E1AB81F2594A515854C6AA147342D" />
+            <ComponentRef Id="cmp772BF5D3E605B8B2BE33A4DEB8AE0F92" />
+            <ComponentRef Id="cmp8055052D82AB508654F4F9E5B392782D" />
+            <ComponentRef Id="cmpF3615C60B0924FBA9955F2ECBE06398E" />
+            <ComponentRef Id="cmp3E4FB13C6E59716EDAF62ACCE9BAF779" />
+            <ComponentRef Id="cmp53DC20CA2726B4CD496FEBB2BB5786C5" />
+            <ComponentRef Id="cmp28275415046587BB861E1277E28F5BAB" />
+            <ComponentRef Id="cmpAD371979EB35F0EDD4FE01E684B6A44D" />
+            <ComponentRef Id="cmp629D37A94E83299EB728B1428372F29C" />
+            <ComponentRef Id="cmpF59B5AF8C5C8A77A1F4753D522F06419" />
+            <ComponentRef Id="cmp5BF3610D67B1B04A2EC6B65767369E64" />
+            <ComponentRef Id="cmp99401106573DAC59262B069044039391" />
+            <ComponentRef Id="cmpB685EE141413B3C93437F53A7F756406" />
+            <ComponentRef Id="cmpCFDE5BDC4786B283DAD04881DAB09AB5" />
+            <ComponentRef Id="cmpB66050EBA20223A54E73C025168B6EB7" />
+            <ComponentRef Id="cmpFD3A1E1B6D56BDDE57643DD6F40ADBB4" />
+            <ComponentRef Id="cmp184B6AEB4270D1AFC02DADDE2CF6A0BE" />
+            <ComponentRef Id="cmp511AF053296EE63C5ECEF73BFE96665C" />
+            <ComponentRef Id="cmpD974CACDA7FD92BEE0F23B760B64D5CA" />
+            <ComponentRef Id="cmp4D6BBB997EF907AD52C142C906F3CAD2" />
+            <ComponentRef Id="cmp4BB022418D7874FA0848A95612118DB7" />
+            <ComponentRef Id="cmp2E2878CF3486D3F154379C7AA78F54DD" />
+            <ComponentRef Id="cmp4C925032EEB766B192C3CB58B9244D5D" />
+            <ComponentRef Id="cmp4C2D493D4E1CB20CA7BB20F8DEAC8528" />
+            <ComponentRef Id="cmp379B5C0D8CF71ECF63238B563BBFC7C5" />
+            <ComponentRef Id="cmp8F2D32AD6C743F559C23673D35704E0A" />
+            <ComponentRef Id="cmpB7B3E0D62E1A5DAF4C5A734B4B785783" />
+            <ComponentRef Id="cmp0C10690807EEBA64105243783EEBFA75" />
+            <ComponentRef Id="cmpF4923A19E83210F1FB8C0950A019FF55" />
+            <ComponentRef Id="cmp0F45E12BFAA17D39C1B6161E3FF0D411" />
+            <ComponentRef Id="cmpD8853D7742DB7E475862A1AF492ABA99" />
+            <ComponentRef Id="cmp6F83472DF84E86D6CB187DA40A56963B" />
+            <ComponentRef Id="cmp892345C42A1DA83B14B96B60114C0FA5" />
+            <ComponentRef Id="cmpC3045AEE54C39C555D12F6899779A047" />
+            <ComponentRef Id="cmp05028274E6F61F370E1DC66180228A0B" />
+            <ComponentRef Id="cmp6D20C7F8478D4AA694B3609F8982DBB9" />
+            <ComponentRef Id="cmpE897B9E70BF0341FAA2870390CC77C95" />
+            <ComponentRef Id="cmpCC3A85533CA658F3E75EEE5EE1535C49" />
+            <ComponentRef Id="cmp2F52890E41A50C62823B6FF1BAA7D104" />
+            <ComponentRef Id="cmpF9DFB20CE7839328D19C9DD04D4583C2" />
+            <ComponentRef Id="cmpC83CE32A6F4D0AA093AAA43C9A581AE1" />
+            <ComponentRef Id="cmp946994ABBDFFA72BCC9C16D38A696F72" />
+            <ComponentRef Id="cmpB188E9B2620EFAC4DF37C08A37CF6568" />
+            <ComponentRef Id="cmp2D1CD0132B2210F0892492F319295CEE" />
+            <ComponentRef Id="cmpCC325AFBDFC89897225A3A61E9DAFE7C" />
+            <ComponentRef Id="cmpD100B065EC54DE0CB6F604ABC2A4DED9" />
+            <ComponentRef Id="cmp9A8489EB26EF7C60FC107D92ED043AD1" />
+            <ComponentRef Id="cmpCE946C6C7941B80F885174736FF6B89C" />
+            <ComponentRef Id="cmpA9942EB4E882E3CB0C2497FE9F632DB9" />
+            <ComponentRef Id="cmp56183F26C93A0A84246CC0F0EDCF4A32" />
+            <ComponentRef Id="cmpBDBBD336F3124FB827EF1CCD766C9C30" />
+            <ComponentRef Id="cmp612BCB0C8CDBC6B3A7B340FFB0A36F47" />
+            <ComponentRef Id="cmp181622136D13BD6F14CC8851893299AF" />
+            <ComponentRef Id="cmp11BE47F3596EED6209DC4538B61F1F98" />
+            <ComponentRef Id="cmp4C2B31D97726D45787CA2E4CFACD5B12" />
+            <ComponentRef Id="cmp84BDB8150F97B567251F55D58B6A9C4B" />
+            <ComponentRef Id="cmp529B3101229339130585F81A1807A93F" />
+            <ComponentRef Id="cmp4AB4157BFA9E10473AA2B8CED8D0D20E" />
+            <ComponentRef Id="cmp7D534566AA02F63574A55A6D86841731" />
+            <ComponentRef Id="cmp18E6805D226EFF09ED9A245D0D99525E" />
+            <ComponentRef Id="cmp623E3065E7ED696E1B8399C7C71D37D9" />
+            <ComponentRef Id="cmp886145BBC14E8A5180F97855501F0483" />
+            <ComponentRef Id="cmp52B300E975F3AD33E579D140237E0EFC" />
+            <ComponentRef Id="cmpF0069F75434DCD04095FBFC1EC165A9C" />
+            <ComponentRef Id="cmp0252AC176B3C22E01F33ACF361131F21" />
+            <ComponentRef Id="cmp71C864E24FC2428499EF617149FA17E8" />
+        </ComponentGroup>
+    </Fragment>
+</Include>

@@ -1,2 +1,0 @@
-DeployTools\EnvironmentSettingsExporter.exe EnvironmentSettings\SettingsFileGenerator.xml EnvironmentSettings
-DeployTools\SetEnvUI.exe UnInstallWizard.xml ServerUnDeploy.bat

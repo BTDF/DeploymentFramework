@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Deployment Framework for BizTalk 5.0
+    Copyright (C) 2004-2012 Thomas F. Abraham and Scott Colestock
+    
+    This source file is subject to the Microsoft Public License (Ms-PL).
+-->
+<Include xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  <Fragment>
+    <Feature Id="VS2008IntegrationFeature" Title="Visual Studio 2008 Integration" Level="1" InstallDefault="local" Display="41"
+             AllowAdvertise="no" TypicalDefault="install" Description="Integrates commands with the Visual Studio 2008 IDE">
+        <ComponentRef Id="DFBTVisualStudioAddIn.AddIn_VS2008"/>
+        <ComponentRef Id="DFBTVisualStudioAddIn.dll_VS2008"/>
+        <ComponentRef Id="DeploymentFrameworkForBizTalk5.0.xml_VS2008"/>
+        <ComponentRef Id="DeploymentFrameworkForBizTalk5.0.xsd_VS2008"/>
+        <ComponentRef Id="DeploymentFrameworkForBizTalkProjectTemplate5_0.zip_VS2008"/>
+        <Condition Level="0">
+          <![CDATA[(NOT VS90_IDE_VCSHARP_PROJECTSYSTEM_INSTALLED) OR (BTS_PRODUCTNAME <> "Microsoft BizTalk Server 2009")]]>
+        </Condition>
+      </Feature>
+  </Fragment>
+
+  <Fragment>
+    <PropertyRef Id="VS90DEVENV" />
+    <PropertyRef Id="VS90_IDE_VCSHARP_PROJECTSYSTEM_INSTALLED"/>
+    <PropertyRef Id="VS90_SCHEMAS_DIR"/>
+    <PropertyRef Id="VS90_PROJECTTEMPLATES_DIR"/>
+
+    <InstallExecuteSequence>
+      <Custom Action="VS90InstallVSTemplates" Before="InstallFinalize">
+        VS90_IDE_VCSHARP_PROJECTSYSTEM_INSTALLED AND (BTS_PRODUCTNAME = "Microsoft BizTalk Server 2009") AND (NOT Installed)
+      </Custom>
+      <Custom Action="VS90ResetVSAddin" Before="InstallFinalize">
+        VS90_IDE_VCSHARP_PROJECTSYSTEM_INSTALLED AND (BTS_PRODUCTNAME = "Microsoft BizTalk Server 2009") AND Installed
+      </Custom>
+    </InstallExecuteSequence>
+
+    <UI Id="VS2008UI">
+      <ProgressText Action="VS90InstallVSTemplates">Installing Visual Studio 2008 integration...</ProgressText>
+      <ProgressText Action="VS90ResetVSAddin">Removing Visual Studio 2008 integration...</ProgressText>
+    </UI>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="VisualStudio">
+      <Directory Id="D90" Name="9.0" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="D90">
+      <Directory Id="Addins90" Name="Addins" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="ProgramFilesFolder">
+      <Directory Id="VS90_SCHEMAS_DIR" Name="VS9.0Schemas" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="ProgramFilesFolder">
+      <Directory Id="VS90_PROJECTTEMPLATES_DIR" Name="VS9.0SProjectTemplates" />
+    </DirectoryRef>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="Addins90" FileSource="..\VisualStudioAddIn\VisualStudioAddIn">
+      <Component Id="DFBTVisualStudioAddIn.AddIn_VS2008" Guid="*">
+        <File Id="DFBTVisualStudioAddIn.AddIn_VS2008" Name="DFBTVisualStudioAddIn.AddIn" KeyPath="yes" Source="..\VisualStudioAddIn\VisualStudioAddIn\DFBTVisualStudioAddIn.AddIn" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="Addins90" FileSource="..\VisualStudioAddIn\VisualStudioAddIn\bin">
+      <Component Id="DFBTVisualStudioAddIn.dll_VS2008" Guid="*">
+        <File Id="DFBTVisualStudioAddIn.dll_VS2008" Name="DFBTVisualStudioAddIn.dll" KeyPath="yes" Source="..\VisualStudioAddIn\VisualStudioAddIn\bin\DFBTVisualStudioAddIn.dll" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="VS90_SCHEMAS_DIR" FileSource="..\VisualStudioAddIn">
+      <Component Id="DeploymentFrameworkForBizTalk5.0.xml_VS2008" Guid="73F631B9-5BB1-468e-831F-E1FAB03A19C8">
+        <File Id="DeploymentFrameworkForBizTalk5.0.xml_VS2008" Name="DeploymentFrameworkForBizTalk5.0.xml" KeyPath="yes" Source="..\VisualStudioAddIn\DeploymentFrameworkForBizTalk5.0.xml" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="VS90_SCHEMAS_DIR" FileSource="..\VisualStudioAddIn">
+      <Component Id="DeploymentFrameworkForBizTalk5.0.xsd_VS2008" Guid="4765239C-91C6-41c6-9162-2B21DD4454CB">
+        <File Id="DeploymentFrameworkForBizTalk5.0.xsd_VS2008" Name="DeploymentFrameworkForBizTalk5.0.xsd" KeyPath="yes" Source="..\VisualStudioAddIn\DeploymentFrameworkForBizTalk5.0.xsd" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="VS90_PROJECTTEMPLATES_DIR" FileSource="..\VisualStudioAddIn">
+      <Component Id="DeploymentFrameworkForBizTalkProjectTemplate5_0.zip_VS2008" Guid="FCCB95D6-B86C-42f9-9D24-9ED27764CD7C">
+        <File Id="DeploymentFrameworkForBizTalkProjectTemplate5_0.zip_VS2008" Name="DeploymentFrameworkForBizTalkProjectTemplate5_0.zip" KeyPath="yes" Source="..\VisualStudioAddIn\DeploymentFrameworkForBizTalkProjectTemplate5_0.zip" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+
+  <Fragment>
+    <CustomAction Id="VS90ResetVSAddin"
+      Property="VS90DEVENV" ExeCommand="/ResetAddin DeploymentFramework.VisualStudioAddIn.Connect /Command File.Exit"
+      Execute="deferred" Return="ignore" Impersonate="yes" />
+  </Fragment>
+</Include>
