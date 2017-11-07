@@ -289,3 +289,4 @@ __pycache__/
 
 # Deployment Framework for BizTalk
 Staging/
+!src/Tools/ESB.Resolvers/Bin
