@@ -3,8 +3,8 @@
 
   <xs:annotation>
     <xs:documentation>
-      Deployment Framework for BizTalk 5.0
-      Copyright (C) 2008-2010 Thomas F. Abraham and Scott Colestock
+      Deployment Framework for BizTalk
+      Copyright (C) 2008-2014 Thomas F. Abraham and Scott Colestock
 
       Schema for describing Deployment Framework for BizTalk build files (btdfproj).
     </xs:documentation>
@@ -668,11 +668,6 @@
             <xs:documentation>BTDF: Include the SettingsFileGenerator.xml spreadsheet into the server install MSI (boolean)</xs:documentation>
         </xs:annotation>
 	</xs:element>
-    <xs:element name="IncludeCompsAndVDirsAsResources" type="msb:StringPropertyType" substitutionGroup="msb:Property">
-        <xs:annotation>
-            <xs:documentation>BTDF: Add components and virtual directories as resources in the BizTalk application (boolean)</xs:documentation>
-        </xs:annotation>
-	</xs:element>
     <xs:element name="SkipIISReset" type="msb:StringPropertyType" substitutionGroup="msb:Property">
         <xs:annotation>
             <xs:documentation>BTDF: Do not perform an IIS reset during deployment (boolean)</xs:documentation>
@@ -743,6 +738,11 @@
             <xs:documentation>BTDF: Indicates whether to enable BizTalk's schema validation debugging option (configured in BTSNTSvc.exe.config).</xs:documentation>
         </xs:annotation>
 	</xs:element>
+    <xs:element name="ConfigureBizTalkDebuggingFeatures" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Indicates whether to enable configuration of BizTalk's debugging options (configured in BTSNTSvc.exe.config).</xs:documentation>
+        </xs:annotation>
+	</xs:element>
     <xs:element name="UndeployIISArtifacts" type="msb:StringPropertyType" substitutionGroup="msb:Property">
         <xs:annotation>
             <xs:documentation>BTDF: Indicates whether to undeploy IIS vdirs during undeployment.</xs:documentation>
@@ -786,6 +786,61 @@
     <xs:element name="XmlEscapeXPathsFile" type="msb:StringPropertyType" substitutionGroup="msb:Property">
         <xs:annotation>
             <xs:documentation>BTDF: Specifies the name of and optional relative path to a custom XPaths file used to re-encode bindings XML fragments when ApplyXmlEscape = true</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="DeploymentFrameworkRootDir" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies the root path of the Deployment Framework system files, including MSBuild targets, binary files, etc.</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="SuppressMSIValidation" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies whether to suppress WiX validation of generated MSI's (boolean). Default is false.</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="AutoTerminateInstances" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies whether to terminate all msg instances associated with the app during deployment (boolean). Default is false.</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="WiXRegistryKey" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies the registry key path for the current Windows Installer XML (WiX) installation</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="WixProjectFile" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies the name of a custom WiX project (WXS) file that overrides the default, relative to the deployment project folder</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="WixHeatTransformFile" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies the name of a custom XSLT file for WiX that overrides the default Heat transform, relative to the deployment project folder</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="WiXHeatArguments" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Overrides the default argument list for the WiX Heat tool</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="WiXCandleArguments" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Overrides the default argument list for the WiX Candle tool</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="WiXLightArguments" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Overrides the default argument list for the WiX Light tool</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="WiXDir" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies the path to the WiX binaries, relative to the deployment project folder</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="CreateStartMenuShortcuts" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies whether to create Start menu shortcuts on MSI install. Default is true.</xs:documentation>
         </xs:annotation>
 	</xs:element>
 </xs:schema>

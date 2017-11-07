@@ -1,5 +1,5 @@
-﻿// Deployment Framework for BizTalk 5.0
-// Copyright (C) 2004-2012 Thomas F. Abraham and Scott Colestock
+﻿// Deployment Framework for BizTalk
+// Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
 // This source file is subject to the Microsoft Public License (Ms-PL).
 // See http://www.opensource.org/licenses/ms-pl.html.
 // All other rights reserved.
@@ -11,7 +11,6 @@ using Microsoft.Practices.EnterpriseLibrary.Validation.Validators;
 using Microsoft.Practices.Modeling.Common.Design;
 using Microsoft.Practices.Modeling.ExtensionProvider.Extension;
 using Microsoft.Practices.Modeling.ExtensionProvider.Metadata;
-using Microsoft.Practices.Modeling.Services.Design;
 using Microsoft.Practices.Services.ItineraryDsl;
 
 namespace DeploymentFrameworkForBizTalk.Services.Extenders.Resolvers.Sso

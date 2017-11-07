@@ -1,5 +1,5 @@
-﻿// Deployment Framework for BizTalk 5.0
-// Copyright (C) 2004-2012 Thomas F. Abraham and Scott Colestock
+﻿// Deployment Framework for BizTalk
+// Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
 // This source file is subject to the Microsoft Public License (Ms-PL).
 // See http://www.opensource.org/licenses/ms-pl.html.
 // All other rights reserved.
@@ -67,7 +67,7 @@ namespace SSOSettingsEditor
                 return;
             }
 
-            SSOSettingsFileManager.SSOSettingsFileReader.Update(
+            SSOSettingsManager.WriteSettings(
                 this.appNameTextBox.Text,
                 ((DictionaryPropertyGridAdapter)(this.propertyGrid.SelectedObject)).Dictionary as Hashtable);
 
@@ -101,13 +101,12 @@ namespace SSOSettingsEditor
         private void LoadSettingsFromSso()
         {
             _isDirty = false;
-            SSOSettingsFileManager.SSOSettingsFileReader.ClearCache(this.appNameTextBox.Text);
 
             Hashtable settings = null;
 
             try
             {
-                settings = SSOSettingsFileManager.SSOSettingsFileReader.Read(this.appNameTextBox.Text);
+                settings = SSOSettingsManager.GetSettings(this.appNameTextBox.Text, false);
             }
             catch (Exception ex)
             {

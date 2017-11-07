@@ -1,5 +1,5 @@
-// Deployment Framework for BizTalk 5.0
-// Copyright (C) 2004-2012 Thomas F. Abraham and Scott Colestock
+// Deployment Framework for BizTalk
+// Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
 // This source file is subject to the Microsoft Public License (Ms-PL).
 // See http://www.opensource.org/licenses/ms-pl.html.
 // All other rights reserved.
@@ -63,7 +63,7 @@ namespace DeployBTRules
                 {
                     if (cl.ruleSetName != string.Empty)
                     {
-                        Console.WriteLine("Warning: Unable to import/publish {0} ({1}). Attempting deploy operation.", cl.ruleSetFile, ex.Message);
+                        Console.WriteLine("Unable to import/publish {0} ({1}). Attempting deploy operation.", cl.ruleSetFile, ex.Message);
                     }
                     else
                     {
@@ -133,7 +133,7 @@ namespace DeployBTRules
             if (matchingRuleSetInfo == null)
             {
                 Console.WriteLine(
-                    "Warning: Could not find a published ruleset with name '" + cl.ruleSetName + "' and version '" + cl.ruleSetVersion + "'.");
+                    "No published ruleset with name '" + cl.ruleSetName + "' and version '" + cl.ruleSetVersion + "'.");
             }
             else if (cl.undeploy)
             {
@@ -145,7 +145,7 @@ namespace DeployBTRules
                 }
                 else
                 {
-                    Console.WriteLine("  Warning: Rule set is not currently deployed.");
+                    Console.WriteLine("  Rule set is not currently deployed.");
                 }
 
                 if (cl.unpublish)
@@ -184,7 +184,7 @@ namespace DeployBTRules
             if (matchingVocabularyInfo == null)
             {
                 Console.WriteLine(
-                    "Warning: Could not find a published vocabulary with name '" + cl.vocabularyName + "' and version '" + cl.ruleSetVersion + "'.");
+                    "No published vocabulary with name '" + cl.vocabularyName + "' and version '" + cl.ruleSetVersion + "'.");
             }
             else if (cl.unpublish)
             {

@@ -1,0 +1,44 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.BizTalk.dll" TaskName="UpdateBizTalkDebuggingConfig" />
+  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.BizTalk.dll" TaskName="UpdateBizTalkAppDomainConfig" />
+  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.BizTalk.dll" TaskName="CheckForServiceInstances" />
+  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.BizTalk.dll" TaskName="TerminateServiceInstances" />
+  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.BizTalk.dll" TaskName="UpdateSSOConfigItem" />
+
+  <ItemGroup>
+    <ABCPatternAssignmentRule Include="*">
+      <AssemblyNamePattern>ABC.*, Version=1.0.0.0, Culture=neutral, PublicKeyToken=51a4d4439455a1a7</AssemblyNamePattern>
+    </ABCPatternAssignmentRule>
+  </ItemGroup>
+
+  <ItemGroup>
+    <XYZExactAssignmentRule Include="*">
+      <AssemblyName>XYZ.Schemas, Version=1.0.0.0, Culture=neutral, PublicKeyToken=51a4d4439455a1a7</AssemblyName>
+    </XYZExactAssignmentRule>
+    <XYZExactAssignmentRule Include="*">
+      <AssemblyName>XYZ.Transforms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=51a4d4439455a1a7</AssemblyName>
+    </XYZExactAssignmentRule>
+  </ItemGroup>
+
+  <Target Name="TestAppDomainConfig">
+    <UpdateBizTalkDebuggingConfig ExtendedLogging="true" ValidateCorrelations="true" />
+
+    <UpdateBizTalkAppDomainConfig AppDomainName="ABC_1.0" SecondsIdleBeforeShutdown="1800" ConfigurationFilePath="c:\ABC.config" PatternAssignmentRules="@(ABCPatternAssignmentRule)" />
+
+    <!--<UpdateBizTalkAppDomainConfig AppDomainName="ABC_1.0" Remove="true"/>-->
+
+    <UpdateBizTalkAppDomainConfig AppDomainName="XYZ_1.0" SecondsIdleBeforeShutdown="1800" ConfigurationFilePath="c:\XYZ.config" Remove="false" ExactAssignmentRules="@(XYZExactAssignmentRule)" PatternAssignmentRules="@(ABCPatternAssignmentRule)" />
+  </Target>
+
+  <Target Name="TestCheckForServiceInstances">
+    <CheckForServiceInstances Application="BizTalkSample_1.0" />
+  </Target>
+
+  <Target Name="TestTerminateServiceInstances">
+    <TerminateServiceInstances Application="BizTalkSample_1.0" />
+  </Target>
+  
+  <Target Name="UpdateSSOConfigItem">
+    <UpdateSSOConfigItem BizTalkAppName="DeploymentFramework.Samples.BasicMasterBindings" SSOItemName="TestSetting" SSOItemValue="$(MSBuildProjectDirectory)" />
+  </Target>
+</Project>

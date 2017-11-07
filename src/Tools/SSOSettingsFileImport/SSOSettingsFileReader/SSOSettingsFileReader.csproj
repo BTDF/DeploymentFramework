@@ -101,8 +101,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.BizTalk.Interop.SSOClient">
-      <Name>Microsoft.BizTalk.Interop.SSOClient</Name>
-      <HintPath>..\..\..\Program Files\Common Files\Enterprise Single Sign-On\Microsoft.BizTalk.Interop.SSOClient.dll</HintPath>
+      <HintPath>..\ExternalReferences\PreBTS2013\Microsoft.BizTalk.Interop.SSOClient.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -115,6 +114,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="..\SSOSettingsFileImport\Settings.cs">
       <Link>Settings.cs</Link>
       <SubType>Code</SubType>
@@ -123,9 +125,11 @@
       <Link>SSOHelper.cs</Link>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="..\SSOSettingsFileImport\SSOPropertyBag.cs">
-      <Link>SSOPropertyBag.cs</Link>
-      <SubType>Code</SubType>
+    <Compile Include="..\SSOSettingsFileImport\SSOSettingsFileReader.cs">
+      <Link>SSOSettingsFileReader.cs</Link>
+    </Compile>
+    <Compile Include="..\SSOSettingsFileImport\SSOSettingsManager.cs">
+      <Link>SSOSettingsManager.cs</Link>
     </Compile>
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -165,7 +169,6 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>copy /Y "$(TargetPath)" "..\..\..\..\..\Framework\DeployTools\SSOSettingsFileReaderFx2.dll"</PostBuildEvent>
   </PropertyGroup>
 </Project>

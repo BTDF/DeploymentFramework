@@ -1,5 +1,5 @@
-// Deployment Framework for BizTalk 5.0
-// Copyright (C) 2004-2012 Thomas F. Abraham and Scott Colestock
+// Deployment Framework for BizTalk
+// Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
 // This source file is subject to the Microsoft Public License (Ms-PL).
 // See http://www.opensource.org/licenses/ms-pl.html.
 // All other rights reserved.
@@ -13,7 +13,7 @@ using clp = Genghis.CommandLineParser;
 
 namespace ElementTunnel
 {
-    [clp.ParserUsage("\nEncodes/decodes child content of XML element(s) located with an XPath\nwithin an XML document. It applies escaping rules such as &gt; for '<'.\nNamespace declarations, PIs, etc. of nested documents are not preserved.")]
+    [clp.ParserUsage("\nXML encodes/decodes content of element(s) by XPath. Applies escaping rules such\nas &gt; for '<'. Namespace decls, PIs, etc. of nested XML are not preserved.")]
     class ElementTunnelCommandLine : CommandLineParser
     {
         [clp.ValueUsage("Location of input file.", MatchPosition = false, ValueName = "inputFile", Name = "i", Optional = false)]
@@ -30,6 +30,9 @@ namespace ElementTunnel
 
         [clp.FlagUsage("Decode the elements.", MatchPosition = false, Optional = true)]
         public bool decode = false;
+
+        [clp.FlagUsage("Verbose output.", MatchPosition = false, Optional = true)]
+        public bool verbose = false;
 
         public void PrintLogo()
         {

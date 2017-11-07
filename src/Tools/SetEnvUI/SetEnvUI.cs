@@ -1,5 +1,5 @@
-// Deployment Framework for BizTalk 5.0
-// Copyright (C) 2004-2012 Thomas F. Abraham and Scott Colestock
+// Deployment Framework for BizTalk
+// Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
 // This source file is subject to the Microsoft Public License (Ms-PL).
 // See http://www.opensource.org/licenses/ms-pl.html.
 // All other rights reserved.
@@ -33,13 +33,13 @@ namespace SetEnvUI
         [clp.ParserUsage("Auto-generate a wizard UI based on a configuration file.")]
         class SetEnvUIParams : CommandLineParser
         {
-            [clp.ValueUsage("Configuration file that defines wizard.", MatchPosition = true, ValueName = "configFile", Optional = false)]
+            [clp.ValueUsage("Configuration file that defines wizard.", AlternateName1 = "c", ValueName = "configFile", Optional = false)]
             public string configFile;
 
-            [clp.ValueUsage("Process to launch at wizard completion.", MatchPosition = true, ValueName = "configFile", Optional = false)]
+            [clp.ValueUsage("Process to launch at wizard completion.", AlternateName1 = "p", ValueName = "startProcessPath", Optional = false)]
             public string postProcess = null;
 
-            [clp.ValueUsage("Arguments to process to launch at wizard completion.", MatchPosition = true, ValueName = "configFile", Optional = false)]
+            [clp.ValueUsage("Arguments to process to launch at wizard completion.", AlternateName1 = "a", ValueName = "startProcessArgs", Optional = true)]
             public string postProcessArgs = null;
         }
 

@@ -1,5 +1,5 @@
-// Deployment Framework for BizTalk 5.0
-// Copyright (C) 2004-2012 Thomas F. Abraham and Scott Colestock
+// Deployment Framework for BizTalk
+// Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
 // This source file is subject to the Microsoft Public License (Ms-PL).
 // See http://www.opensource.org/licenses/ms-pl.html.
 // All other rights reserved.
@@ -12,8 +12,6 @@ using System.Xml;
 using System.Xml.Serialization;
 using Genghis;
 using clp = Genghis.CommandLineParser;
-
-using Microsoft.BizTalk.SSOClient.Interop;
 
 namespace SSOSettingsFileManager
 {
@@ -62,12 +60,7 @@ namespace SSOSettingsFileManager
             {
                 try
                 {
-                    object propertyValue;
-                    ISSOConfigStore configStore = (ISSOConfigStore)new SSOConfigStore();
-                    SSOPropertyBag bag = new SSOPropertyBag();
-                    configStore.GetConfigInfo(cl.affiliateAppName, SSOHelper.InfoIdentifier, SSOFlag.SSO_FLAG_RUNTIME, bag);
-                    bag.Read(SSOHelper.PropName, out propertyValue, 0);
-                    Console.WriteLine(propertyValue);
+                    Console.WriteLine(SSOSettingsManager.GetRawSettings(cl.affiliateAppName, false));
                 }
                 catch (System.Exception ex)
                 {
@@ -82,9 +75,7 @@ namespace SSOSettingsFileManager
             {
                 try
                 {
-                    Hashtable ht = SSOSettingsFileManager.SSOSettingsFileReader.Read(cl.affiliateAppName);
-                    ht[cl.propToModify] = cl.propValue;
-                    SSOSettingsFileManager.SSOSettingsFileReader.Update(cl.affiliateAppName, ht);
+                    SSOSettingsManager.WriteSetting(cl.affiliateAppName, cl.propToModify, cl.propValue);
                 }
                 catch (System.Exception ex)
                 {
@@ -97,11 +88,9 @@ namespace SSOSettingsFileManager
 
             if (cl.deleteApp)
             {
-                SSOHelper helper = new SSOHelper();
                 try
                 {
-                    helper.DeleteConfigInfo(cl.affiliateAppName);
-                    helper.DeleteApp(cl.affiliateAppName);
+                    SSOSettingsManager.DeleteApp(cl.affiliateAppName);
                     Console.WriteLine("Affiliate application '{0}' deleted.", cl.affiliateAppName);
                 }
                 catch (System.Exception ex)
@@ -112,14 +101,23 @@ namespace SSOSettingsFileManager
                 return 0;
             }
 
-            string settingsFileAsString = string.Empty;
-            settings inSettings = null;
+            string settingsXml = null;
             try
             {
+                settings inSettings = null;
+
                 // Make sure we can deserialize the file cleanly.
                 XmlSerializer serializer = new XmlSerializer(typeof(settings));
-                FileStream stream = new FileStream(cl.settingsFile, FileMode.Open, System.IO.FileAccess.Read);
-                inSettings = (settings)serializer.Deserialize(stream);
+                using (FileStream stream = new FileStream(cl.settingsFile, FileMode.Open, FileAccess.Read))
+                {
+                    inSettings = (settings)serializer.Deserialize(stream);
+                }
+
+                StringBuilder sb = new StringBuilder();
+                StringWriter writer = new StringWriter(sb);
+                serializer.Serialize(writer, inSettings);
+
+                settingsXml = sb.ToString();
             }
             catch (System.Exception ex)
             {
@@ -130,7 +128,7 @@ namespace SSOSettingsFileManager
 
             try
             {
-                SaveSettingsToSSO(cl.affiliateAppName, inSettings, cl.userGroupName, cl.adminGroupName);
+                SaveSettingsToSSO(cl.affiliateAppName, settingsXml, cl.userGroupName, cl.adminGroupName);
             }
             catch (System.Exception ex)
             {
@@ -142,28 +140,12 @@ namespace SSOSettingsFileManager
             return 0;
         }
 
-        private static void SaveSettingsToSSO(
-            string affiliateAppName,
-            settings inSettings,
-            string userGroupName,
-            string adminGroupName)
+        private static void SaveSettingsToSSO(string affiliateAppName, string inSettings, string userGroupName, string adminGroupName)
         {
-            // Grab the contents as a string.  Rather than reset the stream,
-            // we just serialize to avoid any extra artifacts that were in the file.
-            StringBuilder sb = new StringBuilder();
-            StringWriter writer = new StringWriter(sb);
-            XmlSerializer serializer = new XmlSerializer(typeof(settings));
-            serializer.Serialize(writer, inSettings);
-
-            SSOHelper helper = new SSOHelper();
-            SSOPropertyBag bag = new SSOPropertyBag();
-            object o = sb.ToString();
-            bag.Write(SSOHelper.PropName, ref o);
-
             // Create affiliate app if it doesn't exist.
-            if (!helper.AppExists(affiliateAppName))
+            if (!SSOSettingsManager.AppExists(affiliateAppName))
             {
-                helper.CreateApp(affiliateAppName, userGroupName, adminGroupName);
+                SSOSettingsManager.CreateApp(affiliateAppName, userGroupName, adminGroupName);
                 Console.WriteLine("Affiliate application '{0}' was created.", affiliateAppName);
             }
             else
@@ -171,7 +153,7 @@ namespace SSOSettingsFileManager
                 Console.WriteLine("Affiliate application '{0}' already exists.", affiliateAppName);
             }
 
-            helper.SaveConfigInfo(bag, affiliateAppName);
+            SSOSettingsManager.WriteRawSettings(affiliateAppName, inSettings);
             Console.WriteLine("Settings file was associated with application '{0}' in SSO.", affiliateAppName);
         }
     }

@@ -1,5 +1,5 @@
-// Deployment Framework for BizTalk 5.0
-// Copyright (C) 2004-2012 Thomas F. Abraham and Scott Colestock
+// Deployment Framework for BizTalk
+// Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
 // This source file is subject to the Microsoft Public License (Ms-PL).
 // See http://www.opensource.org/licenses/ms-pl.html.
 // All other rights reserved.
@@ -55,32 +55,36 @@ namespace BizTalkSample.DeploymentTest
 
             XPathDocument doc = new XPathDocument(fileLoc);
             XPathNavigator nav = doc.CreateNavigator();
-            XPathNodeIterator sendIter = (XPathNodeIterator)nav.Select("/BindingInfo/SendPortCollection/SendPort[@Name=\"Advanced_Send_FILE\"]/PrimaryTransport/Address");
+
+            XPathNodeIterator sendIter = (XPathNodeIterator)nav.Select("//SendPort[@Name=\"Advanced_Send_FILE\"]/PrimaryTransport/Address");
             sendIter.MoveNext();
-            string location = Path.GetDirectoryName(sendIter.Current.Value);
-            Console.WriteLine("Looking at send address: " + location);
+            string outLocation = Path.GetDirectoryName(sendIter.Current.Value);
+            Console.WriteLine("Looking at send address: " + outLocation);
+
+            sendIter = (XPathNodeIterator)nav.Select("//ReceiveLocation[@Name=\"Advanced_Receive_FILE\"]/Address");
+            sendIter.MoveNext();
+            string inLocation = Path.GetDirectoryName(sendIter.Current.Value);
+            Console.WriteLine("Looking at receive address: " + outLocation);
 
             // Make sure we aren't fooled by old files.
-            string[] oldFiles = Directory.GetFiles(location);
+            string[] oldFiles = Directory.GetFiles(outLocation);
             foreach (string file in oldFiles)
             {
                 File.Delete(file);
             }
 
             string testFileLoc = @"TestFiles\S1_output.xml";
-            string outFileLoc = @"InDir\S1_output.xml";
 
             if (!File.Exists(testFileLoc))
             {
                 testFileLoc = @"..\..\..\TestFiles\S1_output.xml";
-                outFileLoc = @"..\..\..\InDir\S1_output.xml";
             }
 
-            File.Copy(testFileLoc, outFileLoc, true);
-            File.SetAttributes(outFileLoc, FileAttributes.Normal);
+            File.Copy(testFileLoc, Path.Combine(inLocation, "S1_output.xml"), true);
+            File.SetAttributes(Path.Combine(inLocation, "S1_output.xml"), FileAttributes.Normal);
             System.Threading.Thread.Sleep(new TimeSpan(0, 0, 15));
 
-            string[] files = Directory.GetFiles(location);
+            string[] files = Directory.GetFiles(outLocation);
             if (files.Length == 0)
             {
                 throw (new Exception("File didn't appear in output direcory within 15 seconds..."));

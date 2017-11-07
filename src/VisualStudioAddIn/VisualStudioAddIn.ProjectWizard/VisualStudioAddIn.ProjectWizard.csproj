@@ -81,6 +81,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>"%WindowsSdkDir%\Bin\gacutil.exe" /i "$(TargetPath)"</PostBuildEvent>
+    <PostBuildEvent>IF $(Configuration) == 'Debug' "%WindowsSdkDir%\Bin\gacutil.exe" /i "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

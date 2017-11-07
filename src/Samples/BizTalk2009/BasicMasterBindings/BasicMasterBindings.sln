@@ -6,8 +6,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{8EC08F9A-F59F-428B-8649-2BE238BACF7C}"
 	ProjectSection(SolutionItems) = preProject
 		BasicMasterBindings.Deployment\BasicMasterBindings.Deployment.btdfproj = BasicMasterBindings.Deployment\BasicMasterBindings.Deployment.btdfproj
-		BasicMasterBindings.Deployment\BuildDebugMsi.bat = BasicMasterBindings.Deployment\BuildDebugMsi.bat
-		BasicMasterBindings.Deployment\BuildReleaseMsi.bat = BasicMasterBindings.Deployment\BuildReleaseMsi.bat
 		BasicMasterBindings.Deployment\InstallWizard.xml = BasicMasterBindings.Deployment\InstallWizard.xml
 		BasicMasterBindings.Deployment\License.rtf = BasicMasterBindings.Deployment\License.rtf
 		BasicMasterBindings.Deployment\PortBindingsMaster.xml = BasicMasterBindings.Deployment\PortBindingsMaster.xml

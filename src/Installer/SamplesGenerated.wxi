@@ -144,12 +144,6 @@
                             </Directory>
                         </Directory>
                         <Directory Id="dir41273DEEA717AC9357E058117A8BABDB" Name="Deployment">
-                            <Component Id="cmp6D6BCE046786A345ED6FEEA8C38DD015" Guid="{14CFA26E-2501-4C19-8604-73CA34B42513}">
-                                <File Id="fil45B8AFDD63FBA24F0702502C9F378902" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Deployment\BuildDebugMsi.bat" />
-                            </Component>
-                            <Component Id="cmp484CE768A72745E2CC0AEBE0BB2A782F" Guid="{DFBA429B-8905-4B17-A7B4-0DEBF89213BE}">
-                                <File Id="fil17572DA570C68C5A498C9DEE3AE891F1" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Deployment\BuildReleaseMsi.bat" />
-                            </Component>
                             <Component Id="cmp7A2506FFA9D4602FB8B11FEDF4160D72" Guid="{EDED598C-F68B-4ECC-921D-E3F32C264E32}">
                                 <File Id="fil54A7C239E23455BA9B1FC4356088DE29" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Deployment\Deployment.btdfproj" />
                             </Component>
@@ -285,12 +279,6 @@
                             </Component>
                         </Directory>
                         <Directory Id="dir057399AB2A9CD021ECE6B89A056822C9" Name="Deployment">
-                            <Component Id="cmpEB295AA3C176E8646A9DB6153F265DCC" Guid="{446BEBA1-CE64-4C79-ADC5-4D986487B198}">
-                                <File Id="fil6CAF744736D0BDD7E2F512542CF79F85" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Deployment\BuildDebugMsi.bat" />
-                            </Component>
-                            <Component Id="cmp6A846D003C7963CCBE503B3780FFD707" Guid="{37A55598-C4B6-403C-B803-09553AA763A5}">
-                                <File Id="fil864ADF7524614CA27A6FE4BA5A951264" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Deployment\BuildReleaseMsi.bat" />
-                            </Component>
                             <Component Id="cmpD3406CB154D9D535BCFACDD913B12B30" Guid="{1680220F-BAD4-46C2-9AEF-C56E4E5F9EC9}">
                                 <File Id="fil2E6F02F7EF86A869048F79E2C5D7DF21" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Deployment\Deployment.btdfproj" />
                             </Component>
@@ -430,12 +418,6 @@
                             <Component Id="cmp511AF053296EE63C5ECEF73BFE96665C" Guid="{FD06AE1C-09DA-46F9-B2A6-7CCE35D4BC55}">
                                 <File Id="fil64F399A977730908B67C710BB857E62D" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings.Deployment\BasicMasterBindings.Deployment.btdfproj" />
                             </Component>
-                            <Component Id="cmpD974CACDA7FD92BEE0F23B760B64D5CA" Guid="{EBA6D78F-7C79-4441-A618-4D91C9C49E26}">
-                                <File Id="filC8A0C1DA0D980E84B7CA095654F82EF0" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings.Deployment\BuildDebugMsi.bat" />
-                            </Component>
-                            <Component Id="cmp4D6BBB997EF907AD52C142C906F3CAD2" Guid="{CAD25DAA-AA08-48A8-B68F-BF6C6ABA4173}">
-                                <File Id="fil397C970500762A7129480E01E8755363" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings.Deployment\BuildReleaseMsi.bat" />
-                            </Component>
                             <Component Id="cmp4BB022418D7874FA0848A95612118DB7" Guid="{7B0C918F-7CB8-4382-A439-3EF404C11B84}">
                                 <File Id="fil6D930C57B3B1263F6D9D2AE2BB1D9160" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings.Deployment\InstallWizard.xml" />
                             </Component>
@@ -487,12 +469,6 @@
                             </Directory>
                         </Directory>
                         <Directory Id="dir5AA2DCEE97DF9A2FBA3A252246F7C78F" Name="ESBToolkitSSOResolver.Deployment">
-                            <Component Id="cmpC3045AEE54C39C555D12F6899779A047" Guid="{75740C57-FCF6-49CF-8C2D-9CCB843D5D15}">
-                                <File Id="fil7C5611FB8F2F707BF485F33A6D2E37B2" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Deployment\BuildDebugMsi.bat" />
-                            </Component>
-                            <Component Id="cmp05028274E6F61F370E1DC66180228A0B" Guid="{C289B98D-0814-4D71-A4DB-481909210140}">
-                                <File Id="fil146F90D5825517FC244AA4352C0A1AE2" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Deployment\BuildReleaseMsi.bat" />
-                            </Component>
                             <Component Id="cmp6D20C7F8478D4AA694B3609F8982DBB9" Guid="{408172DF-8CBD-48C2-B9BA-EAB6D5E23A35}">
                                 <File Id="fil0E99289A46CCDEEDB8B1299A6223A5C0" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Deployment\ESBToolkitSSOResolver.Deployment.btdfproj" />
                             </Component>
@@ -569,12 +545,6 @@
                             </Directory>
                         </Directory>
                         <Directory Id="dir5C2B88F17095FE9EDA3DBBC623E3CA65" Name="HelloWorld.Deployment">
-                            <Component Id="cmp84BDB8150F97B567251F55D58B6A9C4B" Guid="{B440CC61-28AA-4ED7-95D2-396214B50CB6}">
-                                <File Id="fil57EE08DA9739FE0C5B29B86501225BBA" KeyPath="yes" Source="..\Samples\BizTalk2009\HelloWorld\HelloWorld.Deployment\BuildDebugMsi.bat" />
-                            </Component>
-                            <Component Id="cmp529B3101229339130585F81A1807A93F" Guid="{C2E3C204-D1F4-4C99-83FC-F0AF6CE5C29F}">
-                                <File Id="fil014721129CB24F6B8EC4ACE81FA2C6ED" KeyPath="yes" Source="..\Samples\BizTalk2009\HelloWorld\HelloWorld.Deployment\BuildReleaseMsi.bat" />
-                            </Component>
                             <Component Id="cmp4AB4157BFA9E10473AA2B8CED8D0D20E" Guid="{5BF03926-890E-4915-8EA6-A06DEB7D3093}">
                                 <File Id="fil10DFD3544DEBA844F9E8AFC45FC2352B" KeyPath="yes" Source="..\Samples\BizTalk2009\HelloWorld\HelloWorld.Deployment\HelloWorld.Deployment.btdfproj" />
                             </Component>
@@ -648,8 +618,6 @@
             <ComponentRef Id="cmpD0486E4BD7E8EE4FFE4933A72C299CDA" />
             <ComponentRef Id="cmp61FB6CE9837A0112E28F5D2B44125906" />
             <ComponentRef Id="cmp249AAEC9467B7E2CB03AA18DD8F96BF8" />
-            <ComponentRef Id="cmp6D6BCE046786A345ED6FEEA8C38DD015" />
-            <ComponentRef Id="cmp484CE768A72745E2CC0AEBE0BB2A782F" />
             <ComponentRef Id="cmp7A2506FFA9D4602FB8B11FEDF4160D72" />
             <ComponentRef Id="cmp2CAB23332252415D690272E34F6CAD66" />
             <ComponentRef Id="cmp46C232842F6C75FCDAC0241B09D17B33" />
@@ -685,8 +653,6 @@
             <ComponentRef Id="cmpEC01B1D8DBBB1EFAA3B4DC83D828EA31" />
             <ComponentRef Id="cmp4082F39D9E58B67B156A36529FA55FDF" />
             <ComponentRef Id="cmpC5FF8AD2F4F9A613F77F96E3F0E2AD36" />
-            <ComponentRef Id="cmpEB295AA3C176E8646A9DB6153F265DCC" />
-            <ComponentRef Id="cmp6A846D003C7963CCBE503B3780FFD707" />
             <ComponentRef Id="cmpD3406CB154D9D535BCFACDD913B12B30" />
             <ComponentRef Id="cmp4D4920E11814F467C3701F9C711FA94A" />
             <ComponentRef Id="cmpFF91D526A4EDBD9AC45F770CA9B00F75" />
@@ -726,8 +692,6 @@
             <ComponentRef Id="cmpFD3A1E1B6D56BDDE57643DD6F40ADBB4" />
             <ComponentRef Id="cmp184B6AEB4270D1AFC02DADDE2CF6A0BE" />
             <ComponentRef Id="cmp511AF053296EE63C5ECEF73BFE96665C" />
-            <ComponentRef Id="cmpD974CACDA7FD92BEE0F23B760B64D5CA" />
-            <ComponentRef Id="cmp4D6BBB997EF907AD52C142C906F3CAD2" />
             <ComponentRef Id="cmp4BB022418D7874FA0848A95612118DB7" />
             <ComponentRef Id="cmp2E2878CF3486D3F154379C7AA78F54DD" />
             <ComponentRef Id="cmp4C925032EEB766B192C3CB58B9244D5D" />
@@ -741,8 +705,6 @@
             <ComponentRef Id="cmpD8853D7742DB7E475862A1AF492ABA99" />
             <ComponentRef Id="cmp6F83472DF84E86D6CB187DA40A56963B" />
             <ComponentRef Id="cmp892345C42A1DA83B14B96B60114C0FA5" />
-            <ComponentRef Id="cmpC3045AEE54C39C555D12F6899779A047" />
-            <ComponentRef Id="cmp05028274E6F61F370E1DC66180228A0B" />
             <ComponentRef Id="cmp6D20C7F8478D4AA694B3609F8982DBB9" />
             <ComponentRef Id="cmpE897B9E70BF0341FAA2870390CC77C95" />
             <ComponentRef Id="cmpCC3A85533CA658F3E75EEE5EE1535C49" />
@@ -763,8 +725,6 @@
             <ComponentRef Id="cmp181622136D13BD6F14CC8851893299AF" />
             <ComponentRef Id="cmp11BE47F3596EED6209DC4538B61F1F98" />
             <ComponentRef Id="cmp4C2B31D97726D45787CA2E4CFACD5B12" />
-            <ComponentRef Id="cmp84BDB8150F97B567251F55D58B6A9C4B" />
-            <ComponentRef Id="cmp529B3101229339130585F81A1807A93F" />
             <ComponentRef Id="cmp4AB4157BFA9E10473AA2B8CED8D0D20E" />
             <ComponentRef Id="cmp7D534566AA02F63574A55A6D86841731" />
             <ComponentRef Id="cmp18E6805D226EFF09ED9A245D0D99525E" />

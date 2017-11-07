@@ -1,5 +1,5 @@
-﻿// Deployment Framework for BizTalk 5.0
-// Copyright (C) 2005-2010 Thomas F. Abraham and Scott Colestock
+﻿// Deployment Framework for BizTalk
+// Copyright (C) 2005-2014 Thomas F. Abraham and Scott Colestock
 // This source file is subject to the Microsoft Public License (Ms-PL).
 // See http://www.opensource.org/licenses/ms-pl.html.
 // All other rights reserved.
@@ -17,7 +17,7 @@ using System;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Abraham")]
 [assembly: AssemblyProduct("DeploymentFrameworkForBizTalk.ESB.Resolver.SSO")]
-[assembly: AssemblyCopyright("Copyright © 2010 Thomas F. Abraham")]
+[assembly: AssemblyCopyright("Copyright © 2014 Thomas F. Abraham")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

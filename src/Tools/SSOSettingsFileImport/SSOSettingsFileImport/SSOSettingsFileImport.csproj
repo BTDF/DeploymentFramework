@@ -26,7 +26,7 @@
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
     <OutputType>Exe</OutputType>
-    <RootNamespace>SSOSettingsFileImport</RootNamespace>
+    <RootNamespace>SSOSettingsFileManager</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
     </StartupObject>
@@ -100,8 +100,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.BizTalk.Interop.SSOClient">
-      <Name>Microsoft.BizTalk.Interop.SSOClient</Name>
-      <HintPath>..\..\Program Files\Common Files\Enterprise Single Sign-On\Microsoft.BizTalk.Interop.SSOClient.dll</HintPath>
+      <HintPath>..\ExternalReferences\PreBTS2013\Microsoft.BizTalk.Interop.SSOClient.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -114,6 +114,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="SSOSettingsFileReader.cs" />
+    <Compile Include="SSOSettingsManager.cs" />
     <Content Include="App.ico" />
     <Content Include="ReadMeForReferences.txt" />
     <Content Include="SampleSettings.xml" />
@@ -130,9 +135,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SSOHelper.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="SSOPropertyBag.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -167,7 +169,6 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>copy /Y "$(TargetPath)" "..\..\..\..\..\Framework\DeployTools\SSOSettingsFileImportFx2.exe"</PostBuildEvent>
   </PropertyGroup>
 </Project>

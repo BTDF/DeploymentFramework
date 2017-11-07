@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Deployment Framework for BizTalk 5.0
-    Copyright (C) 2004-2012 Thomas F. Abraham and Scott Colestock
+    Deployment Framework for BizTalk
+    Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
     
     This source file is subject to the Microsoft Public License (Ms-PL).
 -->
@@ -11,22 +11,12 @@
              Absent="disallow" AllowAdvertise="no" Description="Core runtime files (required)" ConfigurableDirectory="INSTALLLOCATION">
       <ComponentRef Id="BizTalkDeploymentFramework.targets" />
       <ComponentRef Id="BizTalkDeploymentFramework.WiXSetup.targets" />
-      <ComponentRef Id="CopyDeployResults.msbuild" />
-      <ComponentRef Id="ServerDeployFx2.bat" />
-      <ComponentRef Id="ServerDeployFx4.bat" />
-      <ComponentRef Id="ServerDeployWizard.bat" />
-      <ComponentRef Id="ServerDeployWizardMSI.bat" />
-      <ComponentRef Id="ServerRedeployFx2.bat" />
-      <ComponentRef Id="ServerRedeployFx4.bat" />
-      <ComponentRef Id="ServerRedeployWizard.bat" />
-      <ComponentRef Id="ServerUnDeployFx2.bat" />
-      <ComponentRef Id="ServerUnDeployFx4.bat" />
-      <ComponentRef Id="ServerUnDeployWizard.bat" />
+      <ComponentRef Id="BizTalkDeploymentFramework.ServerExecute.targets" />
       <ComponentRef Id="adapterXPaths.txt" />
-      <ComponentRef Id="BounceBizTalkHost.vbs" />
       <ComponentRef Id="DeployBTRules.exe" />
       <ComponentRef Id="DeployBTRules.exe.config" />
-      <ComponentRef Id="DeploymentFramework.BuildTasks.dll" />
+      <ComponentRef Id="BizTalkDeploymentFramework.Tasks.dll" />
+      <ComponentRef Id="BizTalkDeploymentFramework.Tasks.BizTalk.dll" />
       <ComponentRef Id="ElementTunnel.exe" />
       <ComponentRef Id="EnvironmentSettingsExporter.exe" />
       <ComponentRef Id="ExportBamDefinitionXml.exe"/>
@@ -41,24 +31,29 @@
       <ComponentRef Id="SetEnvUI.exe" />
       <ComponentRef Id="SetEnvUIConfig.xsd" />
       <ComponentRef Id="SetPackageIdentity.vbs" />
-      <ComponentRef Id="SSOSettingsFileImport.exe" />
-      <ComponentRef Id="SSOSettingsFileReader.dll" />
-      <ComponentRef Id="SSOSettingsEditor.exe" />
-      <ComponentRef Id="StopBizTalkHost.vbs" />
+      <ComponentRef Id="SSOSettingsFileImportFx2.exe" />
+      <ComponentRef Id="SSOSettingsFileReaderFx2.dll" />
+      <ComponentRef Id="SSOSettingsFileImportFx4.exe" />
+      <ComponentRef Id="SSOSettingsFileReaderFx4.dll" />
+      <ComponentRef Id="SSOSettingsEditorFx2.exe" />
+      <ComponentRef Id="SSOSettingsEditorFx4.exe" />
       <ComponentRef Id="WriteRegValue.vbs" />
       <ComponentRef Id="XmlPreprocess.exe" />
-      <ComponentRef Id="nunit_gui_runner.dll" />
-      <ComponentRef Id="nunit_gui.exe" />
-      <ComponentRef Id="nunit_gui.exe.config" />
-      <ComponentRef Id="nunit_x86.exe" />
-      <ComponentRef Id="nunit_x86.exe.config" />
       <ComponentRef Id="nunit.core.dll" />
-      <ComponentRef Id="nunit.core.extensions.dll" />
       <ComponentRef Id="nunit.core.interfaces.dll" />
-      <ComponentRef Id="nunit.core.tests.dll" />
+      <ComponentRef Id="nunit.exe" />
+      <ComponentRef Id="nunit.exe.config" />
       <ComponentRef Id="nunit.framework.dll" />
+      <ComponentRef Id="nunit.uiexception.dll" />
       <ComponentRef Id="nunit.uikit.dll" />
       <ComponentRef Id="nunit.util.dll" />
+      <ComponentRef Id="nunit_agent.exe" />
+      <ComponentRef Id="nunit_agent.exe.config" />
+      <ComponentRef Id="nunit_agent_x86.exe" />
+      <ComponentRef Id="nunit_agent_x86.exe.config" />
+      <ComponentRef Id="nunit_gui_runner.dll" />
+      <ComponentRef Id="nunit_x86.exe" />
+      <ComponentRef Id="nunit_x86.exe.config" />
       <ComponentRef Id="UacElevate.exe" />
       <ComponentRef Id="RegistryEntries"/>
       <ComponentRef Id="DeploymentFrameworkForBizTalkDocs.chm"/>
@@ -88,16 +83,9 @@
     </DirectoryRef>
   </Fragment>
   <Fragment>
-    <DirectoryRef Id="DeployTools" FileSource="..\Framework\DeployTools">
-      <Component Id="BounceBizTalkHost.vbs" Guid="*">
-        <File Id="BounceBizTalkHost.vbs" Name="BounceBizTalkHost.vbs" KeyPath="yes" Source="..\Framework\DeployTools\BounceBizTalkHost.vbs" />
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
     <DirectoryRef Id="Framework" FileSource="..\Framework">
-      <Component Id="CopyDeployResults.msbuild" Guid="*">
-        <File Id="CopyDeployResults.msbuild" Name="CopyDeployResults.msbuild" KeyPath="yes" Source="..\Framework\CopyDeployResults.msbuild" />
+      <Component Id="BizTalkDeploymentFramework.ServerExecute.targets" Guid="*">
+        <File Id="BizTalkDeploymentFramework.ServerExecute.targets" Name="BizTalkDeploymentFramework.ServerExecute.targets" KeyPath="yes" Source="..\Framework\BizTalkDeploymentFramework.ServerExecute.targets" />
       </Component>
     </DirectoryRef>
   </Fragment>
@@ -112,14 +100,21 @@
     <DirectoryRef Id="DeployTools" FileSource="..\Framework\DeployTools">
       <Component Id="DeployBTRules.exe.config" Guid="*">
         <File Id="DeployBTRules.exe.config" Name="DeployBTRules.exe.config" KeyPath="yes" Source="..\Framework\DeployTools\DeployBTRules.exe.config" />
-        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2010"]]></Condition>
+        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2010" OR BTS_PRODUCTNAME = "Microsoft BizTalk Server 2013"]]></Condition>
       </Component>
     </DirectoryRef>
   </Fragment>
   <Fragment>
     <DirectoryRef Id="MSBDeploymentFrameworkForBizTalkProduct" FileSource="..\Framework">
-      <Component Id="DeploymentFramework.BuildTasks.dll" Guid="*">
-        <File Id="DeploymentFramework.BuildTasks.dll" Name="DeploymentFramework.BuildTasks.dll" KeyPath="yes" Source="..\Framework\DeploymentFramework.BuildTasks.dll" />
+      <Component Id="BizTalkDeploymentFramework.Tasks.dll" Guid="*">
+        <File Id="BizTalkDeploymentFramework.Tasks.dll" Name="BizTalkDeploymentFramework.Tasks.dll" KeyPath="yes" Source="..\Framework\BizTalkDeploymentFramework.Tasks.dll" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="MSBDeploymentFrameworkForBizTalkProduct" FileSource="..\Framework">
+      <Component Id="BizTalkDeploymentFramework.Tasks.BizTalk.dll" Guid="*">
+        <File Id="BizTalkDeploymentFramework.Tasks.BizTalk.dll" Name="BizTalkDeploymentFramework.Tasks.BizTalk.dll" KeyPath="yes" Source="..\Framework\BizTalkDeploymentFramework.Tasks.BizTalk.dll" />
       </Component>
     </DirectoryRef>
   </Fragment>
@@ -148,7 +143,7 @@
     <DirectoryRef Id="DeployTools" FileSource="..\Framework\DeployTools">
       <Component Id="GacUtilFx2.exe" Guid="7AC5A932-2F5F-4012-9815-67DF288D236E">
         <File Id="GacUtilFx2.exe" Name="GacUtil.exe" KeyPath="yes" Source="..\Framework\DeployTools\GacUtilFx2.exe" />
-        <Condition><![CDATA[BTS_PRODUCTNAME <> "Microsoft BizTalk Server 2010"]]></Condition>
+        <Condition><![CDATA[BTS_PRODUCTNAME <> "Microsoft BizTalk Server 2010" AND BTS_PRODUCTNAME <> "Microsoft BizTalk Server 2013"]]></Condition>
       </Component>
     </DirectoryRef>
   </Fragment>
@@ -156,7 +151,7 @@
     <DirectoryRef Id="DeployTools" FileSource="..\Framework\DeployTools">
       <Component Id="GacUtilFx4.exe" Guid="0439F61E-FB76-4fdb-A959-B2E24BF84DDC">
         <File Id="GacUtilFx4.exe" Name="GacUtil.exe" KeyPath="yes" Source="..\Framework\DeployTools\GacUtilFx4.exe" />
-        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2010"]]></Condition>
+        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2010" OR BTS_PRODUCTNAME = "Microsoft BizTalk Server 2013"]]></Condition>
       </Component>
     </DirectoryRef>
   </Fragment>
@@ -164,7 +159,7 @@
     <DirectoryRef Id="DeployTools" FileSource="..\Framework\DeployTools">
       <Component Id="GacUtilFx4.exe.config" Guid="1BFFEFB9-DF99-4b78-AE23-09DE116E3372">
         <File Id="GacUtilFx4.exe.config" Name="GacUtil.exe.config" KeyPath="yes" Source="..\Framework\DeployTools\GacUtilFx4.exe.config" />
-        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2010"]]></Condition>
+        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2010" OR BTS_PRODUCTNAME = "Microsoft BizTalk Server 2013"]]></Condition>
       </Component>
     </DirectoryRef>
   </Fragment>
@@ -172,7 +167,7 @@
     <DirectoryRef Id="DeployTools" FileSource="..\Framework\DeployTools">
       <Component Id="GacUtlRCFx4.dll" Guid="08E2E692-44A9-4cf9-8167-A5A722A8586E">
         <File Id="GacUtlRCFx4.dll" Name="GacUtlRC.dll" KeyPath="yes" Source="..\Framework\DeployTools\GacUtlRCFx4.dll" />
-        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2010"]]></Condition>
+        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2010" OR BTS_PRODUCTNAME = "Microsoft BizTalk Server 2013"]]></Condition>
       </Component>
     </DirectoryRef>
   </Fragment>
@@ -213,13 +208,6 @@
   </Fragment>
   <Fragment>
     <DirectoryRef Id="NUnitSubset" FileSource="..\Framework\DeployTools\NUnitSubset">
-      <Component Id="nunit.core.extensions.dll" Guid="*">
-        <File Id="nunit.core.extensions.dll" Name="nunit.core.extensions.dll" KeyPath="yes" Source="..\Framework\DeployTools\NUnitSubset\nunit.core.extensions.dll" />
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="NUnitSubset" FileSource="..\Framework\DeployTools\NUnitSubset">
       <Component Id="nunit.core.interfaces.dll" Guid="*">
         <File Id="nunit.core.interfaces.dll" Name="nunit.core.interfaces.dll" KeyPath="yes" Source="..\Framework\DeployTools\NUnitSubset\nunit.core.interfaces.dll" />
       </Component>
@@ -227,8 +215,15 @@
   </Fragment>
   <Fragment>
     <DirectoryRef Id="NUnitSubset" FileSource="..\Framework\DeployTools\NUnitSubset">
-      <Component Id="nunit.core.tests.dll" Guid="*">
-        <File Id="nunit.core.tests.dll" Name="nunit.core.tests.dll" KeyPath="yes" Source="..\Framework\DeployTools\NUnitSubset\nunit.core.tests.dll" />
+      <Component Id="nunit.exe" Guid="*">
+        <File Id="nunit.exe" Name="nunit.exe" KeyPath="yes" Source="..\Framework\DeployTools\NUnitSubset\nunit.exe" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="NUnitSubset" FileSource="..\Framework\DeployTools\NUnitSubset">
+      <Component Id="nunit.exe.config" Guid="*">
+        <File Id="nunit.exe.config" Name="nunit.exe.config" KeyPath="yes" Source="..\Framework\DeployTools\NUnitSubset\nunit.exe.config" />
       </Component>
     </DirectoryRef>
   </Fragment>
@@ -236,6 +231,13 @@
     <DirectoryRef Id="NUnitSubset" FileSource="..\Framework\DeployTools\NUnitSubset">
       <Component Id="nunit.framework.dll" Guid="*">
         <File Id="nunit.framework.dll" Name="nunit.framework.dll" KeyPath="yes" Source="..\Framework\DeployTools\NUnitSubset\nunit.framework.dll" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="NUnitSubset" FileSource="..\Framework\DeployTools\NUnitSubset">
+      <Component Id="nunit.uiexception.dll" Guid="*">
+        <File Id="nunit.uiexception.dll" Name="nunit.uiexception.dll" KeyPath="yes" Source="..\Framework\DeployTools\NUnitSubset\nunit.uiexception.dll" />
       </Component>
     </DirectoryRef>
   </Fragment>
@@ -255,15 +257,29 @@
   </Fragment>
   <Fragment>
     <DirectoryRef Id="NUnitSubset" FileSource="..\Framework\DeployTools\NUnitSubset">
-      <Component Id="nunit_gui.exe" Guid="*">
-        <File Id="nunit_gui.exe" Name="nunit-gui.exe" KeyPath="yes" Source="..\Framework\DeployTools\NUnitSubset\nunit-gui.exe" />
+      <Component Id="nunit_agent.exe" Guid="*">
+        <File Id="nunit_agent.exe" Name="nunit-agent.exe" KeyPath="yes" Source="..\Framework\DeployTools\NUnitSubset\nunit-agent.exe" />
       </Component>
     </DirectoryRef>
   </Fragment>
   <Fragment>
     <DirectoryRef Id="NUnitSubset" FileSource="..\Framework\DeployTools\NUnitSubset">
-      <Component Id="nunit_gui.exe.config" Guid="*">
-        <File Id="nunit_gui.exe.config" Name="nunit-gui.exe.config" KeyPath="yes" Source="..\Framework\DeployTools\NUnitSubset\nunit-gui.exe.config" />
+      <Component Id="nunit_agent.exe.config" Guid="*">
+        <File Id="nunit_agent.exe.config" Name="nunit-agent.exe.config" KeyPath="yes" Source="..\Framework\DeployTools\NUnitSubset\nunit-agent.exe.config" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="NUnitSubset" FileSource="..\Framework\DeployTools\NUnitSubset">
+      <Component Id="nunit_agent_x86.exe" Guid="*">
+        <File Id="nunit_agent_x86.exe" Name="nunit-agent-x86.exe" KeyPath="yes" Source="..\Framework\DeployTools\NUnitSubset\nunit-agent-x86.exe" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="NUnitSubset" FileSource="..\Framework\DeployTools\NUnitSubset">
+      <Component Id="nunit_agent_x86.exe.config" Guid="*">
+        <File Id="nunit_agent_x86.exe.config" Name="nunit-agent-x86.exe.config" KeyPath="yes" Source="..\Framework\DeployTools\NUnitSubset\nunit-agent-x86.exe.config" />
       </Component>
     </DirectoryRef>
   </Fragment>
@@ -285,82 +301,6 @@
     <DirectoryRef Id="NUnitSubset" FileSource="..\Framework\DeployTools\NUnitSubset">
       <Component Id="nunit_x86.exe.config" Guid="*">
         <File Id="nunit_x86.exe.config" Name="nunit-x86.exe.config" KeyPath="yes" Source="..\Framework\DeployTools\NUnitSubset\nunit-x86.exe.config" />
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="Framework" FileSource="..\Framework">
-      <Component Id="ServerDeployFx2.bat" Guid="68B8BA8D-9346-45fb-9B90-E283F5399702">
-        <File Id="ServerDeployFx2.bat" Name="ServerDeploy.bat" KeyPath="yes" Source="..\Framework\ServerDeployFx2.bat" />
-        <Condition><![CDATA[BTS_PRODUCTNAME <> "Microsoft BizTalk Server 2010"]]></Condition>
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="Framework" FileSource="..\Framework">
-      <Component Id="ServerDeployFx4.bat" Guid="9F182EB6-701D-4452-B402-151436672D55">
-        <File Id="ServerDeployFx4.bat" Name="ServerDeploy.bat" KeyPath="yes" Source="..\Framework\ServerDeployFx4.bat" />
-        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2010"]]></Condition>
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="Framework" FileSource="..\Framework">
-      <Component Id="ServerDeployWizard.bat" Guid="*">
-        <File Id="ServerDeployWizard.bat" Name="ServerDeployWizard.bat" KeyPath="yes" Source="..\Framework\ServerDeployWizard.bat" />
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="Framework" FileSource="..\Framework">
-      <Component Id="ServerDeployWizardMSI.bat" Guid="*">
-        <File Id="ServerDeployWizardMSI.bat" Name="ServerDeployWizardMSI.bat" KeyPath="yes" Source="..\Framework\ServerDeployWizardMSI.bat" />
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="Framework" FileSource="..\Framework">
-      <Component Id="ServerRedeployFx2.bat" Guid="EF0FF89E-DD6D-4dfd-8B06-3295287E9AB7">
-        <File Id="ServerRedeployFx2.bat" Name="ServerRedeploy.bat" KeyPath="yes" Source="..\Framework\ServerRedeployFx2.bat" />
-        <Condition><![CDATA[BTS_PRODUCTNAME <> "Microsoft BizTalk Server 2010"]]></Condition>
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="Framework" FileSource="..\Framework">
-      <Component Id="ServerRedeployFx4.bat" Guid="1B36726B-538E-4ba2-BDB0-0CE5E4E6F64E">
-        <File Id="ServerRedeployFx4.bat" Name="ServerRedeploy.bat" KeyPath="yes" Source="..\Framework\ServerRedeployFx4.bat" />
-        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2010"]]></Condition>
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="Framework" FileSource="..\Framework">
-      <Component Id="ServerRedeployWizard.bat" Guid="*">
-        <File Id="ServerRedeployWizard.bat" Name="ServerRedeployWizard.bat" KeyPath="yes" Source="..\Framework\ServerRedeployWizard.bat" />
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="Framework" FileSource="..\Framework">
-      <Component Id="ServerUnDeployFx2.bat" Guid="80D9D560-C3A2-4490-8333-25AFEEE84167">
-        <File Id="ServerUnDeployFx2.bat" Name="ServerUnDeploy.bat" KeyPath="yes" Source="..\Framework\ServerUnDeployFx2.bat" />
-        <Condition><![CDATA[BTS_PRODUCTNAME <> "Microsoft BizTalk Server 2010"]]></Condition>
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="Framework" FileSource="..\Framework">
-      <Component Id="ServerUnDeployFx4.bat" Guid="5A7A7547-D1EE-41f2-83D4-15F796BB65DE">
-        <File Id="ServerUnDeployFx4.bat" Name="ServerUnDeploy.bat" KeyPath="yes" Source="..\Framework\ServerUnDeployFx4.bat" />
-        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2010"]]></Condition>
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="Framework" FileSource="..\Framework">
-      <Component Id="ServerUnDeployWizard.bat" Guid="*">
-        <File Id="ServerUnDeployWizard.bat" Name="ServerUnDeployWizard.bat" KeyPath="yes" Source="..\Framework\ServerUnDeployWizard.bat" />
       </Component>
     </DirectoryRef>
   </Fragment>
@@ -387,29 +327,49 @@
   </Fragment>
   <Fragment>
     <DirectoryRef Id="DeployTools" FileSource="..\Framework\DeployTools">
-      <Component Id="SSOSettingsFileImport.exe" Guid="*">
-        <File Id="SSOSettingsFileImport.exe" Name="SSOSettingsFileImport.exe" KeyPath="yes" Source="..\Framework\DeployTools\SSOSettingsFileImport.exe" />
+      <Component Id="SSOSettingsFileImportFx2.exe" Guid="*">
+        <File Id="SSOSettingsFileImportFx2.exe" Name="SSOSettingsFileImport.exe" KeyPath="yes" Source="..\Framework\DeployTools\SSOSettingsFileImportFx2.exe" />
+        <Condition><![CDATA[BTS_PRODUCTNAME <> "Microsoft BizTalk Server 2013"]]></Condition>
       </Component>
     </DirectoryRef>
   </Fragment>
   <Fragment>
     <DirectoryRef Id="DeployTools" FileSource="..\Framework\DeployTools">
-      <Component Id="SSOSettingsFileReader.dll" Guid="*">
-        <File Id="SSOSettingsFileReader.dll" Name="SSOSettingsFileReader.dll" KeyPath="yes" Source="..\Framework\DeployTools\SSOSettingsFileReader.dll" />
+      <Component Id="SSOSettingsFileReaderFx2.dll" Guid="C1B004C8-7CFB-4D07-A664-D6DFDC0048E4">
+        <File Id="SSOSettingsFileReaderFx2.dll" Name="SSOSettingsFileReader.dll" KeyPath="yes" Source="..\Framework\DeployTools\SSOSettingsFileReaderFx2.dll" />
+        <Condition><![CDATA[BTS_PRODUCTNAME <> "Microsoft BizTalk Server 2013"]]></Condition>
       </Component>
     </DirectoryRef>
   </Fragment>
   <Fragment>
     <DirectoryRef Id="DeployTools" FileSource="..\Framework\DeployTools">
-      <Component Id="SSOSettingsEditor.exe" Guid="*">
-        <File Id="SSOSettingsEditor.exe" Name="SSOSettingsEditor.exe" KeyPath="yes" Source="..\Framework\DeployTools\SSOSettingsEditor.exe" />
+      <Component Id="SSOSettingsEditorFx2.exe" Guid="9E86BB4A-3698-4930-91B8-1E195959653D">
+        <File Id="SSOSettingsEditorFx2.exe" Name="SSOSettingsEditor.exe" KeyPath="yes" Source="..\Framework\DeployTools\SSOSettingsEditorFx2.exe" />
+        <Condition><![CDATA[BTS_PRODUCTNAME <> "Microsoft BizTalk Server 2013"]]></Condition>
       </Component>
     </DirectoryRef>
   </Fragment>
   <Fragment>
     <DirectoryRef Id="DeployTools" FileSource="..\Framework\DeployTools">
-      <Component Id="StopBizTalkHost.vbs" Guid="*">
-        <File Id="StopBizTalkHost.vbs" Name="StopBizTalkHost.vbs" KeyPath="yes" Source="..\Framework\DeployTools\StopBizTalkHost.vbs" />
+      <Component Id="SSOSettingsFileImportFx4.exe" Guid="DAFCC07C-B376-4AAF-A028-9BD6D263A077">
+        <File Id="SSOSettingsFileImportFx4.exe" Name="SSOSettingsFileImport.exe" KeyPath="yes" Source="..\Framework\DeployTools\SSOSettingsFileImportFx4.exe" />
+        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2013"]]></Condition>
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="DeployTools" FileSource="..\Framework\DeployTools">
+      <Component Id="SSOSettingsFileReaderFx4.dll" Guid="3CA7B5B0-9407-4B0A-97EC-153EA65A2E96">
+        <File Id="SSOSettingsFileReaderFx4.dll" Name="SSOSettingsFileReader.dll" KeyPath="yes" Source="..\Framework\DeployTools\SSOSettingsFileReaderFx4.dll" />
+        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2013"]]></Condition>
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="DeployTools" FileSource="..\Framework\DeployTools">
+      <Component Id="SSOSettingsEditorFx4.exe" Guid="2E420049-7D3A-4AE0-BDD5-C124D178AD86">
+        <File Id="SSOSettingsEditorFx4.exe" Name="SSOSettingsEditor.exe" KeyPath="yes" Source="..\Framework\DeployTools\SSOSettingsEditorFx4.exe" />
+        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2013"]]></Condition>
       </Component>
     </DirectoryRef>
   </Fragment>
@@ -457,7 +417,7 @@
                   Target="[INSTALLLOCATION]DeploymentFrameworkForBizTalkDocs.chm"
                   WorkingDirectory="INSTALLLOCATION"/>
         <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
-        <RegistryValue Root="HKCU" Key="Software\DeploymentFrameworkForBizTalk\5.0" Name="Installed" Type="integer" Value="1" KeyPath="yes"/>
+        <RegistryValue Root="HKCU" Key="Software\DeploymentFrameworkForBizTalk" Name="InstalledVersion" Type="string" Value="5.5" KeyPath="yes"/>
       </Component>
     </DirectoryRef>
   </Fragment>

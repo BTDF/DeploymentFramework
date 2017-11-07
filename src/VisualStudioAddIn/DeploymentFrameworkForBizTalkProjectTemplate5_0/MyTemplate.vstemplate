@@ -16,7 +16,7 @@
   <TemplateContent>
   </TemplateContent>
   <WizardExtension>
-	<Assembly>DFBTVisualStudioAddIn.ProjectWizard, Version=5.0.100.0, Culture=neutral, PublicKeyToken=e748234cd372cc72</Assembly>
+	<Assembly>DFBTVisualStudioAddIn.ProjectWizard, Version=5.5.100.0, Culture=neutral, PublicKeyToken=e748234cd372cc72</Assembly>
 	<FullClassName>DeploymentFramework.VisualStudioAddIn.ProjectWizard.AddProjectWizard</FullClassName>
   </WizardExtension>
 </VSTemplate>

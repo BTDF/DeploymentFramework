@@ -5,8 +5,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESBToolkitSSOResolver", "ES
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{8EC08F9A-F59F-428B-8649-2BE238BACF7C}"
 	ProjectSection(SolutionItems) = preProject
-		ESBToolkitSSOResolver.Deployment\BuildDebugMsi.bat = ESBToolkitSSOResolver.Deployment\BuildDebugMsi.bat
-		ESBToolkitSSOResolver.Deployment\BuildReleaseMsi.bat = ESBToolkitSSOResolver.Deployment\BuildReleaseMsi.bat
 		ESBToolkitSSOResolver.Deployment\ESBToolkitSSOResolver.Deployment.btdfproj = ESBToolkitSSOResolver.Deployment\ESBToolkitSSOResolver.Deployment.btdfproj
 		ESBToolkitSSOResolver.Deployment\InstallWizard.xml = ESBToolkitSSOResolver.Deployment\InstallWizard.xml
 		ESBToolkitSSOResolver.Deployment\License.rtf = ESBToolkitSSOResolver.Deployment\License.rtf

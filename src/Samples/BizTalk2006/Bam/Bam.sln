@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PipelineComponents", "Pipel
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{461F1977-33B2-48F5-BCD7-2B52009DD0DA}"
 	ProjectSection(SolutionItems) = preProject
-		Deployment\BuildDebugMsi.bat = Deployment\BuildDebugMsi.bat
-		Deployment\BuildReleaseMsi.bat = Deployment\BuildReleaseMsi.bat
 		Deployment\Deployment.btdfproj = Deployment\Deployment.btdfproj
 		Deployment\InstallWizard.xml = Deployment\InstallWizard.xml
 		Deployment\License.rtf = Deployment\License.rtf

@@ -6,12 +6,12 @@ using System.Runtime.CompilerServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyTitle("Nested XML Encoder/Decoder for BizTalk XML Binding Files")]
+[assembly: AssemblyTitle("Nested XML Encoder/Decoder")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("Copyright (C) 2005-2012 Scott Colestock, Tim Rayburn, Thomas F. Abraham")]
+[assembly: AssemblyCopyright("Copyright (C) 2005-2014 Scott Colestock, Tim Rayburn, Thomas F. Abraham")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
@@ -26,5 +26,5 @@ using System.Runtime.CompilerServices;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("5.0.100.0")]
-[assembly: AssemblyFileVersion("5.0.100.0")]
+[assembly: AssemblyVersion("5.5.100.0")]
+[assembly: AssemblyFileVersion("5.5.100.0")]

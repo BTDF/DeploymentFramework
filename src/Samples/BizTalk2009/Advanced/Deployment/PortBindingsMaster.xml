@@ -58,7 +58,7 @@
         <TransmitPipeline Name="Microsoft.BizTalk.DefaultPipelines.XMLTransmit" FullyQualifiedName="Microsoft.BizTalk.DefaultPipelines.XMLTransmit, Microsoft.BizTalk.DefaultPipelines, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Type="2" TrackingOption="ServiceStartEnd MessageSendReceive PipelineEvents" Description="" />
         <PrimaryTransport>
             <!-- ifdef ${_xml_preprocess} -->
-            <!-- <Address>${FileSendLocation}\%MessageID%.xml</Address> -->
+            <!-- <Address>${FileOutPath}\%MessageID%.xml</Address> -->
             <!-- endif -->
             <TransportType Name="FILE" Capabilities="11" ConfigurationClsid="5e49e3a6-b4fc-4077-b44c-22f34a242fdb" />
             <!-- We use ElementTunnel.exe to encode the contents of this element.  We keep it decoded in this file to ease maintenance. -->
@@ -112,9 +112,8 @@
          <ReceiveLocations>
             <ReceiveLocation Name="Advanced_Receive_FILE">
                <Description xsi:nil="true" />
-               <!-- CurDir macro wil contain current directory. -->
                <!-- ifdef ${_xml_preprocess} -->
-               <!-- <Address>${CurDir}\InDir\*.xml</Address> -->
+               <!-- <Address>${FileInPath}\*.xml</Address> -->
                <!-- endif -->
                <PublicAddress />
                <Primary>true</Primary>

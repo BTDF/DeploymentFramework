@@ -225,7 +225,18 @@
     <Cell ss:StyleID="s74"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="25.5">
-    <Cell ss:StyleID="s75"><Data ss:Type="String">FileSendLocation</Data><Comment
+    <Cell ss:StyleID="s75"><Data ss:Type="String">FileInPath</Data><Comment
+      ss:Author="Scott Colestock"><ss:Data
+       xmlns="http://www.w3.org/TR/REC-html40"><Font html:Face="Tahoma" html:Size="8"
+        html:Color="#000000">Used for the SampleS2_File port&#10;</Font></ss:Data></Comment></Cell>
+    <Cell ss:StyleID="s76"><Data ss:Type="String">C:\DeploymentFrameworkForBizTalk\Samples\Advanced\InDir</Data></Cell>
+    <Cell ss:StyleID="s76"/>
+    <Cell ss:StyleID="s78"/>
+    <Cell ss:StyleID="s78"/>
+    <Cell ss:StyleID="s78"/>
+   </Row>
+   <Row ss:Height="25.5">
+    <Cell ss:StyleID="s75"><Data ss:Type="String">FileOutPath</Data><Comment
       ss:Author="Scott Colestock"><ss:Data
        xmlns="http://www.w3.org/TR/REC-html40"><Font html:Face="Tahoma" html:Size="8"
         html:Color="#000000">Used for the SampleS2_File port&#10;</Font></ss:Data></Comment></Cell>
@@ -243,7 +254,7 @@
     <Cell ss:StyleID="s76"><Data ss:Type="String">BizTalk Application Users</Data></Cell>
     <Cell ss:StyleID="s76"><Data ss:Type="String">BizTalk Application Users</Data></Cell>
    </Row>
-   <Row>
+   <Row ss:AutoFitHeight="0" ss:Height="25.5">
     <Cell ss:StyleID="s75"><Data ss:Type="String">SsoAppAdminGroup</Data></Cell>
     <Cell ss:StyleID="s79"/>
     <Cell ss:StyleID="s76"><Data ss:Type="String">BizTalk Server Administrators</Data></Cell>
@@ -251,7 +262,7 @@
     <Cell ss:StyleID="s76"><Data ss:Type="String">BizTalk Server Administrators</Data></Cell>
     <Cell ss:StyleID="s76"><Data ss:Type="String">BizTalk Server Administrators</Data></Cell>
    </Row>
-   <Row ss:AutoFitHeight="0" ss:Height="25.5">
+   <Row>
     <Cell ss:StyleID="s75"/>
     <Cell ss:StyleID="s76"/>
     <Cell ss:Index="4" ss:StyleID="s78"/>
@@ -295,14 +306,6 @@
     <Cell ss:StyleID="s76"/>
     <Cell ss:StyleID="s79"/>
     <Cell ss:StyleID="s79"/>
-   </Row>
-   <Row>
-    <Cell ss:StyleID="s80"/>
-    <Cell ss:StyleID="s81"/>
-    <Cell ss:StyleID="s81"/>
-    <Cell ss:StyleID="s81"/>
-    <Cell ss:StyleID="s81"/>
-    <Cell ss:StyleID="s81"/>
    </Row>
    <Row>
     <Cell ss:StyleID="s80"/>

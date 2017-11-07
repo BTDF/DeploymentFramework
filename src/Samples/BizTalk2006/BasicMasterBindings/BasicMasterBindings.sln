@@ -5,8 +5,6 @@ Project("{EF7E3281-CD33-11D4-8326-00C04FA0CE8D}") = "BasicMasterBindings", "Basi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{76F22FD1-4486-4C62-92C6-D40A4B0B97BE}"
 	ProjectSection(SolutionItems) = preProject
-		BasicMasterBindings.Deployment\BuildDebugMsi.bat = BasicMasterBindings.Deployment\BuildDebugMsi.bat
-		BasicMasterBindings.Deployment\BuildReleaseMsi.bat = BasicMasterBindings.Deployment\BuildReleaseMsi.bat
 		BasicMasterBindings.Deployment\BasicMasterBindings.Deployment.btdfproj = BasicMasterBindings.Deployment\BasicMasterBindings.Deployment.btdfproj
 		BasicMasterBindings.Deployment\InstallWizard.xml = BasicMasterBindings.Deployment\InstallWizard.xml
 		BasicMasterBindings.Deployment\License.rtf = BasicMasterBindings.Deployment\License.rtf

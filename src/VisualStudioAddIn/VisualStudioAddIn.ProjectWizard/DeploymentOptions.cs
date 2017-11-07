@@ -1,5 +1,5 @@
-﻿// Deployment Framework for BizTalk 5.0
-// Copyright (C) 2004-2012 Thomas F. Abraham and Scott Colestock
+﻿// Deployment Framework for BizTalk
+// Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
 // This source file is subject to the Microsoft Public License (Ms-PL).
 // See http://www.opensource.org/licenses/ms-pl.html.
 // All other rights reserved.
@@ -110,9 +110,10 @@ namespace DeploymentFramework.VisualStudioAddIn.ProjectWizard
         public bool IncludeInstallUtilForComponents { get; set; }
 
         [Category("2. How to Deploy")]
-        [Description("Use a master/template bindings XML file (PortBindingsMaster.xml)? It is transformed at deploy time to PortBindings.xml by optional re-encoding of nested XML fragments and optional replacement of template values from the settings spreadsheet.")]
-        [DisplayName("Use a master bindings XML file?")]
+        [Description("Use a master/template bindings XML file (PortBindingsMaster.xml). Transformed at deploy time to PortBindings.xml incl. replacement of any template values from the settings spreadsheet.")]
+        [DisplayName("Use a master bindings XML file")]
         [DefaultValue(false)]
+        [ReadOnly(true)]
         public bool UsingMasterBindings { get; set; }
 
         [Category("2. How to Deploy")]
@@ -122,9 +123,10 @@ namespace DeploymentFramework.VisualStudioAddIn.ProjectWizard
         public bool RequireXmlPreprocessDirectives { get; set; }
 
         [Category("2. How to Deploy")]
-        [Description("Use un-encoded (&gt; to > etc.) XML in adapter bindings in PortBindings.xml or PortBindingsMaster.xml? ElementTunnel.exe will be executed to re-encode the XML before passing it to BizTalk.")]
-        [DisplayName("Use un-encoded XML in adapter bindings?")]
+        [Description("Use un-encoded (&gt; to > etc.) XML in adapter bindings in PortBindingsMaster.xml. ElementTunnel.exe will re-encode the XML before passing it to BizTalk.")]
+        [DisplayName("Use un-encoded XML in adapter bindings")]
         [DefaultValue(false)]
+        [ReadOnly(true)]
         public bool ApplyXmlEscape { get; set; }
 
         [Category("2. How to Deploy")]
@@ -132,12 +134,6 @@ namespace DeploymentFramework.VisualStudioAddIn.ProjectWizard
         [DisplayName("Include SettingsFileGenerator.xml in the MSI?")]
         [DefaultValue(true)]
         public bool IncludeSettingsSpreadsheetInMsi { get; set; }
-
-        [Category("2. How to Deploy")]
-        [Description("Add .NET component assemblies and IIS vdirs as resources in the BizTalk app? May be desirable if you ever export an MSI from the BizTalk Admin Console.")]
-        [DisplayName("Add components/vdirs as resources in BizTalk app?")]
-        [DefaultValue(false)]
-        public bool IncludeCompsAndVDirsAsResources { get; set; }
 
         [Category("2. How to Deploy")]
         [Description("Skip IIS reset or AppPool reset during deployment? Reset is not necessary if not using IIS-related ports that could lock files in the application.")]
@@ -212,6 +208,7 @@ namespace DeploymentFramework.VisualStudioAddIn.ProjectWizard
             this.StartReferencedApplicationsOnDeploy = true;
             this.UsingMasterBindings = true;
             this.RequireXmlPreprocessDirectives = false;
+            this.ApplyXmlEscape = true;
         }
     }
 }

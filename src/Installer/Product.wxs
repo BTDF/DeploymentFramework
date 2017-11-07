@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Deployment Framework for BizTalk 5.0
-    Copyright (C) 2004-2012 Thomas F. Abraham and Scott Colestock
+    Deployment Framework for BizTalk
+    Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
     
     This source file is subject to the Microsoft Public License (Ms-PL).
 -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-  <?define ProductVersion="5.0" ?>
+  <?define ProductVersion="5.5" ?>
 
-  <Product Id="$(var.ProductID)" Name="Deployment Framework for BizTalk $(var.ProductVersion) RTW"
+  <Product Id="$(var.ProductID)" Name="Deployment Framework for BizTalk $(var.ProductVersion)"
            Language="1033" Version="$(var.ProductVersionFull)" Manufacturer="Abraham/Colestock" UpgradeCode="a0550f65-4338-4892-884e-594593e8b4f7">
 		<Package InstallerVersion="200" Compressed="yes" />
 
@@ -27,6 +27,10 @@
       <RegistrySearch Id="ESBTOOLKIT21_DIR_REG" Root="HKLM" Key="SOFTWARE\Microsoft\BizTalk ESB Toolkit\2.1" Name="InstallPath" Type="directory" />
     </Property>
 
+    <Property Id="ESBTOOLKIT22_DIR" Secure="yes">
+      <RegistrySearch Id="ESBTOOLKIT22_DIR_REG" Root="HKLM" Key="SOFTWARE\Microsoft\BizTalk ESB Toolkit" Name="InstallPath" Type="directory" />
+    </Property>
+
     <Property Id="ARPHELPLINK" Value="http://biztalkdeployment.codeplex.com" />
     <Property Id="ARPURLINFOABOUT" Value="http://biztalkdeployment.codeplex.com" />
 
@@ -34,9 +38,7 @@
 
     <Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="ProgramFilesFolder">
-				<Directory Id="BaseProduct" Name="Deployment Framework for BizTalk">
-          <Directory Id="INSTALLLOCATION" Name="$(var.ProductVersion)" />
-				</Directory>
+				<Directory Id="INSTALLLOCATION" Name="Deployment Framework for BizTalk $(var.ProductVersion)" />
 			</Directory>
       <Directory Id="ProgramMenuFolder">
         <Directory Id="ApplicationProgramsFolder" Name="Deployment Framework for BizTalk $(var.ProductVersion)"/>
@@ -49,9 +51,11 @@
     <FeatureRef Id="VS2005IntegrationFeature" />
     <FeatureRef Id="VS2008IntegrationFeature" />
     <FeatureRef Id="VS2010IntegrationFeature" />
+    <FeatureRef Id="VS2012IntegrationFeature" />
     <FeatureRef Id="ToolsSourceFeature" />
     <FeatureRef Id="EsbToolkit20IntegrationFeature" />
     <FeatureRef Id="EsbToolkit21IntegrationFeature" />
+    <FeatureRef Id="EsbToolkit22IntegrationFeature" />
 
     <PropertyRef Id="BTS_PRODUCTNAME" />
     <PropertyRef Id="WIX_DIR_COMMON_DOCUMENTS"/>
@@ -59,8 +63,9 @@
     <UIRef Id="VS2005UI" />
     <UIRef Id="VS2008UI" />
     <UIRef Id="VS2010UI" />
+    <UIRef Id="VS2012UI" />
 
-    <Condition Message="Microsoft BizTalk Server 2006, 2006 R2, 2009 or 2010 is required to install this product.">
+    <Condition Message="Microsoft BizTalk Server 2006, 2006 R2, 2009, 2010 or 2013 is required to install this product.">
       Installed OR BTS_PRODUCTNAME
     </Condition>
 
@@ -124,7 +129,7 @@
   </Fragment>
   <Fragment>
     <DirectoryRef Id="MSBDeploymentFrameworkForBizTalk">
-      <Directory Id="MSBDeploymentFrameworkForBizTalkProduct" Name="$(var.ProductVersion)" />
+      <Directory Id="MSBDeploymentFrameworkForBizTalkProduct" Name="5.0" />
     </DirectoryRef>
   </Fragment>
   <Fragment>
@@ -146,7 +151,8 @@
   <Fragment>
     <DirectoryRef Id="TARGETDIR">
       <Component Id="RegistryEntries" Guid="*">
-        <RegistryKey Root="HKLM" Key="Software\DeploymentFrameworkForBizTalk\5.0" Action="createAndRemoveOnUninstall">
+        <RegistryKey Root="HKLM" Key="Software\DeploymentFrameworkForBizTalk">
+          <RegistryValue Name="InstalledVersion" Type="string" Value="5.5"/>
           <RegistryValue Name="InstallPath" Type="string" Value="[INSTALLLOCATION]"/>
         </RegistryKey>
       </Component>
@@ -160,7 +166,9 @@
   <?include VS2005Integration.wxi ?>
   <?include VS2008Integration.wxi ?>
   <?include VS2010Integration.wxi ?>
+  <?include VS2012Integration.wxi ?>
   <?include ESBToolkit20Integration.wxi ?>
   <?include ESBToolkit21Integration.wxi ?>
+  <?include ESBToolkit22Integration.wxi ?>
 
 </Wix>

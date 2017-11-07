@@ -1,18 +1,8 @@
 <!-- 
-    Deployment Framework for BizTalk 5.0
-    Copyright (C) 2004-2012 Thomas F. Abraham and Scott Colestock
+    Deployment Framework for BizTalk
+    Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
     
     This source file is subject to the Microsoft Public License (Ms-PL).
-
-    This is the core MSBuild file that is used to:
-
-    1) assemble the desired MSI directory structure 
-    2) invoke the WiX generation script
-    3) invoke WiX itself.
-
-    Project specific WiX files should implement a target called CustomRedist to perform 
-    any project specific work necessary to assemble a directory tree that corresponds to what
-    the MSI should contain.
 -->
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Installer">
@@ -21,12 +11,26 @@
     <IntermediateOutputPath Condition="'$(IntermediateOutputPath)' == ''">$(ObjDir)</IntermediateOutputPath>
     <RedistDir>$(IntermediateOutputPath)\redist</RedistDir>
     <MsiName Condition="'$(MsiName)' == ''">$(ProjectName)-$(ProductVersion)</MsiName>
+
+    <SuppressMSIValidation Condition="'$(SuppressMSIValidation)' == ''">False</SuppressMSIValidation>
+    <MSIValidationParam Condition="'$(SuppressMSIValidation)' == 'true'">-sval</MSIValidationParam>
+    <MSIValidationParam Condition="'$(SuppressMSIValidation)' == 'false'"></MSIValidationParam>
+	
+    <CreateStartMenuShortcuts Condition="'$(CreateStartMenuShortcuts)' == ''">True</CreateStartMenuShortcuts>
+	
+    <WiXRegistryKey Condition="'$(WiXRegistryKey)' == ''">HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Installer XML\3.7</WiXRegistryKey>
   </PropertyGroup>
 
   <Target Name="InitWixDir">
+    <GetRegistryValue KeyName="$(WiXRegistryKey)" ValueName="InstallRoot" Condition="'$(WixDir)' == ''">
+      <Output TaskParameter="Value" PropertyName="WixDir"/>
+    </GetRegistryValue>
+
     <CreateProperty Value="$(DeploymentFrameworkDeveloperDir)\WiX" Condition="'$(WixDir)' == ''">
       <Output TaskParameter="Value" PropertyName="WixDir" />
     </CreateProperty>
+
+    <Message Text="Using WiX Install Path '$(WixDir)'." />
   </Target>
 
   <Target Name="InitTargetDir">
@@ -61,14 +65,10 @@
     <CreateItem Include="$(DeploymentFrameworkTargetsPath)*.*">
       <Output TaskParameter="Include" ItemName="FrameworkTargetsSourceGroup" />
     </CreateItem>
-    <Copy DestinationFolder="$(RedistDir)\Deployment\Framework\%(RecursiveDir)" SourceFiles="@(FrameworkTargetsSourceGroup)"/>
+    <Copy DestinationFolder="$(RedistDir)\Deployment\Framework\%(RecursiveDir)" SourceFiles="@(FrameworkTargetsSourceGroup->'%(FullPath)')"/>
 
     <!-- Make sure we have directories we need -->
     <MakeDir Directories="$(RedistDir)\DeployResults" />
-
-    <ItemGroupFromCSVFile ColumnNames="$(VdirListFileColumns)" Filename="$(VdirListFile)" Condition="'$(IncludeVirtualDirectories)' == 'true' and '@(VDirList)' == ''">
-      <Output TaskParameter="ItemGroup" ItemName="VDirList" />
-    </ItemGroupFromCSVFile>
 
     <!-- Force MSBuild to expand the item spec into physical file specs -->
     <CreateItem Include="@(VDirList->'%(Physdir)\**\*.*')" AdditionalMetadata="Path=%(Physdir)" Condition="'$(IncludeVirtualDirectories)' == 'true'">
@@ -101,7 +101,7 @@
 
     <Copy DestinationFolder="$(RedistDir)\Deployment" SourceFiles="@(RedistPortBindingsGroup)" Condition="'$(UsingMasterBindings)' == 'true' and '$(IncludeMessagingBindings)' == 'true'" />
 
-    <Copy DestinationFolder="$(RedistDir)\Deployment" SourceFiles="$(VdirListFile)" Condition="'$(IncludeVirtualDirectories)' == 'true' and '@(VDirList)' == ''" />
+    <CheckXmlSyntax XmlFilenames="@(RedistPortBindingsGroup)" Condition="'$(IncludeMessagingBindings)' == 'true'" />
 
     <Copy DestinationFolder="$(RedistDir)\Deployment" SourceFiles="$(MSBuildProjectFile)"/>
 
@@ -213,11 +213,34 @@
     Create the installer package
    -->
   <Target Name="Installer" DependsOnTargets="Clean;Redist">
-    <Exec Command="&quot;$(Cscript)&quot; /nologo &quot;$(DeploymentFrameworkDeveloperDir)\generate-install-script.js&quot; &quot;$(RedistDir)&quot; &quot;$(IntermediateOutputPath)\Contents.wxi&quot; $(IncludeVocabAndRules) $(IncludeSSO) &quot;$(BizTalkAppName)&quot;" />
+    <CreateProperty Value="@(DeploymentTest)" Condition="'@(DeploymentTest)' != ''">
+      <Output TaskParameter="Value" PropertyName="DeploymentTestProperty" />
+    </CreateProperty>
+
+    <CreateProperty Value="$(DeploymentFrameworkDeveloperDir)\GenericBizTalkMSI.wxs" Condition="'$(WixProjectFile)' == ''">
+      <Output TaskParameter="Value" PropertyName="WixProjectFile" />
+    </CreateProperty>
+
+    <CreateProperty Value="$(DeploymentFrameworkDeveloperDir)\RedistComponentGroup.xslt" Condition="'$(WixHeatTransformFile)' == ''">
+      <Output TaskParameter="Value" PropertyName="WixHeatTransformFile" />
+    </CreateProperty>
+
+    <CreateProperty Value="dir &quot;$(RedistDir)&quot; -scom -srd -sreg -cg RedistComponentGroup -ke -gg -dr INSTALLDIR -var var.redist_folder -o &quot;$(IntermediateOutputPath)\RedistComponentGroup.wxs&quot; -t &quot;$(WixHeatTransformFile)&quot;" Condition="'$(WiXHeatArguments)' == ''">
+      <Output TaskParameter="Value" PropertyName="WiXHeatArguments" />
+    </CreateProperty>
+
+    <CreateProperty Value="&quot;-dredist_folder=$(RedistDir)&quot; &quot;-dProductUpgradeCode=$(ProductUpgradeCode)&quot; &quot;-dProductName=$(ProductName)&quot; &quot;-dProductId=$(ProductId)&quot; &quot;-dProductVersion=$(ProductVersion)&quot; &quot;-dProjectVersion=$(ProjectVersion)&quot; &quot;-dManufacturer=$(Manufacturer)&quot; &quot;-dPackageDescription=$(PackageDescription)&quot; &quot;-dPackageComments=$(PackageComments)&quot; &quot;-dDeploymentTest=$(DeploymentTestProperty)&quot; &quot;-dBizTalkAppName=$(BizTalkAppName)&quot; &quot;-dProjectFilename=$(MSBuildProjectFile)&quot; -dIncludeDeployRulesShortcut=$(IncludeVocabAndRules) -dIncludeSSOEditorShortcut=$(IncludeSSO) -dCreateStartMenuShortcuts=$(CreateStartMenuShortcuts) -out &quot;$(IntermediateOutputPath)\\&quot; &quot;$(WixProjectFile)&quot; &quot;$(IntermediateOutputPath)\RedistComponentGroup.wxs&quot;" Condition="'$(WiXCandleArguments)' == ''">
+      <Output TaskParameter="Value" PropertyName="WiXCandleArguments" />
+    </CreateProperty>
+
+    <CreateProperty Value="&quot;$(IntermediateOutputPath)\GenericBizTalkMSI.wixobj&quot; &quot;$(IntermediateOutputPath)\RedistComponentGroup.wixobj&quot; -out &quot;$(TargetDir)\$(MsiName).msi&quot; -ext &quot;$(WixDir)\WixUIExtension.dll&quot; -ext &quot;$(WixDir)\WixNetFxExtension.dll&quot; -spdb $(MSIValidationParam)" Condition="'$(WiXLightArguments)' == ''">
+      <Output TaskParameter="Value" PropertyName="WiXLightArguments" />
+    </CreateProperty>
 
     <Message Text="Generating MSI..." Importance="normal" />
-    <Exec Command="&quot;$(WixDir)\candle.exe&quot; &quot;-dredist_folder=$(RedistDir)&quot; &quot;-dProductUpgradeCode=$(ProductUpgradeCode)&quot; &quot;-dProductName=$(ProductName)&quot; &quot;-dProductId=$(ProductId)&quot; &quot;-dProductVersion=$(ProductVersion)&quot; &quot;-dProjectVersion=$(ProjectVersion)&quot; &quot;-dManufacturer=$(Manufacturer)&quot; &quot;-dPackageDescription=$(PackageDescription)&quot; &quot;-dPackageComments=$(PackageComments)&quot; &quot;-dDeploymentTest=@(DeploymentTest)&quot; &quot;-dContentsIncludePath=$(MSBuildProjectDirectory)\$(IntermediateOutputPath)\Contents.wxi&quot; &quot;-dProjectFilename=$(MSBuildProjectFile)&quot; -out &quot;$(IntermediateOutputPath)\$(ProjectName).wixobj&quot; &quot;$(DeploymentFrameworkDeveloperDir)\GenericBizTalkMSI.wxs&quot;" />
-    <Exec Command="&quot;$(WixDir)\light.exe&quot; &quot;$(IntermediateOutputPath)\$(ProjectName).wixobj&quot; -out &quot;$(TargetDir)\$(MsiName).msi&quot; -ext &quot;$(WixDir)\WixUIExtension.dll&quot; -spdb" />
+    <Exec Command="&quot;$(WixDir)\heat.exe&quot; $(WixHeatArguments)" />
+    <Exec Command="&quot;$(WixDir)\candle.exe&quot; $(WixCandleArguments)" />
+    <Exec Command="&quot;$(WixDir)\light.exe&quot; $(WixLightArguments)" />
     <Message Text="Finished generating MSI." Importance="normal" />
 
     <!-- Write out a .bat file that can be used to launch the installer with msiexec.exe. -->

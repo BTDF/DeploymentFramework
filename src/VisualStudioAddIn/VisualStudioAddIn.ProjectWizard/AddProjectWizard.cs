@@ -1,5 +1,5 @@
-﻿// Deployment Framework for BizTalk 5.0
-// Copyright (C) 2004-2012 Thomas F. Abraham and Scott Colestock
+﻿// Deployment Framework for BizTalk
+// Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
 // This source file is subject to the Microsoft Public License (Ms-PL).
 // See http://www.opensource.org/licenses/ms-pl.html.
 // All other rights reserved.
@@ -73,7 +73,7 @@ namespace DeploymentFramework.VisualStudioAddIn.ProjectWizard
             }
 
             string btdfInstallDir =
-                (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\Software\DeploymentFrameworkForBizTalk\5.0", "InstallPath", null);
+                (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\Software\DeploymentFrameworkForBizTalk", "InstallPath", null);
 
             if (string.IsNullOrEmpty(btdfInstallDir))
             {
@@ -115,8 +115,6 @@ namespace DeploymentFramework.VisualStudioAddIn.ProjectWizard
             Dictionary<string, string> replacements = new Dictionary<string, string>();
             replacements.Add("[PROJECTNAME]", solutionName);
 
-            ReplaceInTextFile(destinationPath, "BuildDebugMsi.bat", replacements, Encoding.ASCII);
-            ReplaceInTextFile(destinationPath, "BuildReleaseMsi.bat", replacements, Encoding.ASCII);
             ReplaceInTextFile(destinationPath, "InstallWizard.xml", replacements, Encoding.UTF8);
             ReplaceInTextFile(destinationPath, "UnInstallWizard.xml", replacements, Encoding.UTF8);
 
@@ -211,7 +209,8 @@ namespace DeploymentFramework.VisualStudioAddIn.ProjectWizard
             XmlElement projectElement = projectXml.SelectSingleNode("/ns0:Project", xnm) as XmlElement;
             string bizTalkProductName = GetBizTalkProductName();
 
-            if (string.Compare(bizTalkProductName, "Microsoft BizTalk Server 2010", true) == 0)
+            if (string.Compare(bizTalkProductName, "Microsoft BizTalk Server 2010", true) == 0
+                || string.Compare(bizTalkProductName, "Microsoft BizTalk Server 2013", true) == 0)
             {
                 projectElement.SetAttribute("ToolsVersion", "4.0");
             }

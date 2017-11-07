@@ -5,8 +5,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld", "HelloWorld\He
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{8EC08F9A-F59F-428B-8649-2BE238BACF7C}"
 	ProjectSection(SolutionItems) = preProject
-		HelloWorld.Deployment\BuildDebugMsi.bat = HelloWorld.Deployment\BuildDebugMsi.bat
-		HelloWorld.Deployment\BuildReleaseMsi.bat = HelloWorld.Deployment\BuildReleaseMsi.bat
 		HelloWorld.Deployment\HelloWorld.Deployment.btdfproj = HelloWorld.Deployment\HelloWorld.Deployment.btdfproj
 		HelloWorld.Deployment\InstallWizard.xml = HelloWorld.Deployment\InstallWizard.xml
 		HelloWorld.Deployment\License.rtf = HelloWorld.Deployment\License.rtf

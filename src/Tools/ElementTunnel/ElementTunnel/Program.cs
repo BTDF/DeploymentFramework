@@ -1,5 +1,5 @@
-// Deployment Framework for BizTalk 5.0
-// Copyright (C) 2004-2012 Thomas F. Abraham and Scott Colestock
+// Deployment Framework for BizTalk
+// Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
 // This source file is subject to the Microsoft Public License (Ms-PL).
 // See http://www.opensource.org/licenses/ms-pl.html.
 // All other rights reserved.
@@ -47,12 +47,21 @@ namespace ElementTunnel
                 ElementTunneler etun = new ElementTunneler();
 
                 XmlDocument inDoc = new XmlDocument();
+                inDoc.PreserveWhitespace = true;
                 
                 inDoc.Load(cl.inputFile);
 
-                etun.TunnelXPaths(inDoc, xPaths, cl.encode);
+                etun.TunnelXPaths(inDoc, xPaths, cl.encode, cl.verbose);
 
-                inDoc.Save(cl.outputFile);    
+                inDoc.Save(cl.outputFile);
+
+                Console.WriteLine("XPaths                        : " + xPaths.Count.ToString());
+                Console.WriteLine("Transformed Nodes             : " + etun.EncDecodedNodes.ToString());
+                Console.WriteLine("Empty Nodes (skipped)         : " + etun.EmptyNodes.ToString());
+                Console.WriteLine("No Transform Req'd (skipped)  : " + etun.AlreadyEncDecNodes.ToString());
+                Console.WriteLine("Total Matched Nodes           : " + etun.MatchedNodes.ToString());
+
+                Console.WriteLine("\nComplete - output file has been saved.");
 
                 return INT_SuccessReturn;
             }

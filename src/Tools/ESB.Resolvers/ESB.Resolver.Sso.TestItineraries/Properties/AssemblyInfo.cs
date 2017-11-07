@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ESB.Resolver.Sso.TestItineraries")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("CHS")]
+[assembly: AssemblyCompany("Abraham")]
 [assembly: AssemblyProduct("ESB.Resolver.Sso.TestItineraries")]
-[assembly: AssemblyCopyright("Copyright © CHS 2010")]
+[assembly: AssemblyCopyright("Copyright © 2014 Thomas F. Abraham")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

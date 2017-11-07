@@ -46,6 +46,7 @@
   <ItemGroup>
     <Content Include="ESBToolkit20Integration.wxi" />
     <Content Include="ESBToolkit21Integration.wxi" />
+    <Content Include="ESBToolkit22Integration.wxi" />
     <Content Include="License.rtf" />
     <Content Include="RuntimeComponents.wxi" />
     <Content Include="DeveloperTools.wxi" />
@@ -55,6 +56,7 @@
     <Content Include="VS2005Integration.wxi" />
     <Content Include="VS2008Integration.wxi" />
     <Content Include="VS2010Integration.wxi" />
+    <Content Include="VS2012Integration.wxi" />
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <!--

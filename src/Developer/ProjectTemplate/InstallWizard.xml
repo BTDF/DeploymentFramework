@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!--
-    Deployment Framework for BizTalk 5.0
-    Copyright (C) 2004-2012 Thomas F. Abraham and Scott Colestock
+    Deployment Framework for BizTalk
+    Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
 -->
 <!-- Each SetEnvUIConfigItem element defines a single page in the wizard that appears during a server deployment. -->
 <!-- The EnvironmentVarName element specifies the name of an environment variable that will contain the value of the -->

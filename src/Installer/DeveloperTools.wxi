@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Deployment Framework for BizTalk 5.0
-    Copyright (C) 2004-2012 Thomas F. Abraham and Scott Colestock
+    Deployment Framework for BizTalk
+    Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
     
     This source file is subject to the Microsoft Public License (Ms-PL).
 -->
@@ -9,7 +9,7 @@
   <Fragment>
     <Feature Id="DevToolsFeature" Title="Developer Tools" Level="1" InstallDefault="local" Display="21" 
              AllowAdvertise="no" TypicalDefault="install" Description="Developer tools, including tools for building deployment MSI, etc.">
-      <ComponentRef Id="generate_install_script.js" />
+      <ComponentRef Id="RedistComponentGroup.xslt" />
       <ComponentRef Id="GenericBizTalkMSI.wxs" />
       <ComponentRef Id="MigrateToProjectFolderStructure.cmd"/>
       <ComponentRef Id="candle.exe" />
@@ -17,19 +17,18 @@
       <ComponentRef Id="CPL.TXT" />
       <ComponentRef Id="light.exe" />
       <ComponentRef Id="light.exe.config" />
-      <ComponentRef Id="smoke.exe" />
-      <ComponentRef Id="smoke.exe.config" />
+      <ComponentRef Id="heat.exe" />
+      <ComponentRef Id="heat.exe.config" />
       <ComponentRef Id="wconsole.dll" />
       <ComponentRef Id="winterop.dll" />
       <ComponentRef Id="wix.dll" />
       <ComponentRef Id="WixIIsExtension.dll" />
       <ComponentRef Id="WixUIExtension.dll" />
       <ComponentRef Id="WixUtilExtension.dll" />
-      <ComponentRef Id="wui.dll" />
+      <ComponentRef Id="WixVsExtension.dll" />
+      <ComponentRef Id="WixNetFxExtension.dll" />
       <ComponentRef Id="darice.cub"/>
       <ComponentRef Id="DFBTVisualStudioAddIn.ProjectWizard.dll"/>
-      <ComponentRef Id="BuildDebugMsi.bat"/>
-      <ComponentRef Id="BuildReleaseMsi.bat"/>
       <ComponentRef Id="InstallWizard.xml"/>
       <ComponentRef Id="License.rtf"/>
       <ComponentRef Id="Deployment.btdfproj"/>
@@ -41,8 +40,8 @@
 
   <Fragment>
     <DirectoryRef Id="Developer" FileSource="..\Developer">
-      <Component Id="generate_install_script.js" Guid="*">
-        <File Id="generate_install_script.js" Name="generate-install-script.js" KeyPath="yes" Source="..\Developer\generate-install-script.js" />
+      <Component Id="RedistComponentGroup.xslt" Guid="*">
+        <File Id="RedistComponentGroup.xslt" Name="RedistComponentGroup.xslt" KeyPath="yes" Source="..\Developer\RedistComponentGroup.xslt" />
       </Component>
     </DirectoryRef>
   </Fragment>
@@ -97,15 +96,15 @@
   </Fragment>
   <Fragment>
     <DirectoryRef Id="WiX" FileSource="..\Developer\WiX">
-      <Component Id="smoke.exe" Guid="*">
-        <File Id="smoke.exe" Name="smoke.exe" KeyPath="yes" Source="..\Developer\WiX\smoke.exe" />
+      <Component Id="heat.exe" Guid="*">
+        <File Id="heat.exe" Name="heat.exe" KeyPath="yes" Source="..\Developer\WiX\heat.exe" />
       </Component>
     </DirectoryRef>
   </Fragment>
   <Fragment>
     <DirectoryRef Id="WiX" FileSource="..\Developer\WiX">
-      <Component Id="smoke.exe.config" Guid="*">
-        <File Id="smoke.exe.config" Name="smoke.exe.config" KeyPath="yes" Source="..\Developer\WiX\smoke.exe.config" />
+      <Component Id="heat.exe.config" Guid="*">
+        <File Id="heat.exe.config" Name="heat.exe.config" KeyPath="yes" Source="..\Developer\WiX\heat.exe.config" />
       </Component>
     </DirectoryRef>
   </Fragment>
@@ -153,8 +152,15 @@
   </Fragment>
   <Fragment>
     <DirectoryRef Id="WiX" FileSource="..\Developer\WiX">
-      <Component Id="wui.dll" Guid="*">
-        <File Id="wui.dll" Name="wui.dll" KeyPath="yes" Source="..\Developer\WiX\wui.dll" />
+      <Component Id="WixVsExtension.dll" Guid="*">
+        <File Id="WixVsExtension.dll" Name="WixVsExtension.dll" KeyPath="yes" Source="..\Developer\WiX\WixVsExtension.dll" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="WiX" FileSource="..\Developer\WiX">
+      <Component Id="WixNetFxExtension.dll" Guid="*">
+        <File Id="WixNetFxExtension.dll" Name="WixNetFxExtension.dll" KeyPath="yes" Source="..\Developer\WiX\WixNetFxExtension.dll" />
       </Component>
     </DirectoryRef>
   </Fragment>
@@ -174,20 +180,6 @@
     </DirectoryRef>
   </Fragment>
 
-  <Fragment>
-    <DirectoryRef Id="ProjectTemplate" FileSource="..\Developer\ProjectTemplate">
-      <Component Id="BuildDebugMsi.bat" Guid="*">
-        <File Id="BuildDebugMsi.bat" Name="BuildDebugMsi.bat" KeyPath="yes" Source="..\Developer\ProjectTemplate\BuildDebugMsi.bat" />
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="ProjectTemplate" FileSource="..\Developer\ProjectTemplate">
-      <Component Id="BuildReleaseMsi.bat" Guid="*">
-        <File Id="BuildReleaseMsi.bat" Name="BuildReleaseMsi.bat" KeyPath="yes" Source="..\Developer\ProjectTemplate\BuildReleaseMsi.bat" />
-      </Component>
-    </DirectoryRef>
-  </Fragment>
   <Fragment>
     <DirectoryRef Id="ProjectTemplate" FileSource="..\Developer\ProjectTemplate">
       <Component Id="InstallWizard.xml" Guid="*">

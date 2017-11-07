@@ -1,5 +1,5 @@
-﻿// Deployment Framework for BizTalk 5.0
-// Copyright (C) 2004-2012 Thomas F. Abraham and Scott Colestock
+﻿// Deployment Framework for BizTalk
+// Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
 // This source file is subject to the Microsoft Public License (Ms-PL).
 // See http://www.opensource.org/licenses/ms-pl.html.
 // All other rights reserved.
@@ -29,7 +29,7 @@ namespace ElementTunnel.Tests
             inDoc.LoadXml(inputXml);
             xPaths.Add(targetXPath);
 
-            tunneler.TunnelXPaths(inDoc, xPaths, true);
+            tunneler.TunnelXPaths(inDoc, xPaths, true, true);
 
             inDoc.ForEach(targetXPath, i => i.ShouldBeEncoded());
         }
@@ -43,7 +43,7 @@ namespace ElementTunnel.Tests
             inDoc.LoadXml(inputXml);
             xPaths.Add(targetXPath);
 
-            tunneler.TunnelXPaths(inDoc, xPaths, true);
+            tunneler.TunnelXPaths(inDoc, xPaths, true, true);
 
             inDoc.ForEach(targetXPath, i => i.InnerText.Length.Equals(0));
             inDoc.ForEach(targetXPath, i => i.OuterXml.ShouldBe("<bar></bar>"));
@@ -58,7 +58,7 @@ namespace ElementTunnel.Tests
             inDoc.LoadXml(inputXml);
             xPaths.Add(targetXPath);
 
-            tunneler.TunnelXPaths(inDoc, xPaths, true);
+            tunneler.TunnelXPaths(inDoc, xPaths, true, true);
 
             inDoc.ForEach(targetXPath, i => i.InnerText.Length.Equals(0));
             inDoc.ForEach(targetXPath, i => i.OuterXml.ShouldBe("<bar />"));
@@ -73,7 +73,7 @@ namespace ElementTunnel.Tests
             inDoc.LoadXml(inputXml);
             xPaths.Add(targetXPath);
 
-            tunneler.TunnelXPaths(inDoc, xPaths, true);
+            tunneler.TunnelXPaths(inDoc, xPaths, true, true);
 
             inDoc.ForEach(targetXPath, i => i.ShouldBeEncoded());
         }
@@ -89,7 +89,7 @@ namespace ElementTunnel.Tests
             xPaths.Add("/a/b/c");
             xPaths.Add(targetXPath);
 
-            tunneler.TunnelXPaths(inDoc, xPaths, true);
+            tunneler.TunnelXPaths(inDoc, xPaths, true, true);
 
             inDoc.ForEach(targetXPath, i => i.InnerXml.ShouldBe(expectedResult));
         }
@@ -105,7 +105,7 @@ namespace ElementTunnel.Tests
         //    xPaths.Add("/a/b/c");
         //    xPaths.Add(targetXPath);
 
-        //    tunneler.TunnelXPaths(inDoc, xPaths, true);
+        //    tunneler.TunnelXPaths(inDoc, xPaths, true, true);
 
         //    inDoc.ForEach(targetXPath, i => i.InnerXml.ShouldBe(expectedResult));
         //}
