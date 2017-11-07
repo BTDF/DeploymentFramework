@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- 
+      BizTalkSample.sln.deploy.build is a template build file designed to show how to
+      leverage the NAnt-based deployment framework for BizTalk 
+      
+      The framework addresses BizTalk 2004 deployments, both for developer desktops
+      and for production use after an MSI installation.
+      
+      It relies on BizTalkDeploymentInclude.nant for the actual BizTalk deployment work - 
+      only project-specific variations and deployment work must be done in this file.
+      
+      (By Scott Colestock / www.traceofthought.net)
+-->      
+
+<project name="BizTalkSample" default="debugDeploy"> 
+   
+   <sysinfo/>
+   <include buildfile="BizTalkDeploymentInclude.nant"/>
+  
+   <!-- Set following properties to true or false to include various pieces of a BizTalk deployment. -->
+   <property name="includeSchemas"  value="true" />
+   <property name="includeOrchestrations" value="true" />
+   <property name="includeTransforms" value="true" />
+   <property name="includePipelines" value="true" />
+   <property name="includeComponents" value="true" />
+   <property name="includePipelineComponents" value="false" />
+   <property name="includeCustomFunctoids" value="false" />
+   <property name="includeVocabAndRules" value="false" />
+   <property name="includeVirtualDirectories" value="true" />
+   <property name="includeMessagingBindings" value="true" />
+   <property name="includeDeploymentTest" value="true" />
+   <property name="includelog4net" value="true" />
+   <property name="includeSSO" value="true" />
+   
+   <!-- We are asking the deployment framework to create NAnt properties from the values
+        in our environment settings file that are named here. -->
+   <property name="propsFromEnvSettings" value="ssoAppUserGroup,ssoAppAdminGroup"/>
+
+   <!-- We name our host explicitly to avoid having the framework bounce them all. -->
+   <property name="bizTalkHosts" value="BizTalkServerApplication"/>     
+   
+   
+   <!-- Note that BizTalkSample.VDirList.txt is populated with "virtual directory, physical directory, app pool name"
+        tuples - one per line in the text file.  Physical directory is interpreted relative to the directory where
+        the nant script is located - not a full path! -->
+        
+   <!-- For vdirs using the BizTalk isapi extension, we set these properties: -->
+   <property name="wseExtensionPath" value="BizTalkSampleVDir" />
+   <property name="wseExtensionName" value="BizTalkSampleVDir" />
+
+   <!-- Properties to assist in deploying BizTalk rule engine vocabularies and rules
+        This sample does NOT include rules at this point - these properties just illustrate
+        what you would do if you had them.  The DeployBTRules.exe utility is used by
+        the include file to support this functionality.  -->
+   <property name="ruleVocabulary" value="${nant.project.name}.RuleVocabulary.1.3.xml" />
+   <property name="rulePolicy" value="${nant.project.name}.RulePolicy.1.1.xml" />
+   <property name="rulePolicyName" value="SomeBusinessRuleMsgPolicy" />
+ 
+   
+</project>

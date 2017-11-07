@@ -1,0 +1,121 @@
+﻿<VisualStudioProject>
+    <BIZTALK
+        ProductVersion = "3.5.1602"
+        SchemaVersion = "1.0"
+        ProjectGuid = "{9365AFE8-091E-4783-8AB0-21D5C0D1694C}"
+    >
+        <Build>
+            <Settings>
+                <EditorCommon/>
+                <ProjectCommon
+                    AssemblyKeyName = ""
+                    AssemblyKeyFile = "..\..\..\sn.snk"
+                    AssemblyDelaySign = "False"
+                    AssemblyTitle = ""
+                    AssemblyDescription = ""
+                    AssemblyDefaultAlias = ""
+                    AssemblyConfiguration = ""
+                    AssemblyTrademark = ""
+                    AssemblyProduct = ""
+                    AssemblyInformationalVersion = "1.0.0.0"
+                    AssemblyFileVersion = "1.0.0.0"
+                    AssemblyCopyright = ""
+                    AssemblyCompany = ""
+                    AssemblyVersion = "1.0.0.0"
+                    DefaultNamespace = "BizTalkSample.Orchestrations"
+                    AssemblyName = "BizTalkSample.Orchestrations"
+                />
+                <Config
+                    Name = "Debug"
+                    ApplicationName = ""
+                    BpelCompliance = "True"
+                    GenerateDebuggingInformation = "True"
+                    EmbedTrackingInformation = "True"
+                    TreatWarningsAsErrors = "False"
+                    WarningLevel = "4"
+                    OutputPath = "bin\Debug\"
+                />
+                <Config
+                    Name = "Release"
+                    ApplicationName = ""
+                    BpelCompliance = "True"
+                    GenerateDebuggingInformation = "True"
+                    EmbedTrackingInformation = "True"
+                    TreatWarningsAsErrors = "False"
+                    WarningLevel = "4"
+                    OutputPath = "bin\Release\"
+                />
+            </Settings>
+            <References>
+                <Reference
+                    Name = "System"
+                    AssemblyName = "System"
+                />
+                <Reference
+                    Name = "System.XML"
+                    AssemblyName = "System.Xml"
+                />
+                <Reference
+                    Name = "Microsoft.BizTalk.DefaultPipelines"
+                    AssemblyName = "Microsoft.BizTalk.DefaultPipelines"
+                />
+                <Reference
+                    Name = "Microsoft.BizTalk.GlobalPropertySchemas"
+                    AssemblyName = "Microsoft.BizTalk.GlobalPropertySchemas"
+                />
+                <Reference
+                    Name = "BizTalkSample.Schemas"
+                    Project = "{591308AF-430A-4DA7-8491-4D9EE640E97D}"
+                    Package = "{EF7E3281-CD33-11D4-8326-00C04FA0CE8D}"
+                />
+                <Reference
+                    Name = "BizTalkSample.Transforms"
+                    Project = "{1D490FE8-42F2-4B80-BC61-3E21BE1D6EA0}"
+                    Package = "{EF7E3281-CD33-11D4-8326-00C04FA0CE8D}"
+                />
+                <Reference
+                    Name = "BizTalkSample.Components"
+                    Project = "{7B759E2F-55AD-4EB8-A062-B3B8114FC77D}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "BizTalkSample.Pipelines"
+                    Project = "{BCC5BDA2-A7A7-4F67-B90C-91F5EF929EC9}"
+                    Package = "{EF7E3281-CD33-11D4-8326-00C04FA0CE8D}"
+                />
+                <Reference
+                    Name = "SSOSettingsFileReader"
+                    AssemblyName = "SSOSettingsFileReader"
+                    HintPath = "..\DeployTools\SSOSettingsFileReader.dll"
+                />
+                <Reference
+                    Name = "log4net"
+                    AssemblyName = "log4net"
+                    HintPath = "..\DeployTools\log4net.dll"
+                />
+                <Reference
+                    Name = "log4net.Ext.Serializable"
+                    AssemblyName = "log4net.Ext.Serializable"
+                    HintPath = "..\DeployTools\log4net.Ext.Serializable.dll"
+                />
+            </References>
+        </Build>
+        <Files>
+            <Include>
+                <File
+                    RelPath = "CalledOrch.odx"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Echo.odx"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TopLevelOrch.odx"
+                    BuildAction = "Compile"
+                />
+            </Include>
+        </Files>
+    </BIZTALK>
+</VisualStudioProject>
+

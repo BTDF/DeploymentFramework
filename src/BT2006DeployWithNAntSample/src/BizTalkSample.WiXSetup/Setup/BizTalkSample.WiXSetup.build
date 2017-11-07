@@ -1,0 +1,56 @@
+<!-- We have our base directory up with the core project to aid in reusing the the core build file. -->
+<project 
+   name="BizTalkSample" 
+   default="installer" 
+   basedir="..\..\">
+
+   <!-- Include core installer functionality. -->
+   <include buildfile="${project::get-name()}.WiXSetup\Setup\BizTalk.WiXSetup.nant" />
+
+   <!-- Pull in core build file.  Use either debugDeploy or releaseDeploy depending on where files should come from,
+        or use the supplied BuildDebugMsi/BuildReleaseMsi batch files. -->   
+   <include buildfile="${project::get-name()}.sln.deploy.build" />
+   <property name="debugDeploy" value="true" overwrite="false" />
+
+   <!-- Custom stuff (for the sample) we need to create our redistribution directory here.
+        Whatever is required for your project to correctly assemble a "redist" directory
+        should be done here. (Redist contents will be in MSI.) -->
+   <target name="customRedist">
+      <mkdir dir="${redist.dir}\BizTalkSample_InDir" />
+      
+      <mkdir dir="${redist.dir}\TestFiles" />
+      <copy todir="${redist.dir}\TestFiles">
+         <fileset basedir="TestFiles">
+            <include name="**\*.*" />
+         </fileset>
+      </copy>
+      
+      <!-- Here, we are taking all of these files into the MSI.  In the real world, you probably
+           will let your operations group manage these on a secure file share!! -->
+      <mkdir dir="${redist.dir}\EnvironmentSettings" />
+      <copy todir="${redist.dir}\EnvironmentSettings">
+         <fileset basedir="EnvironmentSettings">
+            <include name="SettingsFileGenerator.xml" />
+         </fileset>
+      </copy>
+      
+   </target>
+   
+    <!-- Make your MSI unique - your project should change these.  -->
+    <if test="${enableSideBySide}">
+      <property name="DefaultInstallDir" value="[ProgramFilesFolder]\BT2006DeployWithNAntSample\${projectVersion}" />
+    </if>
+    <if test="${not enableSideBySide}">
+      <property name="DefaultInstallDir" value="[ProgramFilesFolder]\BT2006DeployWithNAntSample" />
+    </if>
+
+    <property name="ProductUpgradeCode" value="7D9B3AF0-2292-44dd-BDC5-D6258BB08BEA" />
+    <property name="ProductName" value="BizTalkSample" />
+    <property name="ProductId" value="727071AB-7396-4b9d-8888-FEFC83FD9802" />
+    <property name="ProductVersion" value="1.0.0" />
+    <property name="Manufacturer" value="XYZ Co" />
+    <property name="PackageDescription" value="BT2006 Deploy With NAnt Sample" />
+    <property name="PackageDescription8Chars" value="BTDepSam" />
+    <property name="PackageComments" value="Sample demonstrating deployment of BizTalk 2006 solutions with NAnt" />
+
+</project>

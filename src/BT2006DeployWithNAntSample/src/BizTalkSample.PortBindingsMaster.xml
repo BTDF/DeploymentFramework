@@ -1,0 +1,229 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BindingInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Assembly="Microsoft.BizTalk.Deployment, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Version="3.5.1.0" BindingStatus="FullyBound" BoundEndpoints="3" TotalEndpoints="3">
+   <Timestamp>2006-06-27T11:11:12.3401344-05:00</Timestamp>
+   <ModuleRefCollection>
+      <ModuleRef Name="[Application:BizTalkSample]" Version="" Culture="" PublicKeyToken="" FullName="[Application:BizTalkSample], Version=, Culture=, PublicKeyToken=">
+         <Services />
+         <TrackedSchemas>
+            <Schema FullName="BizTalkSample.Schemas.BizTalkSamplePropSchema" AssemblyQualifiedName="BizTalkSample.Schemas.BizTalkSamplePropSchema,BizTalkSample.Schemas, Version=1.0.0.0, Culture=neutral, PublicKeyToken=05a4a8d4071035d9" AlwaysTrackAllProperties="false">
+               <TrackedPropertyNames />
+            </Schema>
+            <Schema FullName="BizTalkSample.Schemas.BizTalkSampleS3" AssemblyQualifiedName="BizTalkSample.Schemas.BizTalkSampleS3,BizTalkSample.Schemas, Version=1.0.0.0, Culture=neutral, PublicKeyToken=05a4a8d4071035d9" AlwaysTrackAllProperties="false">
+               <TrackedPropertyNames />
+            </Schema>
+            <Schema FullName="BizTalkSample.Schemas.BizTalkSampleS2" AssemblyQualifiedName="BizTalkSample.Schemas.BizTalkSampleS2,BizTalkSample.Schemas, Version=1.0.0.0, Culture=neutral, PublicKeyToken=05a4a8d4071035d9" AlwaysTrackAllProperties="false">
+               <TrackedPropertyNames />
+            </Schema>
+            <Schema FullName="BizTalkSample.Schemas.BizTalkSampleS1" AssemblyQualifiedName="BizTalkSample.Schemas.BizTalkSampleS1,BizTalkSample.Schemas, Version=1.0.0.0, Culture=neutral, PublicKeyToken=05a4a8d4071035d9" AlwaysTrackAllProperties="false">
+               <TrackedPropertyNames />
+            </Schema>
+         </TrackedSchemas>
+      </ModuleRef>
+      <ModuleRef Name="BizTalkSample.Schemas" Version="1.0.0.0" Culture="neutral" PublicKeyToken="05a4a8d4071035d9" FullName="BizTalkSample.Schemas, Version=1.0.0.0, Culture=neutral, PublicKeyToken=05a4a8d4071035d9">
+         <Services />
+         <TrackedSchemas />
+      </ModuleRef>
+      <ModuleRef Name="BizTalkSample.Pipelines" Version="1.0.0.0" Culture="neutral" PublicKeyToken="05a4a8d4071035d9" FullName="BizTalkSample.Pipelines, Version=1.0.0.0, Culture=neutral, PublicKeyToken=05a4a8d4071035d9">
+         <Services />
+         <TrackedSchemas />
+      </ModuleRef>
+      <ModuleRef Name="BizTalkSample.Transforms" Version="1.0.0.0" Culture="neutral" PublicKeyToken="05a4a8d4071035d9" FullName="BizTalkSample.Transforms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=05a4a8d4071035d9">
+         <Services />
+         <TrackedSchemas />
+      </ModuleRef>
+      <ModuleRef Name="BizTalkSample.Orchestrations" Version="1.0.0.0" Culture="neutral" PublicKeyToken="05a4a8d4071035d9" FullName="BizTalkSample.Orchestrations, Version=1.0.0.0, Culture=neutral, PublicKeyToken=05a4a8d4071035d9">
+         <Services>
+            <Service Name="BizTalkSample.Orchestrations.CalledOrch" State="Started" TrackingOption="ServiceStartEnd MessageSendReceive OrchestrationEvents" Description="">
+               <Ports />
+               <Roles />
+               <Host Name="BizTalkServerApplication" NTGroupName="BizTalk Application Users" Type="1" Trusted="false" />
+            </Service>
+            <Service Name="BizTalkSample.Orchestrations.Echo" State="Started" TrackingOption="ServiceStartEnd MessageSendReceive OrchestrationEvents" Description="">
+               <Ports>
+                  <Port Name="EchoPort" Modifier="2" BindingOption="1">
+                     <SendPortRef xsi:nil="true" />
+                     <DistributionListRef xsi:nil="true" />
+                     <ReceivePortRef Name="BizTalkSample_Echo" />
+                  </Port>
+               </Ports>
+               <Roles />
+               <Host Name="BizTalkServerApplication" NTGroupName="BizTalk Application Users" Type="1" Trusted="false" />
+            </Service>
+            <Service Name="BizTalkSample.Orchestrations.TopLevelOrch" State="Started" TrackingOption="ServiceStartEnd MessageSendReceive OrchestrationEvents" Description="">
+               <Ports>
+                  <Port Name="TopLevelRequestPort" Modifier="2" BindingOption="1">
+                     <SendPortRef xsi:nil="true" />
+                     <DistributionListRef xsi:nil="true" />
+                     <ReceivePortRef Name="BizTalkSample_Sample1" />
+                  </Port>
+                  <Port Name="TopLevelResponsePort" Modifier="1" BindingOption="1">
+                     <SendPortRef Name="BizTalkSample_SampleS2_File" />
+                     <DistributionListRef xsi:nil="true" />
+                     <ReceivePortRef xsi:nil="true" />
+                  </Port>
+               </Ports>
+               <Roles />
+               <Host Name="BizTalkServerApplication" NTGroupName="BizTalk Application Users" Type="1" Trusted="false" />
+            </Service>
+         </Services>
+         <TrackedSchemas />
+      </ModuleRef>
+   </ModuleRefCollection>
+   <SendPortCollection>
+      <SendPort Name="BizTalkSample_SampleS2_File" IsStatic="true" IsTwoWay="false" BindingOption="1">
+         <Description xsi:nil="true" />
+         <TransmitPipeline Name="BizTalkSample.Pipelines.SendPipeline" FullyQualifiedName="BizTalkSample.Pipelines.SendPipeline, BizTalkSample.Pipelines, Version=1.0.0.0, Culture=neutral, PublicKeyToken=05a4a8d4071035d9" Type="2" TrackingOption="ServiceStartEnd MessageSendReceive PipelineEvents" Description="" />
+         <PrimaryTransport>
+            <!-- ifdef ${_xml_preprocess} -->
+            <!-- <Address>${FileSendLocation}\%MessageID%.xml</Address> -->
+            <!-- else -->
+            <Address>C:\temp\BizTalkSample_OutDir\%MessageID%.xml</Address>
+            <!-- endif -->
+            <TransportType Name="FILE" Capabilities="11" ConfigurationClsid="5e49e3a6-b4fc-4077-b44c-22f34a242fdb" />
+            <!-- Note we use ElementTunnel.exe to encode the contents of this element.  We keep it decoded in this file to ease maintenance. -->
+            <TransportTypeData>
+               <CustomProps>
+                  <UseTempFileOnWrite vt="11">0</UseTempFileOnWrite>
+                  <CopyMode vt="19">1</CopyMode>
+                  <FileName vt="8">%MessageID%.xml</FileName>
+                  <AllowCacheOnWrite vt="11">0</AllowCacheOnWrite>
+               </CustomProps>
+            </TransportTypeData>
+            <RetryCount>3</RetryCount>
+            <RetryInterval>5</RetryInterval>
+            <ServiceWindowEnabled>false</ServiceWindowEnabled>
+            <FromTime>2000-01-01T00:00:00</FromTime>
+            <ToTime>2000-01-01T23:59:59</ToTime>
+            <Primary>true</Primary>
+            <OrderedDelivery>false</OrderedDelivery>
+            <DeliveryNotification>1</DeliveryNotification>
+            <SendHandler Name="BizTalkServerApplication" HostTrusted="false">
+               <TransportType Name="FILE" Capabilities="11" ConfigurationClsid="5e49e3a6-b4fc-4077-b44c-22f34a242fdb" />
+            </SendHandler>
+         </PrimaryTransport>
+         <SecondaryTransport>
+            <Address />
+            <RetryCount>3</RetryCount>
+            <RetryInterval>5</RetryInterval>
+            <ServiceWindowEnabled>false</ServiceWindowEnabled>
+            <FromTime>2000-01-01T00:00:00</FromTime>
+            <ToTime>2000-01-01T23:59:59</ToTime>
+            <Primary>false</Primary>
+            <OrderedDelivery>false</OrderedDelivery>
+            <DeliveryNotification>1</DeliveryNotification>
+            <SendHandler xsi:nil="true" />
+         </SecondaryTransport>
+         <ReceivePipelineData xsi:nil="true" />
+         <Tracking>0</Tracking>
+         <Filter />
+         <Transforms />
+         <OrderedDelivery>false</OrderedDelivery>
+         <Priority>5</Priority>
+         <StopSendingOnFailure>false</StopSendingOnFailure>
+         <RouteFailedMessage>false</RouteFailedMessage>
+         <ApplicationName>BizTalkSample</ApplicationName>
+      </SendPort>
+   </SendPortCollection>
+   <DistributionListCollection />
+   <ReceivePortCollection>
+      <ReceivePort Name="BizTalkSample_Sample1" IsTwoWay="false" BindingOption="1">
+         <Description xsi:nil="true" />
+         <ReceiveLocations>
+            <ReceiveLocation Name="BizTalkSample_Sample1_File">
+               <Description xsi:nil="true" />
+               <!-- CurDir macro wil contain current directory. -->
+               <!-- ifdef ${_xml_preprocess} -->
+               <!-- <Address>${CurDir}\BizTalkSample_InDir\*.xml</Address> -->
+               <!-- else -->
+               <Address>C:\devproj\BT2006DeployWithNAntSample\src\BizTalkSample_InDir\*.xml</Address>
+               <!-- endif -->
+               <PublicAddress />
+               <Primary>true</Primary>
+               <ReceiveLocationServiceWindowEnabled>false</ReceiveLocationServiceWindowEnabled>
+               <ReceiveLocationFromTime>2000-01-01T00:00:00</ReceiveLocationFromTime>
+               <ReceiveLocationToTime>2000-01-01T23:59:59</ReceiveLocationToTime>
+               <ReceiveLocationStartDateEnabled>false</ReceiveLocationStartDateEnabled>
+               <ReceiveLocationStartDate>2000-01-01T00:00:00</ReceiveLocationStartDate>
+               <ReceiveLocationEndDateEnabled>false</ReceiveLocationEndDateEnabled>
+               <ReceiveLocationEndDate>2000-01-01T23:59:59</ReceiveLocationEndDate>
+               <ReceiveLocationTransportType Name="FILE" Capabilities="11" ConfigurationClsid="5e49e3a6-b4fc-4077-b44c-22f34a242fdb" />
+               <!-- Note we use ElementTunnel.exe to encode the contents of this element.  We keep it decoded in this file to ease maintenance. -->
+               <ReceiveLocationTransportTypeData>
+                  <CustomProps>
+                     <RemoveReceivedFileRetryCount vt="19">5</RemoveReceivedFileRetryCount>
+                     <RemoveReceivedFileMaxInterval vt="19">300000</RemoveReceivedFileMaxInterval>
+                     <FileMask vt="8">*.xml</FileMask>
+                     <BatchSizeInBytes vt="19">102400</BatchSizeInBytes>
+                     <PollingInterval vt="19">60000</PollingInterval>
+                     <BatchSize vt="19">20</BatchSize>
+                     <FileNetFailRetryInt vt="19">5</FileNetFailRetryInt>
+                     <RemoveReceivedFileDelay vt="19">10</RemoveReceivedFileDelay>
+                     <RenameReceivedFiles vt="11">0</RenameReceivedFiles>
+                     <FileNetFailRetryCount vt="19">5</FileNetFailRetryCount>
+                  </CustomProps>
+               </ReceiveLocationTransportTypeData>
+               <ReceivePipeline Name="BizTalkSample.Pipelines.ReceivePipeline" FullyQualifiedName="BizTalkSample.Pipelines.ReceivePipeline, BizTalkSample.Pipelines, Version=1.0.0.0, Culture=neutral, PublicKeyToken=05a4a8d4071035d9" Type="1" TrackingOption="ServiceStartEnd MessageSendReceive PipelineEvents" Description="" />
+               <ReceivePipelineData xsi:nil="true" />
+               <SendPipeline xsi:nil="true" />
+               <SendPipelineData xsi:nil="true" />
+               <Enable>true</Enable>
+               <ReceiveHandler Name="BizTalkServerApplication" HostTrusted="false">
+                  <TransportType Name="FILE" Capabilities="11" ConfigurationClsid="5e49e3a6-b4fc-4077-b44c-22f34a242fdb" />
+               </ReceiveHandler>
+            </ReceiveLocation>
+         </ReceiveLocations>
+         <SendPipelineData xsi:nil="true" />
+         <Authentication>0</Authentication>
+         <Tracking>0</Tracking>
+         <Transforms />
+         <RouteFailedMessage>false</RouteFailedMessage>
+         <ApplicationName>BizTalkSample</ApplicationName>
+      </ReceivePort>
+      <ReceivePort Name="BizTalkSample_Echo" IsTwoWay="true" BindingOption="1">
+         <Description xsi:nil="true" />
+         <ReceiveLocations>
+            <ReceiveLocation Name="BizTalkSample_Echo_HTTP">
+               <Description xsi:nil="true" />
+               <Address>/BizTalkSampleVDir/btshttpreceive.dll</Address>
+               <PublicAddress>http://localhost/BizTalkSampleVDir</PublicAddress>
+               <Primary>true</Primary>
+               <ReceiveLocationServiceWindowEnabled>false</ReceiveLocationServiceWindowEnabled>
+               <ReceiveLocationFromTime>2000-01-01T00:00:00</ReceiveLocationFromTime>
+               <ReceiveLocationToTime>2000-01-01T23:59:59</ReceiveLocationToTime>
+               <ReceiveLocationStartDateEnabled>false</ReceiveLocationStartDateEnabled>
+               <ReceiveLocationStartDate>2000-01-01T00:00:00</ReceiveLocationStartDate>
+               <ReceiveLocationEndDateEnabled>false</ReceiveLocationEndDateEnabled>
+               <ReceiveLocationEndDate>2000-01-01T23:59:59</ReceiveLocationEndDate>
+               <ReceiveLocationTransportType Name="HTTP" Capabilities="387" ConfigurationClsid="1c56d157-0553-4345-8a1f-55d2d1a3ffb6" />
+               <!-- Note we use ElementTunnel.exe to encode the contents of this element.  We keep it decoded in this file to ease maintenance. -->
+               <ReceiveLocationTransportTypeData>
+                  <CustomProps>
+                     <ReturnCorrelationHandle vt="11">-1</ReturnCorrelationHandle>
+                     <ResponseContentType vt="8">text/xml</ResponseContentType>
+                     <SuspendFailedRequests vt="11">0</SuspendFailedRequests>
+                     <UseSSO vt="11">0</UseSSO>
+                     <LoopBack vt="11">0</LoopBack>
+                  </CustomProps>
+               </ReceiveLocationTransportTypeData>
+               <ReceivePipeline Name="Microsoft.BizTalk.DefaultPipelines.PassThruReceive" FullyQualifiedName="Microsoft.BizTalk.DefaultPipelines.PassThruReceive, Microsoft.BizTalk.DefaultPipelines, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Type="1" TrackingOption="ServiceStartEnd MessageSendReceive PipelineEvents" Description="" />
+               <ReceivePipelineData xsi:nil="true" />
+               <SendPipeline Name="Microsoft.BizTalk.DefaultPipelines.PassThruTransmit" FullyQualifiedName="Microsoft.BizTalk.DefaultPipelines.PassThruTransmit, Microsoft.BizTalk.DefaultPipelines, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Type="2" TrackingOption="ServiceStartEnd MessageSendReceive PipelineEvents" Description="" />
+               <SendPipelineData xsi:nil="true" />
+               <Enable>true</Enable>
+               <ReceiveHandler Name="BizTalkServerIsolatedHost" HostTrusted="false">
+                  <TransportType Name="HTTP" Capabilities="387" ConfigurationClsid="1c56d157-0553-4345-8a1f-55d2d1a3ffb6" />
+               </ReceiveHandler>
+            </ReceiveLocation>
+         </ReceiveLocations>
+         <TransmitPipeline Name="Microsoft.BizTalk.DefaultPipelines.PassThruTransmit" FullyQualifiedName="Microsoft.BizTalk.DefaultPipelines.PassThruTransmit, Microsoft.BizTalk.DefaultPipelines, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Type="2" TrackingOption="ServiceStartEnd MessageSendReceive PipelineEvents" Description="" />
+         <SendPipelineData xsi:nil="true" />
+         <Authentication>0</Authentication>
+         <Tracking>0</Tracking>
+         <Transforms />
+         <OutboundTransforms />
+         <RouteFailedMessage>false</RouteFailedMessage>
+         <ApplicationName>BizTalkSample</ApplicationName>
+      </ReceivePort>
+   </ReceivePortCollection>
+   <PartyCollection />
+</BindingInfo>

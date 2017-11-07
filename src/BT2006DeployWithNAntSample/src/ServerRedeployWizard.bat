@@ -1,0 +1,2 @@
+DeployTools\EnvironmentSettingsExporter.exe EnvironmentSettings\SettingsFileGenerator.xml EnvironmentSettings
+DeployTools\SetEnvUI.exe InstallWizard.xml ServerRedeploy.bat

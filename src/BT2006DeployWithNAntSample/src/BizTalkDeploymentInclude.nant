@@ -1,0 +1,1471 @@
+<!--
+      Scott Colestock / www.traceofthought.net
+      
+      Version 4.1
+      
+      Contributors: Thomas F. Abraham
+
+      This is the core of the Deployment Framework for BizTalk.
+      
+      It should be included by the NAnt file for a particular BizTalk project that is
+      leveraging this framework.  It has the targets necessary for most BizTalk deployment tasks.
+      
+      NAnt files that include this file can indicate which components of a BizTalk solution they
+      have by including definition of the following properties and setting to true/false:
+      
+	   <property name="biztalk2006"  value="false" />
+	  
+      <property name="includeSchemas"  value="true" />
+      <property name="includeOrchestrations" value="true" />
+      <property name="includeTransforms" value="true" />
+      <property name="includePipelines" value="true" />
+      <property name="includeComponents" value="true" />
+      <property name="includeInstallUtilForComponents" value="false" />
+      <property name="includePipelineComponents" value="false" />
+      <property name="includeCustomFunctoids" value="false" />
+      <property name="includeVocabAndRules" value="false" />
+      <property name="includeVirtualDirectories" value="false" />
+      <property name="includeMessagingBindings" value="true" />
+      <property name="includeDeploymentTest" value="true" />
+      <property name="includelog4net" value="false" />
+      <property name="includeSSO" value="false" />
+      <property name="includeBAM" value="false" />
+
+      The primary targets of interest will be:
+      * debugDeploy          Used for deploying debug binaries on a development machine
+      * updateOrchestration  Used during development when orchestration assemblies have changed
+                             but have NOT affected port configuration.  Also updates component assemblies and SSO,
+                             as well as maps and schemas per http://www.masteringbiztalk.com/blogs/jon/PermaLink,guid,628aecb9-4eaa-4044-88c9-92cb53f81bdf.aspx
+      * releaseDeploy        Used for deploying release binaries on a development machine
+      * serverDeploy         Used for deploying binaries that are "co-located" with the build file, such
+                             as after an MSI-based deployment.
+                        
+      There are also the following targets for undeploying:
+      * debugUndeploy
+      * releaseUndeploy
+      * serverUndeploy                        
+      
+      To use this build file in conjunction with your own for daily use you will need to:
+      * Create a NAnt file that includes this file using the <include> task.  Name your <project> tag after
+        your solution.  The expectation (unless you override properties below) is that your project name is also
+        a "prefix" for all your assemblies (i.e. <project name="BizTalkSample"> corresponds to BizTalkSample.sln, which
+        has projects such as BizTalkSample.Orchestrations)
+      * Bootstrap your binding files, using a manual deployment and the BizTalk
+        Deployment wizard if need be.  These are referenced by the portBindings properties below (using multiple
+        binding files in a comma separated list is supported.)
+      * If you require virtual directories, customize the VDirList.txt file (see the vdirListFile property below
+        for additional information.
+   
+      Other properties of interest:
+      * deployResults      Deployment results will be placed here (diagnostic outpout)
+      * deployTools        External scripts required are located here. 
+      * skipUndeploy       Note that the deploy targets will attempt to undeploy the project prior to 
+                           deploying.  You can override this behavior by passing in 
+                           -D:skipUndeploy=true on the nant.exe command line.
+
+      
+      Assumptions: This deployment framework assumes that on a developer machine, your assembly names, DLL names, 
+      and directory names are identical for a given project (i.e. BizTalkSample.Orchestrations.btproj corresponds
+      to BizTalkSample.Orchestrations.dll, which corresponds to the BizTalkSample.Orchestrations assembly.
+      
+      If this is not the case, you can certainly add a set of properties that
+      contain this information and substitute these where the current properties are used as directory names, etc.
+      Having the framework assume they are common enforces a degree of consistency that can be desirable, but might
+      not fit your needs.
+
+-->
+
+<project name="BizTalkDeploymentInclude.build">
+
+   <loadtasks assembly="DeployTools\NAntSubset\BizTalk.NAnt.Tasks.dll" />
+  
+   <call target="winVer"/>
+
+   <!-- Set this to true for BizTalk 2006 support. -->
+	<property name="biztalk2006"  value="true" />
+
+   <!-- Defaults for what deployment elements will be included.  NAnt scripts that include this file should
+        set these properties to false if they wish to exclude elements. -->
+   <property name="includeSchemas"  value="true" />
+   <property name="includeOrchestrations" value="true" />
+   <property name="includeTransforms" value="true" />
+   <property name="includePipelines" value="true" />
+   <property name="includeComponents" value="true" />
+   <property name="includeInstallUtilForComponents" value="false" />
+   <property name="includePipelineComponents" value="true" />
+   <property name="includeCustomFunctoids" value="true" />
+   <property name="includeVocabAndRules" value="true" />
+   <property name="includeVirtualDirectories" value="true" />
+   <property name="includeMessagingBindings" value="true" />
+   <property name="includeDeploymentTest" value="true" />  <!-- Used by WiX pieces. -->
+   <property name="includelog4net" value="false" />
+   <property name="includeSSO" value="false" />
+
+   <!-- Configure BizTalk to run this application in an isolated AppDomain? -->
+   <!-- This will update BTSNTSvc.exe.config to map this project's assemblies into a unique AppDomain. -->
+   <property name="useIsolatedAppDomain" value="false" />
+   
+   <!-- BAM definitions may be deployed by the script, but they will never be auto-undeployed because doing so
+        will generally cause data loss.  BAM definitions may be undeployed using the target 'undeployBam'. -->
+   <property name="includeBAM" value="false" />
+
+   <!-- BizTalk Side-by-Side (SxS) Application Versioning -->
+   <!--
+		Sometimes one must deploy multiple versions of the same BizTalk application to the same BizTalk server.
+		To make this easier, the script can auto-append a version number to the BizTalk application name and
+		to the SSO affiliate app name.  In the future it may auto-append a version number to the port names too.
+		
+		There are three important version numbers:
+		1) The assembly version numbers
+		2) The "project version" number
+		3) The "product version" number
+		
+		BizTalk will look at the assembly version numbers to decide if an assembly has changed, but it will only
+		look at Major.Minor and ignore the rest.  These must be deliberately changed in order to deploy SxS to
+		the GAC since the strong names include the version numbers.
+		
+		We also declare a script variable called "projectVersion".  This is the version number that is used
+		in the install directory structure, BizTalk application name, SSO app name, etc.
+		THIS VERSION SHOULD GENERALLY MATCH THE MAJOR.MINOR VERSION OF YOUR ASSEMBLIES.
+		
+		Finally, we declare a "ProductVersion" variable in the WiX setup script.  This version number represents
+		the specific build version of the code.  For instance, you may be working on BTApp 1.1 (projectVersion),
+		but you are creating an installer for the specific build BTApp 1.1.2358.2 (ProductVersion).  ProductVersion
+		is used in the generated MSI filename and displays in Add/Remove Programs in the "support information" dialog.
+		The ProductVersion is a good choice to receive your automated build's version number.
+   -->
+   <property name="enableSideBySide" value="false" overwrite="false"/>
+   <property name="projectVersion" value="1.0" overwrite="false" />
+   <property name="disableAutomaticPortNameVersioning" value="false" overwrite="false"/>
+
+   <!-- 
+         Configuration properties that can be overridden by
+         build file that includes this file.
+   -->
+
+   <!-- Set this to false if you don't wish to deploy PDBs to the GAC.  Deploying PDBs
+        to the GAC means more meaningful stack traces.  Consider turning on PDB creation
+        for your release builds, too. Note that turning this on means a service-stop
+        prior to deployment/undeployment, since loading PDBs causes the BTSNTSvc.exe process to
+        hold on to assemblies even after orchestration unenlistment.  This means it might
+        only be desirable on servers, to avoid delay for developers. -->
+   <property name="deployPDBsToGac" value="false" overwrite="false" />
+
+   <!-- Set this to true to indicate you are using a "master" bindings file - such that xmlpreprocess
+        doesn't overwrite it. -->   
+   <property name="usingMasterBindings" value="false" overwrite="false" />
+   
+   <!-- Set this to true to indicate you are using ElementTunnel to maintain unescaped
+        TransportTypeData.  See ElementTunnel.exe for more info. -->
+   <property name="applyXmlEscape" value="false" overwrite="false" />
+
+   <!-- Set this to true to include components and virtual directories as resources
+        within the created BizTalk 2006 application artifact.  Use true if you intend
+        to export MSIs from BT2006 MMC.  -->
+   <property name="includeCompsAndVDirsAsResources" value="false" overwrite="false"/>
+   
+   <!-- Setting this property to true means that when you supply your own values for the
+        components, schemas, pipelines, transforms, etc. properties below you are supplying
+        full paths - and taking responsibility for varying the "debug" vs "release" in the
+        dev workstation case.  Much less work to just adhere to the convention of the 
+        directory name corresponding to the project name. -->
+   <property name="useCustomDirs" value="false" overwrite="false"/>
+   
+   <!-- You can set this to true if you are not using HTTP/SOAP, or you are but no custom
+        pipelines are involved. -->
+   <property name="skipIISReset" value="false" overwrite="false"/>
+   
+   <!-- One or more assemblies containing .NET classes required by your other assemblies (comma separated) -->
+   <property name="components" value="${project::get-name()}.Components" overwrite="false" />
+   
+   <!-- One or more schema assemblies (comma separated - least dependent first, if schema assemblies
+        reference each other.) -->
+   <property name="schemas" value="${project::get-name()}.Schemas" overwrite="false"/>
+   
+   <!-- One or more pipeline assemblies (comma separated) -->
+   <property name="pipelines" value="${project::get-name()}.Pipelines" overwrite="false"/>
+
+   <!-- One or more transform assemblies (comma separated) -->
+   <property name="transforms" value="${project::get-name()}.Transforms" overwrite="false"/>
+   
+   <!-- One or more pipeline component assemblies (comma separated) -->
+   <property name="pipelineComponents" value="${project::get-name()}.PipelineComponents" overwrite="false"/>
+   
+   <!-- One or more pipeline component assemblies (comma separated) -->
+   <property name="customFunctoids" value="${project::get-name()}.CustomFunctoids" overwrite="false"/>
+
+   <!-- One or more orchestration assemblies (comma separated) -->
+   <property name="orchestrations" value="${project::get-name()}.Orchestrations" overwrite="false"/>
+
+   <!-- One or more BAM definition files (comma separated) -->
+   <property name="bamDefinitions" value="${project::get-name()}.BAM.xls" overwrite="false"/>
+
+   <!-- An NUnit assembly that can be used for unit testing. -->
+   <property name="deploymentTest" value="${project::get-name()}.DeploymentTest" overwrite="false"/>
+
+   <!-- This is one or more (comma separated) binding files that contain definitions for ports and orchestrations, as
+        emitted by the BizTalk Deployment Wizard.  
+        Note: If you want to use the older style "split" binding files, portBindings should contain
+        the SendPortCollection, DistributionListCollection, ReceivePortCollection, and Party Collection children underneath the BindingInfo element. -->
+   <property name="portBindings" value="${project::get-name()}.PortBindings.xml" overwrite="false" />
+   
+   <!-- Only used if applyXmlEscape=true -->
+   <property name="portBindingsMaster" value="${project::get-name()}.PortBindingsMaster.xml" overwrite="false" />
+
+   <!-- A comma separated file (no spaces) with virtual directory, physical directory name, application pool name (IIS6) 
+         See deployVDirs target for exact definition of functionality.  Physical directory is interpreted relative
+         to the directory where the NAnt script is located. -->
+   <property name="vdirListFile" value="${project::get-name()}.VDirList.txt" overwrite="false" />
+
+   <!-- A list of applications to add BizTalk references for (comma separated). -->
+   <property name="appsToReference" value="" overwrite="false" />
+
+   <!-- These properties control the groups that will be used when creating an SSO affiliate app, if
+        includeSSO property is true.  Override these in your project-specific nant file with the groups
+        your targeted host account is a member of, or use SettingsFileGenerator.xls with propsFromEnvSettings  -->
+   <property name="ssoAppUserGroup" value="BizTalk Application Users" overwrite="false"/>
+   <property name="ssoAppAdminGroup" value="BizTalk Server Administrators" overwrite="false"/>
+   
+   
+   <!-- Subdirectory that contains a btshttpreceive.dll and btshttpreceive64.dll that should be added to IIS6 web service extension list. -->
+<!--   
+   <property name="wseExtensionPath" value="BTSHTTP_VD" />
+   <property name="wseExtensionName" value="BTSHTTP_VD" />
+-->   
+   
+   <!-- If you wish to limit which BizTalk hosts are restarted, provided a comma-separated list in this property. -->
+   <property name="bizTalkHosts" value="ALL" overwrite="false"/>
+   
+   <!-- Customize if needed (in seconds) -->
+   <property name="iisResetTime" value="60"/>
+   <!-- Customize if needed (in milliseconds) -->
+   <property name="biztalkHostResetTime" value="60000" />
+   
+   <!-- Comma separated list of send port groups, send ports, and receive locations that 
+        should NOT be started when ports are started. -->
+   <property name="portsToExcludeFromStart" value="" overwrite="false"/>
+   
+   <!--Orchestrations that should not be started or stopped-->
+   <property name="orchestrationsToIgnore" value="" overwrite="false"/>
+
+   <!-- Whether a BT 2006 application start should be performed after deployment. -->
+   <property name="startApplicationOnDeploy" value="true" overwrite="false"/>
+   
+   <!-- Location of deployment-related scripts and tools, and target directory for deployment results. -->
+   <!-- Note corresponding directories in MSI project. -->
+   <property name="deployTools" value="DeployTools" overwrite="false" />
+   <property name="deployResults" value="DeployResults" overwrite="false" />
+
+
+   <!-- Will determine if running on 64 bit OS -->
+   <property name="is64bitOS" value="false"/>
+   <property name="is64bitOS" value="true" if="${directory::exists(sys.env.windir + '\syswow64')}" />
+
+   <!-- Use 64 bit cscript.exe if on 64 bit windows -->
+   <property name="cscript" value="cscript.exe"/>
+   <property name="cscript" value="${deployTools}\cscript64.exe" if="${is64bitOS}" />
+   <echo message="is64bitOS flag is ${is64bitOS}" />
+
+  <!-- Use 64 bit btshttpreceive.dll if on 64 bit windows.  Note: Grab
+       btshttpreceive.dll from HttpReceive64 subdirectory of your installation
+       and rename to btshttpreceive64.dll to make this work - allows for deployment
+       to function both for dev workstations and servers. -->
+  <property name="btshttpreceive" value="btshttpreceive.dll"/>
+  <property name="btshttpreceive" value="btshttpreceive.dll" if="${is64bitOS}" />
+  
+  <!-- Flag typically used on NAnt command line to indicate that undeploy targets should be skipped.
+        This speeds up a first-time server-style deployment.  Referenced by the "unless" attribute on many targets below. -->
+   <property name="skipUndeploy" value="false" overwrite="false" />
+
+  <!-- Indicates that BAM profile definitions should not be undeployed.  Undeploying a profile may cause existing BAM
+        data to be lost.  Referenced by the "unless" attribute on the undeployBam target below. -->
+  <property name="skipBamUndeploy" value="true" overwrite="false" />
+
+  <!-- Flag typically used on NAnt command line to indicate whether we are deploying to BizTalk management database. -->
+   <property name="deployBizTalkMgmtDB" value="true" overwrite="false" />
+   
+   <!-- Default "flavor" of deployment to use, to support individual targets being called successfully.  This can be overridden
+        in the containing NAnt script. -->
+   <!--<property name="serverDeploy" value="true" overwrite="false" />-->
+
+   <!-- Used for copying pipeline components to the correct directory, among other things.
+        This registry key is unchanged between BizTalk 2004 and BizTalk 2006. -->
+   <readregistry property="btsDir" key="SOFTWARE\Microsoft\BizTalk Server\3.0\InstallPath" hive="LocalMachine"
+      failonerror="true" />
+      
+   <readregistry property="frameworkDir" key="SOFTWARE\Microsoft\.NETFramework\InstallRoot" hive="LocalMachine"/>
+
+   <!-- Used to gather version information about Windows -->      
+   <readregistry property="winVer" key="SOFTWARE\Microsoft\Windows NT\CurrentVersion\CurrentVersion" hive="LocalMachine"
+      failonerror="true" />
+   
+   <!-- The list of additional assemblies that will be deployed to the GAC from the
+        DeployTools folder.  Overrideable of course. -->   
+   <property name="additionalAssemblies" value="log4net,log4net.Ext.Serializable,SSOSettingsFileReader" overwrite="false"/>
+   
+   <!-- The registry key where log4net configuration file location information 
+        will be written to/read from if we are using log4net -->
+   <property name="log4netRegKey" value="HKLM\SOFTWARE\${project::get-name()}\log4netConfig"/>
+      
+   <!--
+         Primary deployment targets.
+         
+   -->
+
+   <!-- debugDeploy/debugUndeploy are the work horses for most day-to-day development.  
+        Release variants exist as well. -->
+   <target name="debugDeploy" description="Deploy debug binaries.">
+      <property name="debugDeploy" value="true" />
+      <property name="serverDeploy" value="false" />
+      <call target="deploy" />
+      <tstamp property="deployComplete" />
+   </target>
+   <target name="debug.deploy" description="For backwards compatibility with previous versions of the template.">
+      <call target="debugDeploy"/>
+   </target>
+      
+   <target name="debugUndeploy" description="Un-Deploy debug binaries.">
+      <property name="debugDeploy" value="true" />
+      <property name="serverDeploy" value="false" />
+      <call target="undeploy" />
+      <tstamp property="undeployComplete" />
+   </target>
+   <target name="debug.undeploy" description="For backwards compatibility with previous versions of the template.">
+      <call target="debugUndeploy"/>
+   </target>
+   
+   <target name="releaseDeploy" description="Deploy release binaries.">
+      <property name="releaseDeploy" value="true" />
+      <property name="serverDeploy" value="false" />
+      <call target="deploy" />
+      <tstamp property="deployComplete" />
+   </target>
+   
+   <target name="releaseUndeploy" description="Un-Deploy release binaries.">
+      <property name="releaseDeploy" value="true" />
+      <property name="serverDeploy" value="false" />
+      <call target="undeploy" />
+      <tstamp property="undeployComplete" />
+   </target>
+   
+   <!-- serverDeploy/serverUndeploy are all about deploying binaries that arrive via MSI installation!
+        Note that this target expects a property to have been defined - most likely on the command line -
+        that defines whether we are supposed to deploy to the BizTalk management database or not, since
+        that only has to happen once in a multi-server group -->
+   <target name="serverDeploy" description="Deploy co-located binaries for a server installation.">
+      <property name="serverDeploy" value="true" />
+      <call target="deployBizTalkMgmtDB_${deployBizTalkMgmtDB}"/>
+      <tstamp property="deployComplete" />
+   </target>
+   <target name="server.deploy" description="For backwards compatibility with previous versions of the template.">
+      <call target="serverDeploy"/>
+   </target>
+   
+   <target name="deployBizTalkMgmtDB_true" description="Supports server deployments that include the BizTalk management database.">
+      <!-- In this case, do a full deployment -->
+      <call target="deploy" />
+   </target>
+   
+   <!-- Used for a deployment that will NOT deploy assemblies to the BizTalk management database. 
+        Only one server in a BizTalk group should actually deploy assemblies to the management database. -->
+   <target name="deployBizTalkMgmtDB_false" description="Support servers deployments that do not include Biztalk management database."
+      depends="frameworkInitialize,preprocessBindings,_customDeployTarget,deployComponents,deployPipelineComponents,deployCustomFunctoids,deployVDirs,_customPostDeployTarget">
+      <!-- Need to handle these differently than standard targets - just putting in gac... -->
+      <if test="${includeSchemas}">
+         <property name="projectName" value="${schemas}"/>
+         <call target="gacIt"/>
+      </if>
+      <if test="${includePipelines}">
+         <property name="projectName" value="${pipelines}" />
+         <call target="gacIt"/>
+      </if>
+      <if test="${includeTransforms}">
+         <property name="projectName" value="${transforms}" />
+         <call target="gacIt"/>
+      </if>
+      <if test="${includeOrchestrations}">
+         <property name="projectName" value="${orchestrations}" />
+         <call target="gacIt"/>
+      </if>
+   </target>
+   
+   <!-- Note this target is consulting the deployBizTalkMgmtDB property, which is generally passed in on the command line,
+        to determine whether we will be deploying to the biztalk management database. -->
+   <target name="serverUndeploy" description="Un-Deploy co-located binaries.">
+      <property name="serverDeploy" value="true" />
+      <call target="undeployBizTalkMgmtDB_${deployBizTalkMgmtDB}"/>
+      <tstamp property="undeployComplete" />
+   </target>
+   <target name="server.undeploy" description="For backwards compatibility with previous versions of the template.">
+      <call target="serverUndeploy"/>
+   </target>
+
+ 
+   <target name="undeployBizTalkMgmtDB_true" description="Supports server undeployment that includes undeploying from the BizTalk management database.">
+      <!-- Standard undeployment -->
+      <call target="undeploy" />
+   </target>
+   
+   <!-- Used for an undeployment that will NOT remove assemblies from the BizTalk management databsae.  
+        Only one server in a BizTalk group should actually undeploy assemblies from the management database. -->
+   <target name="undeployBizTalkMgmtDB_false" description="Supports server undeployment that does not include undeploying from the BizTalk management database."
+      depends="frameworkInitialize,_customUndeployTarget,undeployComponents,undeployPipelineComponents,undeployCustomFunctoids,undeployVDirs,_customPostUndeployTarget">
+      <if test="${includeSchemas}">
+         <property name="projectName" value="${schemas}"/>
+         <call target="unGacIt"/>
+      </if>
+      <if test="${includePipelines}">
+         <property name="projectName" value="${pipelines}" />
+         <call target="unGacIt"/>
+      </if>
+      <if test="${includeTransforms}">
+         <property name="projectName" value="${transforms}" />
+         <call target="unGacIt"/>
+      </if>
+      <if test="${includeOrchestrations}">
+         <property name="projectName" value="${orchestrations}" />
+         <call target="unGacIt"/>
+      </if>
+   </target>
+   
+   <target name="frameworkInitialize">
+
+      <call target="handle2006"/>
+
+      <call target="exportSettings"/>
+
+      <call target="setPropertiesFromEnvironmentSettings"/>
+      <call target="conditionalHostStop" />
+
+      <call target="initializeAppName" />
+   </target>
+
+   <target name="initializeAppName">
+     <property name="bizTalkAppName" value="${project::get-name()}_${projectVersion}" if="${enableSideBySide}" overwrite="false" />
+     <property name="bizTalkAppName" value="${project::get-name()}" if="${not enableSideBySide}" overwrite="false" />
+
+   </target>
+   
+   <target name="exportSettings">
+
+      <exec program="${deployTools}\EnvironmentSettingsExporter.exe" verbose="true" failonerror="true">
+        <arg value="${project::get-base-directory()}\EnvironmentSettings\SettingsFileGenerator.xml" />
+        <arg value="${project::get-base-directory()}\EnvironmentSettings" />
+      </exec>
+   
+   </target>
+
+   <target name="handle2006">
+
+      <property name="frameworkVer" value="v1.1.4322" />
+      <property name="gacutil" value="${frameworkDir}${frameworkVer}\gacutil.exe"/>
+
+      <if test="${biztalk2006}">
+         <echo message="Using BizTalk 2006..."/>
+         <!-- doesn't look like 2.0 includes this in framework dir -->
+         <property name="gacutil" value="${deployTools}\gacutil.exe"/>
+
+         <property name="frameworkVer" value="v2.0.50727" />
+      </if>
+      
+   </target>
+   
+   <target name="conditionalHostStop">
+
+      <!-- Since host instance processes will be hanging on to DLLs... -->
+      <if test="${deployPDBsToGac and not skipUndeploy}">
+         <call target="stopBizTalk" />
+      </if>
+
+   </target>
+   
+   <!-- This target acts as a "function" to create a full path to a binary based on whether we are doing
+       a debug deploy, release deploy, or server deploy as a result of a formal installation. -->
+   <target name="selectPath" description="Creates correct path formulation based on type of deployment.">
+      <if test="${property::exists('debugDeploy') and debugDeploy}">
+          <property name="fullPath" value="${nameInput}\bin\debug\${nameInput}.dll" />
+      </if>
+      <if test="${property::exists('releaseDeploy') and releaseDeploy}">
+         <property name="fullPath" value="${nameInput}\bin\release\${nameInput}.dll" />
+      </if>
+      <if test="${property::exists('serverDeploy') and serverDeploy}">
+         <property name="fullPath" value="${nameInput}.dll" />
+      </if>
+      <if test="${property::exists('useCustomDirs') and useCustomDirs}">
+         <echo message="Using custom directory..."/>
+         <property name="fullPath" value="${nameInput}" />
+      </if>
+   </target>
+   
+   <!-- This target acts as a function for reversing comma-separated strings. -->
+   <target name="reverseCSVString">
+
+      <!--
+      This will reverse the dependency strings so we can undeploy in the reverse
+      order from the deploy process - hat tip to Peter Provost from his build file.
+      This allows us to accomodate schema assemblies that reference other assemblies.
+      -->
+
+      <property name="reversed" value="" />
+      <foreach item="String" property="oneValue" delim="," in="${toReverse}" verbose="true">
+         <do>
+            <property name="reversed" value="${oneValue},${reversed}" />
+         </do>
+      </foreach>
+      <!-- Remove the trailing comma -->
+      <regex pattern="(?'reversed'.*),$" input="${reversed}" />
+
+   </target>
+
+   <!-- This is the expression of our "master" dependencies for deploying and undeploying. -->
+   <target name="deploy" description="Master dependency list for deploying, including BizTalk management database."
+       depends="frameworkInitialize,preprocessBindings,_customDeployTarget,deployAppDefinition,deploySchemas,
+       deployComponents,deployPipelineComponents,deployPipelines,deployTransforms,
+       deployOrchestrations,deployAndStartPorts,startOrchestrations,deployVDirs,deployVocabAndRules,deployCustomFunctoids,deploySSO,deployBam,deployBtsNtSvcExeConfig,startApplication,_customPostDeployTarget,
+       bounceBizTalk" />
+   <target name="undeploy" description="Master dependency list for undeploying, including BizTalk management database."
+        depends="frameworkInitialize,_customUndeployTarget,undeployBtsNtSvcExeConfig,undeployBam,undeploySchemas,
+        undeployOrchestrations,undeployTransforms,undeployPipelines,undeployPipelineComponents,
+        undeployPorts,undeployComponents,undeployVDirs, undeployVocabAndRules, undeployCustomFunctoids, 
+        undeploySSO,undeployAppDefinition, _customPostUndeployTarget, bounceBizTalk" />
+
+   <target name="deployBtsNtSvcExeConfig" if="${useIsolatedAppDomain}">
+
+     <updateBizTalkAppDomainConfig appDomainName="${bizTalkAppName}">
+       <patternAssignmentRules>
+         <patternAssignmentRule assemblyNamePattern="${project::get-name()}.*" />
+       </patternAssignmentRules>
+     </updateBizTalkAppDomainConfig>
+
+   </target>
+
+   <target name="undeployBtsNtSvcExeConfig" if="${useIsolatedAppDomain}">
+
+     <updateBizTalkAppDomainConfig appDomainName="${bizTalkAppName}" remove="true" />
+
+   </target>
+
+   <!-- This is a target you may want to create an external tool for in VS.NET - if you haven't changed any of the
+        ports in your orchestration, you can simply replace the orchestration assembly in the GAC and bounce the service.
+        This is much faster than a full redeploy, and speeds the edit/run/debug cycle quite a bit. 
+        A similar thing can be done for the components assembly, as is shown.
+        We're also refreshing SSO configuration. -->
+   <target name="updateOrchestration" description="Replace existing orchestration assembly in the GAC.">
+
+     <property name="debugDeploy" value="true" />
+
+     <call target="frameworkInitialize" />
+
+      <property name="projectName" value="${orchestrations}" />
+      <call target="gacIt" if="${includeOrchestrations}" />
+   
+      <property name="projectName" value="${components}" />
+      <call target="gacIt" if="${includeComponents}"/>
+
+      <property name="projectName" value="${pipelineComponents}" />
+      <call target="gacIt" if="${includePipelineComponents}"/>
+
+      <property name="projectName" value="${transforms}" />
+      <call target="gacIt" if="${includeTransforms}"/>
+   
+      <property name="projectName" value="${schemas}" />
+      <call target="gacIt" if="${includeSchemas}"/>
+      
+      <call target="deploySSO" if="${includeSSO}"/>
+      
+      <call target="bounceBizTalk" />
+      
+   </target>
+
+   <!-- If the NAnt script that includes this include file would like to supply custom functionality when deploying
+        and undeploying, they will supply customDeployTarget and customUndeployTarget (and/or customPostDeployTarget
+        and customPostUndeployTarget)
+   -->
+   <target name="_customDeployTarget">
+      <if test="${target::exists('customDeployTarget')}"> 
+         <call target="customDeployTarget"/>
+      </if>
+   </target>
+   <target name="_customUndeployTarget">
+      <if test="${target::exists('customUndeployTarget')}"> 
+         <call target="customUndeployTarget"/>
+      </if>
+   </target>
+   <target name="_customPostDeployTarget">
+      <if test="${target::exists('customPostDeployTarget')}"> 
+         <call target="customPostDeployTarget"/>
+      </if>
+   </target>
+   <target name="_customPostUndeployTarget">
+      <if test="${target::exists('customPostUndeployTarget')}"> 
+         <call target="customPostUndeployTarget"/>
+      </if>
+   </target>
+
+   <!-- 
+        Targets used for managing individual BizTalk assembly types
+        and binding files.
+   
+   -->
+
+   <target name="callPreprocessBindings">
+     <call target="initializeAppName" />
+     <call target="preprocessBindings" />
+   </target>
+
+   <target name="preprocessBindings" description="Preprocess binding files." if="${includeMessagingBindings}">
+   
+      <property name="sourceBindingFile" value="${portBindings}" />
+      <if test="${usingMasterBindings}">
+         <property name="sourceBindingFile" value="${portBindingsMaster}" />
+      </if>
+
+      <if test="${(property::exists('serverDeploy') and serverDeploy) and property::exists('sys.env.ENV_SETTINGS')}">
+        <property name="settingsFile" value="${sys.env.ENV_SETTINGS}" />
+      </if>
+      
+      <if test="${(property::exists('developerPreProcessSettings')) and ((property::exists('serverDeploy') and serverDeploy)) != true}">
+        <property name="settingsFile" value="${developerPreProcessSettings}" />
+      </if>
+
+     <!-- in case readonly from version control -->
+     <attrib file="${portBindings}" readonly="false"/>
+     <exec program="${deployTools}\xmlpreprocess.exe" verbose="true" failonerror="true">
+        <arg value="/c" />
+        <arg value="/i:${project::get-base-directory()}\${sourceBindingFile}" />
+        <arg value="/o:${project::get-base-directory()}\${portBindings}" />
+        <arg value="/d:CurDir=${project::get-base-directory()}" />
+        <arg value="/s:${settingsFile}" />
+      </exec>
+
+      <!-- Update the app name in the bindings file -->
+      <xmlpoke file="${portBindings}" value="${bizTalkAppName}" xpath="//ApplicationName" />
+
+      <if test="${enableSideBySide and not disableAutomaticPortNameVersioning}">
+        <prependToBindingPortNames stringToPrepend="${bizTalkAppName}" bindingFilePath="${project::get-base-directory()}\${portBindings}" />
+      </if>
+
+      <!-- preprocess log4net file -->
+      <if test="${includelog4net}">
+        <!-- in case readonly from version control -->
+        <attrib file="${project::get-name()}.log4net" readonly="false"/>
+        <exec program="${deployTools}\xmlpreprocess.exe" verbose="true" failonerror="true">
+          <arg value="/i:${project::get-base-directory()}\${project::get-name()}.log4net" />
+          <arg value="/o:${project::get-base-directory()}\${project::get-name()}.log4net" />
+          <arg value="/d:CurDir=${project::get-base-directory()}" />
+          <arg value="/s:${settingsFile}" />
+        </exec>
+      </if>
+
+      <if test="${applyXmlEscape}">
+         <exec program="${deployTools}\ElementTunnel.exe" verbose="false" failonerror="true">
+            <arg value="/i:${project::get-base-directory()}\${portBindings}" />
+            <arg value="/o:${project::get-base-directory()}\${portBindings}" />
+            <arg value="/x:${deployTools}\adapterXPaths.txt" />
+            <arg value="/encode+" />
+         </exec>
+      </if>
+      
+   </target>
+
+  <target name="btsDeployBamSet" description="Used to manage multiple BAM definition deployments (comma separated list)">
+    
+    <!-- First, deploy the BAM definitions -->
+    <foreach item="String" in="${deployAssemblies}" delim="," property="assembly">
+
+      <property name="rootFilename" value="${path::get-file-name-without-extension(assembly)}" />
+      <property name="fullPath" value="${project::get-base-directory()}\${rootFilename}\${assembly}" />
+
+      <if test="${property::exists('serverDeploy') and serverDeploy}">
+        <property name="fullPath" value="${assembly}" />
+      </if>
+      <if test="${property::exists('useCustomDirs') and useCustomDirs}">
+        <echo message="Using custom directory..."/>
+        <property name="fullPath" value="${assembly}" />
+      </if>
+
+      <exec
+         program="${btsDir}Tracking\bm.exe"
+         commandline="update-all -DefinitionFile:&quot;${fullPath}&quot;"
+         verbose="true" />
+
+    </foreach>
+
+    <!-- Next, apply permissions to the BAM views -->
+    <!-- View names and associated accounts must be defined in a property called BAMViewsAndAccounts -->
+    <!-- The format of the value of the BAMViewsAndAccounts property must be: -->
+    <!-- ViewName1:DOMAIN\GroupName1,DOMAIN\UserName1;ViewName2:BUILTIN\Administrators,COMPUTERNAME\UserName2;<etc. etc.> -->
+    <!-- This is easily pulled from the settings spreadsheet by including BAMViewsAndAccounts in the propsFromEnvSettings property. -->
+    <if test="${property::exists('BAMViewsAndAccounts')}">
+
+      <foreach item="String" in="${BAMViewsAndAccounts}" delim=";" property="viewAccounts">
+
+        <!-- Extract the view name and the list of accounts into two different properties -->
+        <regex pattern="(?'viewName'\w+)\s*:\s*(?'groupNames'[\w\s\\,]+)$" input="${viewAccounts}" />
+
+        <foreach item="String" in="${groupNames}" delim="," property="viewGroup">
+          <exec
+           program="${btsDir}Tracking\bm.exe"
+           commandline="add-account -View:&quot;${viewName}&quot; -AccountName:&quot;${viewGroup}&quot;"
+           verbose="true" failonerror="false" />
+        </foreach>
+
+      </foreach>
+      
+    </if>
+
+    </target>
+
+  <target name="btsUndeployBamSet" description="Used to manage multiple BAM definition undeployments (comma separated list)">
+    <foreach item="String" in="${deployAssemblies}" delim="," property="assembly">
+
+      <property name="rootFilename" value="${path::get-file-name-without-extension(assembly)}" />
+      <property name="fullPath" value="${project::get-base-directory()}\${rootFilename}\${assembly}" />
+
+      <if test="${property::exists('serverDeploy') and serverDeploy}">
+        <property name="fullPath" value="${assembly}" />
+      </if>
+      <if test="${property::exists('useCustomDirs') and useCustomDirs}">
+        <echo message="Using custom directory..."/>
+        <property name="fullPath" value="${assembly}" />
+      </if>
+
+      <exec
+         program="${btsDir}Tracking\bm.exe"
+         commandline="remove-all -DefinitionFile:&quot;${fullPath}&quot;"
+         verbose="true" />
+
+    </foreach>
+  </target>
+
+  <target name="btsDeploySet" description="Used to manage multiple assembly deployments (comma separated list)">
+      <foreach item="String" in="${deployAssemblies}" delim="," property="assembly">
+         <property name="nameInput" value="${assembly}" />
+         <call target="selectPath" />
+         
+         <exec 
+            program="btsdeploy.exe" 
+            commandline="Deploy Assembly=&quot;${fullPath}&quot; Install=true Log=${deployResults}\${assembly}" 
+            verbose="true"
+            if="${not biztalk2006}"/>
+
+         <exec 
+            program="BTSTask.exe" 
+            commandline="AddResource -Type:BizTalkAssembly -Source:&quot;${fullPath}&quot; -ApplicationName:${bizTalkAppName} -Options:GacOnAdd,GacOnImport,GacOnInstall"
+            verbose="true"
+            if="${biztalk2006}"/>
+         
+         <!-- Deploy PDBS to gac. This likely won't work with custom directories - a little more work required yet -->                  
+         <if test="${deployPDBsToGac}">
+            <getgacpath fullpath="${fullPath}" property="gacpath" unless="${biztalk2006}" />
+            <getgacpath gacvariant="GAC_MSIL" fullpath="${fullPath}" property="gacpath" if="${biztalk2006}" />
+            
+            <property name="copyPdb" value="true"/>
+            <if test="${property::exists('serverDeploy') and serverDeploy}">
+               <copy file="${assembly}.pdb" todir="${gacpath}" failonerror="true" verbose="true" />
+               <property name="copyPdb" value="false"/>
+            </if>
+            <if test="${copyPdb}">
+               <getdirectoryname filespec="${fullPath}" property="dironly" />
+               <copy file="${dironly}\${assembly}.pdb" todir="${gacpath}" failonerror="true" verbose="true" />
+            </if>
+            
+         </if>
+         
+      </foreach>
+   </target>
+   
+   <target name="btsUndeploySet" description="Used to manage multiple assembly undeployments (comma separated list)">
+
+      <foreach item="String" in="${deployAssemblies}" delim="," property="assembly">
+         
+         <if test="${not biztalk2006}">
+            <property name="nameInput" value="${assembly}" />
+            <call target="selectPath" />
+            <exec program="btsdeploy.exe" failonerror="false" commandline="Remove Assembly=&quot;${fullPath}&quot; Uninstall=true Log=${deployResults}\Undeploy_${assembly}" verbose="true"/>
+         </if>
+
+         <!-- removing app definition does not remove resources from gac -->
+         <property name="projectName" value="${assembly}"/>
+         <call target="unGacIt" if="${biztalk2006}"/>
+
+      </foreach>
+      
+   </target>
+
+   <target name="deployAppDefinition" description="Create BizTalk 2006 application definition"
+           depends="undeployAppDefinition">
+      
+      <exec program="BTSTask.exe" 
+            commandline="AddApp -ApplicationName:${bizTalkAppName} -Description:&quot;${project::get-name()}&quot;"
+            verbose="true" 
+            if="${biztalk2006}"/>
+
+      <if test="${appsToReference != ''}">
+         <addappreference application="${bizTalkAppName}" appstoreference="${appsToReference}" />
+      </if>
+	  
+   </target>
+
+   <target name="undeployAppDefinition" 
+      description="Remove BizTalk 2006 application definition" 
+      unless="${skipUndeploy}" 
+      if="${biztalk2006}">
+
+      <checkforserviceinstances application="${bizTalkAppName}"/>
+
+      <controlbiztalkapp application="${bizTalkAppName}" stopOption="DisableAllReceiveLocations,UndeployAllPolicies,UnenlistAllOrchestrations,UnenlistAllSendPortGroups,UnenlistAllSendPorts" failonerror="false" verbose="true"/>
+      
+      <exec program="BTSTask.exe" 
+            commandline="RemoveApp -ApplicationName:${bizTalkAppName}"
+            verbose="true" 
+            failonerror="false"/>
+      
+   </target>
+
+   <target name="deploySchemas" description="Deploy schema assemblies." depends="undeploySchemas" if="${includeSchemas}">
+      <property name="deployAssemblies" value="${schemas}" />
+      <call target="btsDeploySet"/>
+   </target>
+   
+   <target name="undeploySchemas" description="Undeploy schema assemblies." 
+      depends="undeployOrchestrations,undeployTransforms" if="${includeSchemas}" unless="${skipUndeploy}">
+
+      <property name="toReverse" value="${schemas}"/>
+      <call target="reverseCSVString"/>
+
+      <property name="deployAssemblies" value="${reversed}" />
+      <call target="btsUndeploySet"/>
+   </target>
+   
+   <target name="deployOrchestrations" description="Deploy orchestration assemblies." if="${includeOrchestrations}">
+
+      <property name="deployAssemblies" value="${orchestrations}" />
+      <call target="btsDeploySet"/>
+
+   </target>
+
+   <target name="startOrchestrations" if="${includeOrchestrations}" unless="${biztalk2006}" depends="deployOrchestrations,deployAndStartPorts">
+      <foreach item="String" in="${deployAssemblies}" delim="," property="assembly">
+         <controlorchestrations mode="start" orchassembly="${assembly}" orchestrationstoignore="${orchestrationsToIgnore}"/>
+      </foreach>
+   </target>
+   
+   <target name="undeployOrchestrations" description="Undeploy orchestration assemblies."
+         depends="unenlistOrchestrations" if="${includeOrchestrations}" unless="${skipUndeploy}">
+         
+      <property name="toReverse" value="${orchestrations}"/>
+      <call target="reverseCSVString"/>
+         
+      <property name="deployAssemblies" value="${reversed}" />
+      <call target="btsUndeploySet"/>
+      
+   </target>
+   
+   <target name="unenlistOrchestrations" description="Unenlist orchestrations in the orchestration assemblies."
+         if="${includeOrchestrations}" unless="${skipUndeploy or biztalk2006}">
+   
+      <property name="toReverse" value="${orchestrations}"/>
+      <call target="reverseCSVString"/>
+
+      <property name="deployAssemblies" value="${reversed}" />
+      <foreach item="String" in="${deployAssemblies}" delim="," property="assembly">
+         <controlorchestrations mode="stop" orchassembly="${assembly}" orchestrationstoignore="${orchestrationsToIgnore}"/>
+      </foreach>
+      
+   </target>
+
+   <!-- This target uses a collection (comma separated list) of component assemblies in the components property.  Likewise for undeployComponents.  -->
+   <target name="deployComponents" description="Deploy components to the gac." if="${includeComponents}">
+      <foreach item="String" in="${components}" delim="," property="projectName">
+         <call target="gacIt" />
+         <if test="${includeInstallUtilForComponents}">
+            <property name="nameInput" value="${projectName}" />
+            <call target="selectPath" />
+            <exec program="${frameworkDir}${frameworkVer}\installutil.exe" commandline="/ShowCallStack &quot;${fullPath}&quot;" verbose="true"/>
+         </if>
+
+         <exec 
+            program="BTSTask.exe" 
+            commandline="AddResource -Type:Assembly -Source:&quot;${fullPath}&quot; -ApplicationName:${bizTalkAppName} -Options:GacOnImport,GacOnInstall"
+            verbose="true"
+            if="${biztalk2006 and includeCompsAndVDirsAsResources}"/>
+
+      </foreach>
+      
+      <if test="${includelog4net}">
+         <!-- Write registry key with location of our log4net configuration file. -->
+<!-- Note: If you're doing 32 bit hosts on win64, hard code this to cscript.exe rather than using macro. -->
+         <exec program="${cscript}" 
+            failonerror="true" 
+            commandline="/nologo ${deployTools}\WriteRegValue.vbs ${log4netRegKey} &quot;${project::get-base-directory()}\${project::get-name()}.log4net&quot;" />
+      </if>
+      
+      <!-- Deploy additional assemblies.  We aren't undeploying them since they are shared 
+      components, though this could be debated. -->
+      <foreach item="String" in="${additionalAssemblies}" delim="," property="assembly">
+			<property name="assemblyFile" value="${project::get-base-directory()}\${deployTools}\${assembly}.dll"/>
+			<exec program="${gacutil}" verbose="true" >
+				<arg value="/nologo"/>
+				<arg value="/i"/>
+				<arg file="${assemblyFile}"/>
+			</exec>
+
+         <exec 
+            program="BTSTask.exe" 
+            commandline="AddResource -Type:Assembly -Source:&quot;${assemblyFile}&quot; -ApplicationName:${bizTalkAppName} -Options:GacOnImport,GacOnInstall"
+            verbose="true"
+            if="${biztalk2006 and includeCompsAndVDirsAsResources}"/>
+         
+		</foreach>
+      
+   </target>
+   
+   <target name="undeployComponents" description="Undeploy components from the gac."
+      if="${includeComponents}" unless="${skipUndeploy}">
+      <foreach item="String" in="${components}" delim="," property="projectName">
+         <call target="unGacIt" />
+         <if test="${includeInstallUtilForComponents}">
+            <property name="nameInput" value="${projectName}" />
+            <call target="selectPath" />
+            <exec program="${frameworkDir}${frameworkVer}\installutil.exe" commandline="/u /ShowCallStack &quot;${fullPath}&quot;" />
+         </if>
+      </foreach>
+   </target>
+
+   <target name="callDeploySSO">
+     <call target="initializeAppName" />
+     <call target="deploySSO" />
+   </target>
+   
+   <target name="deploySSO" description="Create affiliate app and import settings file into SSO." 
+      if="${includeSSO}">
+      <if test="${property::exists('serverDeploy') and serverDeploy}"> 
+         <exec program="${deployTools}\SSOSettingsFileImport.exe" verbose="true"
+            commandline="${bizTalkAppName} /settingsFile &quot;${sys.env.ENV_SETTINGS}&quot; /userGroupName:&quot;${ssoAppUserGroup}&quot; /adminGroupName:&quot;${ssoAppAdminGroup}&quot;"/>
+      </if>
+      
+      <!-- If we aren't doing a server deployment, delegate to the devlSSO target which will deploy either
+           developerPreProcessSettings if it exists or devl_settings.xml to the SSO -->
+      <if test="${property::exists('debugDeploy') and debugDeploy}">
+         <call target="devlSSO"/>
+      </if>
+      <if test="${property::exists('releaseDeploy') and releaseDeploy}">
+         <call target="devlSSO"/>
+      </if>
+      
+      <if test="${target::exists('customSSO')}"> 
+         <call target="customSSO"/>
+      </if>
+
+     <!-- Make sure we can always access our project (and install path) at run time -->
+     <updatessoconfigitem biztalkappname="${bizTalkAppName}"  ssoitemname="ProjectPath" ssoitemvalue="${project::get-base-directory()}" />
+     
+   </target>
+   
+   <target name="devlSSO" description="This target will use developerPreProcessSettings if it exists, otherwise it will use devl_settings.xml to deploy to the SSO.">
+
+      <if test="${(property::exists('developerPreProcessSettings'))}">
+          <exec program="${deployTools}\SSOSettingsFileImport.exe" verbose="true" 
+            commandline="${bizTalkAppName} /settingsFile:&quot;${developerPreProcessSettings}&quot; /userGroupName:&quot;${ssoAppUserGroup}&quot; /adminGroupName:&quot;${ssoAppAdminGroup}&quot;"/>
+      </if>
+      <if test="${not property::exists('developerPreProcessSettings')}">
+          <exec program="${deployTools}\SSOSettingsFileImport.exe" verbose="true"
+            commandline="${bizTalkAppName} /settingsFile:&quot;${project::get-base-directory()}\EnvironmentSettings\Devl_settings.xml&quot; /userGroupName:&quot;${ssoAppUserGroup}&quot; /adminGroupName:&quot;${ssoAppAdminGroup}&quot;"/>
+      </if>
+
+   </target>
+      
+   <target name="undeploySSO" description="Delete affiliate app and associated settings." 
+      if="${includeSSO}" unless="${skipUndeploy}">
+      
+      <exec program="${deployTools}\SSOSettingsFileImport.exe" verbose="true"
+         commandline="${bizTalkAppName} /deleteApp"/>
+         
+   </target>
+
+   
+   <!-- Shows copying pipeline components to the BizTalk installation directory.  Sample doesn't include any of these. -->
+   <target name="deployPipelineComponents" description="Deploy pipeline components."
+      if="${includePipelineComponents}">
+      
+      <foreach item="String" in="${pipelineComponents}" delim="," property="pipelineComponent">
+         <property name="nameInput" value="${pipelineComponent}" />
+         <call target="selectPath" />
+         <copy file="${fullPath}" todir="${btsDir}Pipeline components" failonerror="false" />
+      </foreach>
+
+      <foreach item="String" in="${pipelineComponents}" delim="," property="projectName">
+         <call target="gacIt" />
+
+         <exec
+            program="BTSTask.exe"
+            commandline="AddResource -Type:Assembly -Source:&quot;${fullPath}&quot; -ApplicationName:${bizTalkAppName} -Options:GacOnImport,GacOnInstall"
+            verbose="true"
+            if="${biztalk2006 and includeCompsAndVDirsAsResources}"/>
+
+      </foreach>
+      
+   </target>
+   
+   <target name="undeployPipelineComponents" description="Undeploy pipeline components."
+      if="${includePipelineComponents}" unless="${skipUndeploy}">
+      
+      <if test="${not skipIISReset}">
+         <exec program="iisreset.exe" commandline="/noforce /restart /timeout:${iisResetTime}" verbose="true"/>  <!-- To deal with pipeline components loaded in isolated host. -->
+      </if>
+      
+      <foreach item="String" in="${pipelineComponents}" delim="," property="pipelineComponent">
+         <delete file="${btsDir}Pipeline components\${pipelineComponent}.dll" failonerror="false" />
+      </foreach>
+
+      <foreach item="String" in="${pipelineComponents}" delim="," property="projectName">
+         <call target="unGacIt" />
+      </foreach>
+   </target>
+   
+   <target name="deployPipelines" description="Deploy pipeline assemblies."
+      if="${includePipelines}" depends="undeployPipelines">
+
+      <property name="deployAssemblies" value="${pipelines}" />
+      <call target="btsDeploySet"/>
+   </target>
+   
+   <target name="undeployPipelines" description="Undeploy pipeline assemblies."
+      depends="undeployOrchestrations,undeployPorts" if="${includePipelines}" unless="${skipUndeploy}">
+      
+      <property name="deployAssemblies" value="${pipelines}" />
+      <call target="btsUndeploySet"/>
+      
+   </target>
+
+   <target name="deployTransforms" description="Deploy transform assemblies."
+      depends="undeployTransforms" if="${includeTransforms}">
+      
+      <property name="deployAssemblies" value="${transforms}" />
+      <call target="btsDeploySet"/>
+      
+   </target>
+   
+   <target name="undeployTransforms" description="Deploy transform assemblies."
+      depends="undeployOrchestrations,undeployPorts" if="${includeTransforms}" unless="${skipUndeploy}">
+      
+      <property name="deployAssemblies" value="${transforms}" />
+      <call target="btsUndeploySet"/>
+      
+   </target>
+
+   <target name="deployCustomFunctoids" description="Deploy custom functoids." if="${includeCustomFunctoids}">
+      <property name="nameInput" value="${customFunctoids}" />
+      
+      <foreach item="String" in="${customFunctoids}" delim="," property="customFunctoid">
+         <call target="selectPath" />
+         <copy file="${fullPath}" todir="${btsDir}developer tools\mapper extensions" failonerror="false" />
+      </foreach>
+
+      <foreach item="String" in="${customFunctoids}" delim="," property="projectName">
+         <call target="gacIt" />
+
+         <exec
+            program="BTSTask.exe"
+            commandline="AddResource -Type:Assembly -Source:&quot;${fullPath}&quot; -ApplicationName:${bizTalkAppName} -Options:GacOnImport,GacOnInstall"
+            verbose="true"
+            if="${biztalk2006 and includeCompsAndVDirsAsResources}"/>
+
+      </foreach>
+
+   </target>
+   
+   <target name="undeployCustomFunctoids" description="Undeploy custom functoids." 
+      if="${includeCustomFunctoids}" unless="${skipUndeploy}">
+      
+      <foreach item="String" in="${customFunctoids}" delim="," property="customFunctoid">
+         <delete file="${btsDir}developer tools\mapper extensions\${customFunctoid}" failonerror="false" />
+      </foreach>
+
+      <foreach item="String" in="${customFunctoids}" delim="," property="projectName">
+         <call target="unGacIt" />
+      </foreach>
+      
+   </target>
+   
+   <target name="undeployVocabAndRules" description="Undeploy vocabularies and rules." 
+      if="${includeVocabAndRules}" unless="${skipUndeploy}">
+      <exec program="${deployTools}\DeployBTRules.exe" commandline="/ruleSetName ${rulePolicyName} /undeploy" verbose="true"
+         failonerror="true" />
+   </target>
+   
+   <target name="deployVocabAndRules" description="Deploy vocabularies and rules." if="${includeVocabAndRules}" >
+      <exec program="${deployTools}\DeployBTRules.exe" commandline="/ruleSetFile ${ruleVocabulary}" verbose="true"
+         failonerror="true" />
+
+      <exec program="${deployTools}\DeployBTRules.exe" commandline="/ruleSetFile ${rulePolicy} /ruleSetName ${rulePolicyName}" verbose="true"
+         failonerror="true" />
+
+   </target>
+
+   <target name="deployBam" description="Deploy BAM definitions." depends="undeployBam" if="${includeBAM}">
+
+     <property name="deployAssemblies" value="${bamDefinitions}" />
+     <call target="btsDeployBamSet"/>
+
+   </target>
+
+   <target name="undeployBam" description="Deploy BAM definitions." if="${includeBAM}" unless="${skipUndeploy or skipBamUndeploy}">
+
+     <property name="deployAssemblies" value="${bamDefinitions}" />
+     <call target="btsUndeployBamSet"/>
+
+   </target>
+
+   <target name="callDeployAndStartPorts">
+     <call target="initializeAppName" />
+     <call target="deployAndStartPorts" />
+   </target>
+
+   <!-- This target examines our portBindings file to deploy and start our ports... -->
+   <target name="deployAndStartPorts" description="Deploy and start messaging ports." if="${includeMessagingBindings}" >
+   
+      <foreach item="String" in="${portBindings}" delim="," property="portBinding">
+
+         <exec 
+            program="btsdeploy.exe" 
+            commandline="Import Binding=&quot;${portBinding}&quot; Log=${deployResults}\${portBinding}" 
+            if="${not biztalk2006}" verbose="true"/>
+
+         <controlbiztalkports 
+            mode="start" 
+            bindingfile="${portBinding}" 
+            excludefromstart="${portsToExcludeFromStart}"
+            if="${not biztalk2006}" 
+            verbose="true"/>
+         
+         <if test="${biztalk2006}">
+
+           <property name="importBindingFileName" value="${portBinding}" />
+
+           <if test="${enableSideBySide}">
+             <!-- Binding file name must be unique for the whole BizTalk group, so prepend the app name incl. version number -->
+             <property name="importBindingFileName" value="${bizTalkAppName}_${portBinding}" />
+             <copy file="${portBinding}" tofile="${importBindingFileName}" failonerror="true" verbose="true" />
+           </if>
+           
+            <exec 
+               program="BTSTask.exe" 
+               commandline="AddResource -Type:BizTalkBinding -Source:&quot;${importBindingFileName}&quot; -ApplicationName:${bizTalkAppName}"
+               verbose="true"/>
+
+           <if test="${enableSideBySide}">
+            <delete file="${importBindingFileName}" failonerror="false" verbose="true" />
+           </if>
+           
+           <exec 
+               program="BTSTask.exe" 
+               commandline="ImportBindings -Source:&quot;${portBinding}&quot; -ApplicationName:${bizTalkAppName}"
+               verbose="true"/>
+
+         </if>
+
+      </foreach>        
+     
+   </target>
+   
+   <!-- This target examines our portBindings file to stop and delete our ports... -->
+   <target name="undeployPorts" description="Undeploy and stop messaging ports." 
+         if="${includeMessagingBindings}" unless="${skipUndeploy or biztalk2006}">
+
+      <foreach item="String" in="${portBindings}" delim="," property="portBinding">
+         <controlbiztalkports mode="remove" bindingfile="${portBinding}"/>
+      </foreach>
+      
+   </target>
+
+   <target name="startApplication" description="Start orchestrations and ports" if="${biztalk2006}">
+
+     <tstamp property="startingApplication" />
+     <echo message="Note: Starting the application may take 3-6 secs PER ORCHESTRATION. Please wait..."/>
+     <controlbiztalkapp application="${bizTalkAppName}" startOption="StartAll" verbose="true" 
+                         if="${startApplicationOnDeploy}" />      
+      
+   </target>
+   
+   <!-- Create our virtual directories, and handle service account assignment. -->   
+   <target name="deployVDirs" description="Deploy virtual directories and handle service account assignment." 
+      if="${includeVirtualDirectories}">
+   
+
+      <foreach item="Line" in="${vdirListFile}" delim="," property="vdir,physdir,appPool">
+      
+         <exec program="${cscript}" failonerror="true" commandline="/nologo ${deployTools}\ConfigureIIs.vbs ${vdir} \${physdir}" verbose="true"  />
+       
+         <!-- This will make sure aspnet account can read physical directory & its contents.  
+              For workstation deployments, you would need to supply the account value through a nant property. -->
+         <if test="${property::exists('winXPor2000') and winXPor2000}">
+            <exec program="cacls" failonerror="true" commandline="${physdir} /E /G aspnet:R" verbose="true"  />
+            <exec program="cacls" failonerror="true" commandline="${physdir}\*.* /E /G aspnet:R" verbose="true"  />
+         </if>            
+         <if test="${property::exists('win2003') and win2003}">
+            <!-- override this property in your project's build file if deploying on win2003 as a developer -->
+            <property name="appPoolAccount" value="${sys.env.USERNAME}" overwrite="false"/>
+            <if test="${property::exists('serverDeploy') and serverDeploy}">
+               <!-- Take the value from install wizard if doing a formal install -->
+               <property name="appPoolAccount" value="${sys.env.VDIR_UserName}" overwrite="true"/>
+            </if>
+            <!-- Make sure app pool account can read this physical directory & its contents -->            
+            <exec program="cacls" failonerror="true" commandline="${physdir} /E /G ${appPoolAccount}:R" verbose="true"  />
+            <exec program="cacls" failonerror="true" commandline="${physdir}\*.* /E /G ${appPoolAccount}:R" verbose="true"  />
+         </if>
+         
+         <if test="${property::exists('serverDeploy') and serverDeploy}">
+         
+             <!-- Set package identity for winxp or win2000 -->
+            <if test="${property::exists('winXPor2000') and winXPor2000}">
+               <exec 
+                  program="${cscript}"
+                  verbose="true" 
+                  failonerror="true"
+                  commandline="/nologo ${deployTools}\SetPackageIdentity.vbs &quot;IIS-{Default Web Site//Root/${vdir}}&quot;" />
+            </if>
+            
+            <!-- Create app pool and place vdir in app pool for win2003 -->
+            <if test="${property::exists('win2003') and win2003}">
+               <exec
+                  program="${cscript}"
+                  verbose="true" 
+                  failonerror="true"
+                  commandline="/nologo ${deployTools}\SetAppPoolInfo.vbs ${appPool}"/>
+
+               <exec 
+                  program="${cscript}"
+                  verbose="true" 
+                  failonerror="true"
+                  commandline="/nologo ${deployTools}\PlaceVDirInAppPool.vbs &quot;${vdir}&quot; ${appPool}" />
+            </if>
+            
+         </if>
+
+         <exec 
+            program="BTSTask.exe" 
+            commandline="AddResource -Type:WebDirectory -Source:&quot;http://localhost/${vdir}&quot; -ApplicationName:${bizTalkAppName}"
+            verbose="true"
+            if="${biztalk2006 and includeCompsAndVDirsAsResources}"/>
+         
+      </foreach>
+      
+      <!-- We are setting up our biztalk isapi extension as web svc extension for 2003 -->
+      
+      <if test="${property::exists('win2003') and win2003}">
+         <if test="${property::exists('wseExtensionPath')}">
+
+            <!-- We remove in case it is already there.  We could have deployVDirs depend on undeployVDirs instead,
+               but that seems excessive since the vdir portion itself doesn't require that. -->
+            <exec
+            program="${cscript}"
+            verbose="true" 
+            failonerror="false"
+            commandline="/nologo ${deployTools}\iisext.vbs /RmFile &quot;${project::get-base-directory()}\${wseExtensionPath}\${btshttpreceive}&quot;"/>
+
+         <exec
+            program="${cscript}"
+            verbose="true" 
+            failonerror="true"
+            commandline="/nologo ${deployTools}\iisext.vbs /AddFile &quot;${project::get-base-directory()}\${wseExtensionPath}\${btshttpreceive}&quot; 1 ${wseExtensionName} 1 ${wseExtensionName}"/>
+         </if>
+      </if>
+      
+      
+   </target>
+   
+   <target name="undeployVDirs" description="Delete virtual directories and relevant IIS configuration." 
+      if="${includeVirtualDirectories}" unless="${skipUndeploy}">
+      <!-- We don't want to undeploy vdirs for developers - if we do, they might not be able to load web projects that are
+           part of their solution the next time they load the solution file. -->
+      <if test="${property::exists('serverDeploy') and serverDeploy}">
+         <foreach item="Line" in="${vdirListFile}" delim="," property="vdir,physdir,appPool">
+            <exec program="${cscript}" failonerror="false" commandline="/nologo ${deployTools}\RemoveIISVDir.vbs ${vdir}" />
+         </foreach>
+         
+         <!-- We are removing our biztalk isapi extension as web svc extension for 2003 -->
+         <if test="${property::exists('win2003') and win2003}">
+            <if test="${property::exists('wseExtensionPath')}">
+            <exec
+               program="${cscript}"
+               verbose="true" 
+               failonerror="true"
+               commandline="/nologo ${deployTools}\iisext.vbs /RmFile &quot;${project::get-base-directory()}\${wseExtensionPath}\${btshttpreceive}&quot;"/>
+            </if>            
+         </if>
+
+      </if>
+   </target>
+
+   <target name="gacIt" description="Place the assembly identified by projectName property in the gac." >
+      <foreach item="String" in="${projectName}" delim="," property="assembly">
+         <property name="nameInput" value="${assembly}" />
+         <call target="selectPath" />
+         <exec program="${gacutil}" commandline="/i &quot;${fullPath}&quot;" verbose="true" />
+         
+         <!-- Deploy PDBS to gac. This likely won't work with custom directories - a little more work required yet -->                  
+         <if test="${deployPDBsToGac}">
+            <getgacpath fullpath="${fullPath}" property="gacpath" unless="${biztalk2006}" />
+            <getgacpath gacvariant="GAC_MSIL" fullpath="${fullPath}" property="gacpath" if="${biztalk2006}" />
+
+            <property name="copyPdb" value="true"/>
+            <if test="${property::exists('serverDeploy') and serverDeploy}">
+               <copy file="${assembly}.pdb" todir="${gacpath}" failonerror="true" verbose="true" />
+               <property name="copyPdb" value="false"/>
+            </if>
+            <if test="${copyPdb}">
+               <getdirectoryname filespec="${fullPath}" property="dironly" />
+               <copy file="${dironly}\${assembly}.pdb" todir="${gacpath}" failonerror="true" verbose="true" />
+            </if>
+            
+         </if>
+
+      </foreach>
+   </target>
+   
+   <target name="unGacIt" description="Remove the assembly identified by projectName property in the gac.">
+      <foreach item="String" in="${projectName}" delim="," property="assembly">
+         <property name="nameInput" value="${assembly}" />
+         <call target="selectPath" />
+         <!--
+              Use the assembly's display name to remove the specific assembly from the GAC.
+              If the version is not specified, gacutil removes all assemblies from the GAC that match on
+              the filename, even if they have different strong names.
+         -->
+         <getAssemblyNameAndVersion assemblyPath="${fullPath}" assemblyNameProperty="assemblyName" assemblyVersionProperty="assemblyVersion" />
+         <exec program="${gacutil}" commandline="/u &quot;${assemblyName}&quot;" verbose="true" />
+      </foreach>         
+   </target>
+
+   <target name="bounceBizTalk" description="Reset BizTalk hosts and IIS">
+      <!-- An iisreset is needed when doing things with http & the isolated host, since your binaries will be loaded into 
+            dllhost.exe proceses. -->
+      <if test="${not skipIISReset}">            
+         <exec program="iisreset.exe" commandline="/noforce /restart /timeout:${iisResetTime}" verbose="true"/>
+      </if>
+      
+      <if test="${bizTalkHosts == 'ALL'}">
+         <echo message="Host list (bizTalkHosts property) not customized."/>
+         <foreach item="String" in="${bizTalkHosts}" delim="," property="hostName">   
+            <exec
+               program="cscript.exe"
+               failonerror="true"
+               commandline="/nologo ${deployTools}\BounceBizTalkHost.vbs ${hostName}" verbose="true" />
+         </foreach>
+      </if>
+
+      <if test="${bizTalkHosts != 'ALL'}">
+         <foreach item="String" in="${bizTalkHosts}" delim="," property="hostName">   
+            <getservicenames servicematch="${'%biztalk%: %' + hostName + '%'}" property="serviceName" verbose="true"/>
+            
+            <if test="${string::get-length(serviceName) != 0}" >
+               <echo message="${'Attempting stop of: ' + serviceName}"/>
+               <servicecontroller action="Stop" service="${serviceName}" timeout="${biztalkHostResetTime}" failonerror="true" verbose="true"/>
+               <echo message="${'Attempting start of: ' + serviceName}"/>
+               <servicecontroller action="Start" service="${serviceName}" timeout="${biztalkHostResetTime}" failonerror="true" verbose="true"/>
+            </if>
+
+         </foreach>
+      </if>
+      
+   </target>
+   
+   <target name="stopBizTalk" description="Reset BizTalk hosts and IIS">
+      <!-- An iisreset is needed when doing things with http & the isolated host, since your binaries will be loaded into 
+            dllhost.exe proceses. -->
+      <if test="${not skipIISReset}">            
+         <exec program="iisreset.exe" commandline="/noforce /stop /timeout:${iisResetTime}" verbose="true"/>
+      </if>
+      
+      <if test="${bizTalkHosts == 'ALL'}">
+         <echo message="Host list (bizTalkHosts property) not customized."/>
+         <foreach item="String" in="${bizTalkHosts}" delim="," property="hostName">   
+            <exec
+               program="cscript.exe"
+               failonerror="false"
+               commandline="/nologo ${deployTools}\StopBizTalkHost.vbs ${hostName}" verbose="true" />
+         </foreach>
+      </if>
+
+      <if test="${bizTalkHosts != 'ALL'}">
+         <foreach item="String" in="${bizTalkHosts}" delim="," property="hostName">   
+            <getservicenames servicematch="${'%biztalk%: %' + hostName + '%'}" property="serviceName" verbose="true"/>
+            
+            <if test="${string::get-length(serviceName) != 0}" >
+               <echo message="${'Attempting stop of: ' + serviceName}"/>
+               <servicecontroller action="Stop" service="${serviceName}" timeout="${biztalkHostResetTime}" failonerror="false" verbose="true"/>
+            </if>
+          </foreach>
+      </if>
+      
+   </target>
+
+   <target name="winVer" description="Retrieve current windows version and set poperties accordingly.">
+      <readregistry property="os.version" key="SOFTWARE\Microsoft\Windows NT\CurrentVersion\CurrentVersion" hive="LocalMachine" />
+      <call target="setWinVer.${os.version}"/>
+   </target>
+
+   <!-- Windows 2000  -->
+   <target name="setWinVer.5.0">
+      <property name="win2000" value="true"/>
+      <property name="winXPor2000" value="true"/>
+   </target>
+
+   <!-- Windows XP -->
+   <target name="setWinVer.5.1">
+      <property name="winXP" value="true"/>
+      <property name="winXPor2000" value="true"/>
+   </target>
+
+   <!-- Windows 2003 -->
+   <target name="setWinVer.5.2">
+      <property name="win2003" value="true"/>
+   </target>
+
+   <!-- Windows 2008 -->
+   <target name="setWinVer.6.0">
+      <property name="win2003" value="true"/>
+   </target>
+  
+  <target name="setPropertiesFromEnvironmentSettings" 
+      description="Takes a comma separated list of properties and obtains their value from the settings file specified through sys.env.ENV_SETTINGS, typically passed by SetEnvUI">
+      
+      <if test="${property::exists('propsFromEnvSettings')}">
+   
+         <!-- Use either the settings file that comes from SetEnvUI, or devl/local settings if doing
+              workstation deployment. -->
+         <if test="${property::exists('serverDeploy') and serverDeploy and property::exists('sys.env.ENV_SETTINGS')}"> 
+            <property name="settingsFileToUse" value="${sys.env.ENV_SETTINGS}"/>
+         </if>
+         <if test="${(property::exists('debugDeploy') and debugDeploy) or (property::exists('releaseDeploy') and releaseDeploy)}">
+           <if test="${property::exists('developerPreProcessSettings')}">
+               <property name="settingsFileToUse" value="${developerPreProcessSettings}"/>
+            </if>
+            <if test="${not property::exists('developerPreProcessSettings')}">
+               <property name="settingsFileToUse" value="${project::get-base-directory() + '\EnvironmentSettings\devl_settings.xml'}"/>
+            </if>
+         </if>
+   
+         <if test="${property::exists('settingsFileToUse')}">
+            
+            <echo message="Setting properties from environment settings file (${settingsFileToUse}): ${propsFromEnvSettings}"/>
+
+            <foreach item="String" property="propFromEnv" delim="," in="${propsFromEnvSettings}" verbose="true">
+               <do>
+                  <xmlpeek file="${settingsFileToUse}" property="envValue" 
+                     xpath="/settings/property[@name=&quot;${propFromEnv}&quot;]"/>
+                  <property name="${propFromEnv}" value="${envValue}" />
+                  <echo message="setPropertiesFromEnvironmentSettings Setting ${propFromEnv} to value: ${envValue}"/>
+               </do>
+            </foreach>
+         </if>
+         
+         
+      </if>
+   </target>
+   
+
+
+</project>

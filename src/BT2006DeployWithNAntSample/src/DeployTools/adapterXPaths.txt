@@ -1,0 +1,7 @@
+/BindingInfo/ReceivePortCollection/ReceivePort/ReceiveLocations/ReceiveLocation/ReceiveLocationTransportTypeData/CustomProps/AdapterConfig
+/BindingInfo/ReceivePortCollection/ReceivePort/ReceiveLocations/ReceiveLocation/ReceiveLocationTransportTypeData
+/BindingInfo/ReceivePortCollection/ReceivePort/ReceiveLocations/ReceiveLocation/ReceivePipelineData
+
+/BindingInfo/SendPortCollection/SendPort/*/TransportTypeData/CustomProps/AdapterConfig
+/BindingInfo/SendPortCollection/SendPort/*/TransportTypeData
+

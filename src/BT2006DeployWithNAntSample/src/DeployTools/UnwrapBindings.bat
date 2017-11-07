@@ -1,0 +1,1 @@
+ElementTunnel.exe /i ..\Deluxe.BizTalk.PortBindings.xml /x adapterXPaths.txt /o ..\UnwrappedBindings.xml /decode
