@@ -186,22 +186,13 @@
   <Target Name="Clean" DependsOnTargets="InitTargetDir">
     <Error Text="Cannot continue. The OutputPath property is undefined. By default, this property is defined in the .btdfproj in PropertyGroups conditional to Debug and Release configurations." Condition="'$(OutputPath)' == ''"></Error>
 
-    <CreateItem Include="$(TargetDir)Install-$(MsiName).bat">
-      <Output TaskParameter="Include" ItemName="InstallBatFile" />
-    </CreateItem>
     <CreateItem Include="$(TargetDir)$(MsiName).msi">
       <Output TaskParameter="Include" ItemName="InstallMsiFile" />
-    </CreateItem>
-    <CreateItem Include="start &quot;&quot; msiexec.exe /i $(MsiName).msi INSTALLDIR=&quot;$(DefaultInstallDir)&quot;">
-      <Output TaskParameter="Include" ItemName="InstallBatFileLinesWithDefault" />
-    </CreateItem>
-    <CreateItem Include="start &quot;&quot; msiexec.exe /i $(MsiName).msi">
-      <Output TaskParameter="Include" ItemName="InstallBatFileLinesNoDefault" />
     </CreateItem>
 
     <!-- Delete any existing output files -->
     <Message Text="Cleaning output files..." Importance="normal" />
-    <CreateItem Include="@(InstallBatFile);@(InstallMsiFile)">
+    <CreateItem Include="@(InstallMsiFile)">
       <Output TaskParameter="Include" ItemName="OutputsToClean" />
     </CreateItem>
 
@@ -213,9 +204,7 @@
     Create the installer package
    -->
   <Target Name="Installer" DependsOnTargets="Clean;Redist">
-    <CreateProperty Value="@(DeploymentTest)" Condition="'@(DeploymentTest)' != ''">
-      <Output TaskParameter="Value" PropertyName="DeploymentTestProperty" />
-    </CreateProperty>
+    <Error Text="Please remove the backslash from the end of the DefaultInstallDir property's value." Condition="HasTrailingSlash('$(DefaultInstallDir)')" />
 
     <CreateProperty Value="$(DeploymentFrameworkDeveloperDir)\GenericBizTalkMSI.wxs" Condition="'$(WixProjectFile)' == ''">
       <Output TaskParameter="Value" PropertyName="WixProjectFile" />
@@ -225,15 +214,23 @@
       <Output TaskParameter="Value" PropertyName="WixHeatTransformFile" />
     </CreateProperty>
 
+    <CreateItem Include="$(WixProjectFile)">
+      <Output TaskParameter="Include" ItemName="WixProjectFileItem" />
+    </CreateItem>
+
+    <CreateProperty Value="@(DeploymentTest)" Condition="'@(DeploymentTest)' != ''">
+      <Output TaskParameter="Value" PropertyName="DeploymentTestProperty" />
+    </CreateProperty>
+
     <CreateProperty Value="dir &quot;$(RedistDir)&quot; -scom -srd -sreg -cg RedistComponentGroup -ke -gg -dr INSTALLDIR -var var.redist_folder -o &quot;$(IntermediateOutputPath)\RedistComponentGroup.wxs&quot; -t &quot;$(WixHeatTransformFile)&quot;" Condition="'$(WiXHeatArguments)' == ''">
       <Output TaskParameter="Value" PropertyName="WiXHeatArguments" />
     </CreateProperty>
 
-    <CreateProperty Value="&quot;-dredist_folder=$(RedistDir)&quot; &quot;-dProductUpgradeCode=$(ProductUpgradeCode)&quot; &quot;-dProductName=$(ProductName)&quot; &quot;-dProductId=$(ProductId)&quot; &quot;-dProductVersion=$(ProductVersion)&quot; &quot;-dProjectVersion=$(ProjectVersion)&quot; &quot;-dManufacturer=$(Manufacturer)&quot; &quot;-dPackageDescription=$(PackageDescription)&quot; &quot;-dPackageComments=$(PackageComments)&quot; &quot;-dDeploymentTest=$(DeploymentTestProperty)&quot; &quot;-dBizTalkAppName=$(BizTalkAppName)&quot; &quot;-dProjectFilename=$(MSBuildProjectFile)&quot; -dIncludeDeployRulesShortcut=$(IncludeVocabAndRules) -dIncludeSSOEditorShortcut=$(IncludeSSO) -dCreateStartMenuShortcuts=$(CreateStartMenuShortcuts) -out &quot;$(IntermediateOutputPath)\\&quot; &quot;$(WixProjectFile)&quot; &quot;$(IntermediateOutputPath)\RedistComponentGroup.wxs&quot;" Condition="'$(WiXCandleArguments)' == ''">
+    <CreateProperty Value="&quot;-dredist_folder=$(RedistDir)&quot; &quot;-dProductUpgradeCode=$(ProductUpgradeCode)&quot; &quot;-dProductName=$(ProductName)&quot; &quot;-dProductId=$(ProductId)&quot; &quot;-dProductVersion=$(ProductVersion)&quot; &quot;-dProjectVersion=$(ProjectVersion)&quot; &quot;-dManufacturer=$(Manufacturer)&quot; &quot;-dPackageDescription=$(PackageDescription)&quot; &quot;-dPackageComments=$(PackageComments)&quot; &quot;-dDeploymentTest=$(DeploymentTestProperty)&quot; &quot;-dBizTalkAppName=$(BizTalkAppName)&quot; &quot;-dProjectFilename=$(MSBuildProjectFile)&quot; -dIncludeDeployRulesShortcut=$(IncludeVocabAndRules) -dIncludeSSOEditorShortcut=$(IncludeSSO) -dCreateStartMenuShortcuts=$(CreateStartMenuShortcuts) -dExplicitInstallDir=&quot;$(DefaultInstallDir)&quot; -out &quot;$(IntermediateOutputPath)\\&quot; &quot;$(WixProjectFile)&quot; &quot;$(IntermediateOutputPath)\RedistComponentGroup.wxs&quot;" Condition="'$(WiXCandleArguments)' == ''">
       <Output TaskParameter="Value" PropertyName="WiXCandleArguments" />
     </CreateProperty>
 
-    <CreateProperty Value="&quot;$(IntermediateOutputPath)\GenericBizTalkMSI.wixobj&quot; &quot;$(IntermediateOutputPath)\RedistComponentGroup.wixobj&quot; -out &quot;$(TargetDir)\$(MsiName).msi&quot; -ext &quot;$(WixDir)\WixUIExtension.dll&quot; -ext &quot;$(WixDir)\WixNetFxExtension.dll&quot; -spdb $(MSIValidationParam)" Condition="'$(WiXLightArguments)' == ''">
+    <CreateProperty Value="&quot;$(IntermediateOutputPath)\%(WixProjectFileItem.Filename).wixobj&quot; &quot;$(IntermediateOutputPath)\RedistComponentGroup.wixobj&quot; -out &quot;$(TargetDir)\$(MsiName).msi&quot; -ext &quot;$(WixDir)\WixUIExtension.dll&quot; -ext &quot;$(WixDir)\WixNetFxExtension.dll&quot; -spdb $(MSIValidationParam)" Condition="'$(WiXLightArguments)' == ''">
       <Output TaskParameter="Value" PropertyName="WiXLightArguments" />
     </CreateProperty>
 
@@ -242,10 +239,6 @@
     <Exec Command="&quot;$(WixDir)\candle.exe&quot; $(WixCandleArguments)" />
     <Exec Command="&quot;$(WixDir)\light.exe&quot; $(WixLightArguments)" />
     <Message Text="Finished generating MSI." Importance="normal" />
-
-    <!-- Write out a .bat file that can be used to launch the installer with msiexec.exe. -->
-    <WriteLinesToFile File="@(InstallBatFile)" Lines="@(InstallBatFileLinesWithDefault)" Overwrite="true" Condition="'$(DefaultInstallDir)' != ''" ContinueOnError="true" />
-    <WriteLinesToFile File="@(InstallBatFile)" Lines="@(InstallBatFileLinesNoDefault)" Overwrite="true" Condition="'$(DefaultInstallDir)' == ''" ContinueOnError="true" />
 
     <CallTarget Targets="CustomPostInstaller" />
   </Target>

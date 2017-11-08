@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.XLANGs.BizTalk.CrossProcess;
 using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
 
 namespace DeploymentFramework.BuildTasks
 {
@@ -23,48 +24,20 @@ namespace DeploymentFramework.BuildTasks
     public class UpdateBizTalkAppDomainConfig : UpdateBTSNTSvcExeConfigBase
     {
         private string _appDomainName;
-        private string _secondsIdleBeforeShutdown;
-        private string _secondsEmptyBeforeShutdown;
-        private string _configurationFilePath;
         private string _defaultAssembliesPerDomain;
-        private ITaskItem[] _exactAssignmentRules;
         private ITaskItem[] _patternAssignmentRules;
+        private ITaskItem[] _appDomains;
+        private string _defaultAssemblyNameRegexes;
         private string _remove = "false";
 
         /// <summary>
         /// Name of the custom AppDomain
         /// </summary>
+        [Obsolete]
         public string AppDomainName
         {
             get { return _appDomainName; }
             set { _appDomainName = value; }
-        }
-
-        /// <summary>
-        /// Number of seconds that the AppDomain is idle (contains only dehydratable orchestrations) before being unloaded.
-        /// </summary>
-        public string SecondsIdleBeforeShutdown
-        {
-            get { return _secondsIdleBeforeShutdown; }
-            set { _secondsIdleBeforeShutdown = value; }
-        }
-
-        /// <summary>
-        /// Number of seconds that the AppDomain is empty (does not contain any orchestrations) before being unloaded.
-        /// </summary>
-        public string SecondsEmptyBeforeShutdown
-        {
-            get { return _secondsEmptyBeforeShutdown; }
-            set { _secondsEmptyBeforeShutdown = value; }
-        }
-
-        /// <summary>
-        /// Complete path to a standard .NET configuration file to be loaded into the AppDomain.
-        /// </summary>
-        public string ConfigurationFilePath
-        {
-            get { return _configurationFilePath; }
-            set { _configurationFilePath = value; }
         }
 
         /// <summary>
@@ -77,21 +50,28 @@ namespace DeploymentFramework.BuildTasks
         }
 
         /// <summary>
-        /// Exact assembly names for those assemblies to be loaded into this AppDomain.
-        /// </summary>
-        public ITaskItem[] ExactAssignmentRules
-        {
-            get { return _exactAssignmentRules; }
-            set { _exactAssignmentRules = value; }
-        }
-
-        /// <summary>
         /// Regular expressions of assembly names for those assemblies to be loaded into this AppDomain.
         /// </summary>
+        [Obsolete]
         public ITaskItem[] PatternAssignmentRules
         {
             get { return _patternAssignmentRules; }
             set { _patternAssignmentRules = value; }
+        }
+
+        public ITaskItem[] AppDomains
+        {
+            get { return _appDomains; }
+            set { _appDomains = value; }
+        }
+
+        /// <summary>
+        /// Default pattern assignment regular expressions if no pattern or exact rules were provided
+        /// </summary>
+        public string DefaultAssemblyNameRegexes
+        {
+            get { return _defaultAssemblyNameRegexes; }
+            set { _defaultAssemblyNameRegexes = value; }
         }
 
         /// <summary>
@@ -102,67 +82,168 @@ namespace DeploymentFramework.BuildTasks
             get { return _remove; }
             set { _remove = value; }
         }
-	
+
         /// <summary>
         /// Override the BizTalk xlangs configuration data loaded from the BTSNTSvc.exe.config file.
         /// </summary>
         /// <param name="config"></param>
-        protected override void UpdateConfiguration(Configuration config)
+        protected override bool UpdateConfiguration(Configuration config)
         {
             UpdateDefaultAppDomainConfiguration(config);
 
             bool remove = bool.Parse(_remove);
 
-            if (!string.IsNullOrEmpty(_appDomainName))
+            // If no AppDomainName AND no AppDomains, there is nothing to do
+            if (string.IsNullOrEmpty(_appDomainName) && (_appDomains == null || _appDomains.Length == 0))
             {
-                List<AppDomainSpec> adss = new List<AppDomainSpec>(config.AppDomains.AppDomainSpecs);
+                return true;
+            }
 
-                AppDomainSpec ads = adss.Find(AppDomainSpecNameMatchesAppDomainName);
+            // If there is an AppDomainName but no AppDomains, then convert it into the AppDomains list
+            if (!string.IsNullOrEmpty(_appDomainName) && (_appDomains == null || _appDomains.Length == 0))
+            {
+                ConvertPropertiesToAppDomainsList();
+            }
+
+            List<AppDomainSpec> adss = new List<AppDomainSpec>(config.AppDomains.AppDomainSpecs);
+
+            foreach (ITaskItem appDomain in _appDomains)
+            {
+                AppDomainSpec ads = null;
+
+                foreach (AppDomainSpec adsx in adss)
+                {
+                    if (string.Compare(adsx.Name, appDomain.ItemSpec, true) == 0)
+                    {
+                        ads = adsx;
+                    }
+                }
 
                 if (remove)
                 {
-                    this.Log.LogMessage("Removing AppDomain configuration data for AppDomain '{0}'...", _appDomainName);
+                    this.Log.LogMessage("Removing AppDomain configuration data for AppDomain '{0}'...", appDomain.ItemSpec);
 
                     if (ads != null)
                     {
                         adss.Remove(ads);
                     }
 
-                    RemoveExactAssignmentRules(config.AppDomains);
-                    RemovePatternAssignmentRules(config.AppDomains);
+                    RemoveAssignmentRules(config.AppDomains, appDomain.ItemSpec);
                 }
                 else
                 {
-                    this.Log.LogMessage("Adding/updating AppDomain configuration data for AppDomain '{0}'...", _appDomainName);
+                    this.Log.LogMessage("Adding/updating AppDomain configuration data for AppDomain '{0}'...", appDomain.ItemSpec);
 
                     if (ads == null)
                     {
                         ads = new AppDomainSpec();
-                        ads.Name = _appDomainName;
+                        ads.Name = appDomain.ItemSpec;
                         adss.Add(ads);
                     }
 
-                    if (!string.IsNullOrEmpty(_secondsIdleBeforeShutdown))
+                    if (!string.IsNullOrEmpty(appDomain.GetMetadata("SecondsIdleBeforeShutdown")))
                     {
-                        ads.SecondsIdleBeforeShutdown = int.Parse(_secondsIdleBeforeShutdown);
+                        ads.SecondsIdleBeforeShutdown = int.Parse(appDomain.GetMetadata("SecondsIdleBeforeShutdown"));
                     }
 
-                    if (!string.IsNullOrEmpty(_secondsEmptyBeforeShutdown))
+                    if (!string.IsNullOrEmpty(appDomain.GetMetadata("SecondsEmptyBeforeShutdown")))
                     {
-                        ads.SecondsEmptyBeforeShutdown = int.Parse(_secondsEmptyBeforeShutdown);
+                        ads.SecondsEmptyBeforeShutdown = int.Parse(appDomain.GetMetadata("SecondsEmptyBeforeShutdown"));
                     }
 
-                    if (!string.IsNullOrEmpty(_configurationFilePath))
+                    string configFilePath = appDomain.GetMetadata("ConfigurationFilePath");
+                    if (!string.IsNullOrEmpty(configFilePath))
                     {
-                        ads.BaseSetup.ConfigurationFile = _configurationFilePath;
+                        configFilePath = System.IO.Path.GetFullPath(configFilePath);
+
+                        if (!System.IO.File.Exists(configFilePath))
+                        {
+                            this.Log.LogError("The file in BizTalkAppDomain ConfigurationFilePath cannot be found. [" + configFilePath + "]");
+                            return false;
+                        }
+
+                        ads.BaseSetup.ConfigurationFile = configFilePath;
+                    }
+                    else
+                    {
+                        ads.BaseSetup.ConfigurationFile = null;
                     }
 
-                    UpdateExactAssignmentRules(config.AppDomains);
-                    UpdatePatternAssignmentRules(config.AppDomains);
+                    string applicationBase = appDomain.GetMetadata("ApplicationBase");
+                    if (!string.IsNullOrEmpty(applicationBase))
+                    {
+                        if (!applicationBase.EndsWith("\\"))
+                        {
+                            applicationBase += "\\";
+                        }
+
+                        applicationBase = System.IO.Path.GetFullPath(applicationBase);
+
+                        ads.BaseSetup.ApplicationBase = applicationBase;
+                    }
+                    else
+                    {
+                        ads.BaseSetup.ApplicationBase = null;
+                    }
+
+                    string privateBinPath = appDomain.GetMetadata("PrivateBinPath");
+                    if (!string.IsNullOrEmpty(privateBinPath))
+                    {
+                        string[] privateBinPaths = privateBinPath.Split(';');
+
+                        foreach (string privateBinPathInstance in privateBinPaths)
+                        {
+                            if (System.IO.Path.IsPathRooted(privateBinPathInstance))
+                            {
+                                this.Log.LogError("The path(s) in BizTalkAppDomain PrivateBinPath must be relative to ApplicationBase. [" + privateBinPathInstance + "]");
+                                return false;
+                            }
+                        }
+
+                        ads.BaseSetup.PrivateBinPath = privateBinPath;
+                    }
+                    else
+                    {
+                        ads.BaseSetup.PrivateBinPath = null;
+                    }
+
+                    UpdateAssignmentRules(config.AppDomains, appDomain.ItemSpec, appDomain.GetMetadata("AssemblyNameRegexes"), appDomain.GetMetadata("AssemblyNames"));
+                }
+            }
+
+            config.AppDomains.AppDomainSpecs = adss.ToArray();
+
+            return true;
+        }
+
+        private void ConvertPropertiesToAppDomainsList()
+        {
+            ITaskItem newAppDomain = new TaskItem(_appDomainName);
+
+            if (_patternAssignmentRules != null)
+            {
+                List<string> patternAssignmentRules = new List<string>();
+
+                foreach (ITaskItem patternAssignmentRule in _patternAssignmentRules)
+                {
+                    string rule = patternAssignmentRule.GetMetadata("AssemblyNamePattern");
+
+                    if (!string.IsNullOrEmpty(rule))
+                    {
+                        patternAssignmentRules.Add(rule);
+                    }
                 }
 
-                config.AppDomains.AppDomainSpecs = adss.ToArray();
+                if (patternAssignmentRules.Count > 0)
+                {
+                    string[] patternAssignmentRulesArray = patternAssignmentRules.ToArray();
+                    newAppDomain.SetMetadata("AssemblyNameRegexes", string.Join(";", patternAssignmentRulesArray));
+                }
             }
+
+            _appDomains = new ITaskItem[] { newAppDomain };
+            _appDomainName = null;
+            _patternAssignmentRules = null;
         }
 
         private void UpdateDefaultAppDomainConfiguration(Configuration config)
@@ -174,51 +255,62 @@ namespace DeploymentFramework.BuildTasks
         }
 
         /// <summary>
+        /// Update the assignment rules section for the current AppDomain.
+        /// </summary>
+        private void UpdateAssignmentRules(AppDomains adConfig, string appDomainName, string assemblyNameRegexes, string assemblyNames)
+        {
+            if (string.IsNullOrEmpty(assemblyNameRegexes) && string.IsNullOrEmpty(assemblyNames))
+            {
+                assemblyNameRegexes = _defaultAssemblyNameRegexes;
+            }
+
+            RemoveAssignmentRules(adConfig, appDomainName);
+            UpdateExactAssignmentRules(adConfig, appDomainName, assemblyNames);
+            UpdatePatternAssignmentRules(adConfig, appDomainName, assemblyNameRegexes);
+        }
+
+        private void RemoveAssignmentRules(AppDomains adConfig, string appDomainName)
+        {
+            RemoveExactAssignmentRules(adConfig, appDomainName);
+            RemovePatternAssignmentRules(adConfig, appDomainName);
+        }
+
+        /// <summary>
         /// Update the ExactAssignmentRules section for the current AppDomain.
         /// </summary>
         /// <param name="adConfig"></param>
-        private void UpdateExactAssignmentRules(AppDomains adConfig)
+        private void UpdateExactAssignmentRules(AppDomains adConfig, string appDomainName, string assemblyNames)
         {
-            if (_exactAssignmentRules == null || _exactAssignmentRules.Length == 0)
+            if (string.IsNullOrEmpty(assemblyNames))
             {
                 return;
             }
 
             List<ExactAssignmentRule> ears = new List<ExactAssignmentRule>(adConfig.ExactAssignmentRules);
 
-            foreach (ITaskItem adear in _exactAssignmentRules)
-            {
-                string assemblyName = adear.GetMetadata("AssemblyName");
+            string[] assemblyNamesSplit = assemblyNames.Split(';');
 
-                ExactAssignmentRule ear = FindMatchOnAssemblyAppDomain(ears, assemblyName, _appDomainName);
+            foreach (string assemblyName in assemblyNamesSplit)
+            {
+                ExactAssignmentRule ear = FindMatchOnAssemblyAppDomain(ears, assemblyName, appDomainName);
 
                 if (ear == null)
                 {
                     ear = new ExactAssignmentRule();
                     ear.AssemblyName = assemblyName;
-                    ear.AppDomainName = _appDomainName;
+                    ear.AppDomainName = appDomainName;
                     ears.Add(ear);
                 }
-
-                adConfig.ExactAssignmentRules = ears.ToArray();
             }
+
+            adConfig.ExactAssignmentRules = ears.ToArray();
         }
 
-        private void RemoveExactAssignmentRules(AppDomains adConfig)
+        private void RemoveExactAssignmentRules(AppDomains adConfig, string appDomainName)
         {
-            ExactAssignmentRule ear = null;
             List<ExactAssignmentRule> ears = new List<ExactAssignmentRule>(adConfig.ExactAssignmentRules);
 
-            do
-            {
-                ear = ears.Find(ExactAssignmentAppDomainNameMatchesAppDomainName);
-
-                if (ear != null)
-                {
-                    ears.Remove(ear);
-                }
-            }
-            while (ear != null);
+            ears.RemoveAll(ear => (string.Compare(ear.AppDomainName, appDomainName, true) == 0));
 
             adConfig.ExactAssignmentRules = ears.ToArray();
         }
@@ -227,68 +319,43 @@ namespace DeploymentFramework.BuildTasks
         /// Update the PatternAssignmentRules section for the current AppDomain.
         /// </summary>
         /// <param name="adConfig"></param>
-        private void UpdatePatternAssignmentRules(AppDomains adConfig)
+        private void UpdatePatternAssignmentRules(AppDomains adConfig, string appDomainName, string assemblyNameRegexes)
         {
-            if (_patternAssignmentRules == null)
+            if (string.IsNullOrEmpty(assemblyNameRegexes))
             {
                 return;
             }
 
             List<PatternAssignmentRule> pars = new List<PatternAssignmentRule>(adConfig.PatternAssignmentRules);
 
-            foreach (ITaskItem adpar in _patternAssignmentRules)
-            {
-                string assemblyNamePattern = adpar.GetMetadata("AssemblyNamePattern");
+            string[] assemblyNameRegexesSplit = assemblyNameRegexes.Split(';');
 
-                PatternAssignmentRule par = FindMatchOnAssemblyPatternAppDomain(pars, assemblyNamePattern, _appDomainName);
+            foreach (string assemblyNameRegex in assemblyNameRegexesSplit)
+            {
+                PatternAssignmentRule par = FindMatchOnAssemblyPatternAppDomain(pars, assemblyNameRegex, appDomainName);
 
                 if (par == null)
                 {
                     par = new PatternAssignmentRule();
-                    par.AssemblyNamePattern = assemblyNamePattern;
-                    par.AppDomainName = _appDomainName;
+                    par.AssemblyNamePattern = assemblyNameRegex;
+                    par.AppDomainName = appDomainName;
                     pars.Add(par);
                 }
-
-                adConfig.PatternAssignmentRules = pars.ToArray();
             }
+
+            adConfig.PatternAssignmentRules = pars.ToArray();
         }
 
-        private void RemovePatternAssignmentRules(AppDomains adConfig)
+        private void RemovePatternAssignmentRules(AppDomains adConfig, string appDomainName)
         {
-            PatternAssignmentRule par = null;
             List<PatternAssignmentRule> pars = new List<PatternAssignmentRule>(adConfig.PatternAssignmentRules);
 
-            do
-            {
-                par = pars.Find(PatternAssignmentAppDomainNameMatchesAppDomainName);
-
-                if (par != null)
-                {
-                    pars.Remove(par);
-                }
-            }
-            while (par != null);
+            pars.RemoveAll(par => (string.Compare(par.AppDomainName, appDomainName, true) == 0));
 
             adConfig.PatternAssignmentRules = pars.ToArray();
         }
 
         #region Array Search Helpers
-        /// <summary>
-        /// Find an AppDomainSpec with a name matching the current AppDomain name.
-        /// </summary>
-        /// <param name="ads"></param>
-        /// <returns></returns>
-        private bool AppDomainSpecNameMatchesAppDomainName(AppDomainSpec ads)
-        {
-            if (string.Compare(ads.Name, _appDomainName, true) == 0)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
         private ExactAssignmentRule FindMatchOnAssemblyAppDomain(
             List<ExactAssignmentRule> ears, string assemblyName, string appDomainName)
         {
@@ -304,35 +371,6 @@ namespace DeploymentFramework.BuildTasks
             return null;
         }
 
-        /// <summary>
-        /// Find an ExactAssignmentRule with an AppDomainName matching the current AppDomain name.
-        /// </summary>
-        /// <param name="ads"></param>
-        /// <returns></returns>
-        private bool ExactAssignmentAppDomainNameMatchesAppDomainName(ExactAssignmentRule ear)
-        {
-            if (string.Compare(ear.AppDomainName, _appDomainName, true) == 0)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Find an PatternAssignmentRule with an AppDomainName matching the current AppDomain name.
-        /// </summary>
-        /// <param name="ads"></param>
-        /// <returns></returns>
-        private bool PatternAssignmentAppDomainNameMatchesAppDomainName(PatternAssignmentRule par)
-        {
-            if (string.Compare(par.AppDomainName, _appDomainName, true) == 0)
-            {
-                return true;
-            }
-
-            return false;
-        }
 
         private PatternAssignmentRule FindMatchOnAssemblyPatternAppDomain(
             List<PatternAssignmentRule> pars, string assemblyNamePattern, string appDomainName)

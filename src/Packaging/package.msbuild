@@ -1,25 +1,37 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!--
     Deployment Framework for BizTalk
-    Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
+    Copyright (C) 2008-15 Thomas F. Abraham, 2004-08 Scott Colestock
     
     This source file is subject to the Microsoft Public License (Ms-PL).
 -->
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="PackageToolsSource;BuildAddin;BuildInstaller">
-  <UsingTask AssemblyFile="..\Framework\BizTalkDeploymentFramework.Tasks.dll" TaskName="MakeFilesWriteable" />
-
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="BuildTools;BuildAddin;BuildAddinPackage;BuildDocs;BuildInstaller">
   <PropertyGroup>
-    <Version>5_5_0</Version>
-    <InstallerVersion>5.5.100.0</InstallerVersion>
-    <ProductID>ee294f30-d38f-4274-bdcf-f94c0d2a4a32</ProductID>
+    <Version>5_6_0</Version>
+    <InstallerVersion>5.6.101.0</InstallerVersion>
+    <ProductID>018C4B8A-B453-49DD-91AD-3B20D0D1D428</ProductID>
   </PropertyGroup>
 
   <ItemGroup>
     <MsiFile Include="..\Installer\bin\release\DeploymentFrameworkForBizTalk.msi" />
   </ItemGroup>
 
+  <Target Name="BuildTools">
+    <MSBuild Projects="..\Tools\BuildTools.msbuild" Properties="Configuration=Release;Platform=Any CPU" />
+  </Target>
+
+  <UsingTask AssemblyFile="..\Framework\BizTalkDeploymentFramework.Tasks.dll" TaskName="WriteXmlValue" />
+  <UsingTask AssemblyFile="..\Framework\BizTalkDeploymentFramework.Tasks.dll" TaskName="MakeFilesWriteable" />
+
   <Target Name="BuildAddin">
     <MSBuild Projects="..\VisualStudioAddIn\VisualStudioAddIn.sln" Properties="Configuration=Release;Platform=Any CPU" Targets="Rebuild" />
+  </Target>
+
+  <Target Name="BuildAddinPackage">
+    <MakeFilesWriteable InputFiles="..\VisualStudioAddIn\DeploymentFrameworkForBizTalkProjectTemplate5_0\MyTemplate.vstemplate" />
+    <WriteXmlValue XmlFilenames="..\VisualStudioAddIn\DeploymentFrameworkForBizTalkProjectTemplate5_0\MyTemplate.vstemplate" XPath="//ns:Assembly" Namespace="http://schemas.microsoft.com/developer/vstemplate/2005" Value="DFBTVisualStudioAddIn.ProjectWizard, Version=$(InstallerVersion), Culture=neutral, PublicKeyToken=e748234cd372cc72" />
+    <Delete Files="..\VisualStudioAddIn\DeploymentFrameworkForBizTalkProjectTemplate5_0.zip" />
+    <Exec Command="7za a -r -tzip ..\VisualStudioAddIn\DeploymentFrameworkForBizTalkProjectTemplate5_0.zip ..\VisualStudioAddIn\DeploymentFrameworkForBizTalkProjectTemplate5_0\*" />
   </Target>
 
   <Target Name="BuildInstaller">
@@ -27,9 +39,12 @@
     <Copy SourceFiles="@(MsiFile)" DestinationFiles="@(MsiFile->'Staging\%(filename)V$(Version)%(extension)')" />
   </Target>
 
-  <Target Name="PackageToolsSource">
-    <MakeFilesWriteable InputFiles="Staging\ToolsSource.zip" />
+  <Target Name="BuildDocs">
+    <Exec Command="&quot;\Program Files\IBE Software\HelpNDoc\Hnd4.exe&quot; ..\Documentation\Src\DeploymentFrameworkForBizTalkDocs.hnd /g" />
+  </Target>
+
+  <!--<Target Name="PackageToolsSource">
     <Delete Files="Staging\ToolsSource.zip" />
     <Exec Command="7za a -r -tzip Staging\ToolsSource.zip ..\Tools\* -x!*.suo -x!obj -x!bin -x!*.user -x!*.vssscc -x!*.scc" />
-  </Target>
+  </Target>-->
 </Project>

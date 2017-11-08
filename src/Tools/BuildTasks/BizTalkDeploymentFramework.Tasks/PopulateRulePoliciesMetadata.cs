@@ -23,6 +23,7 @@ namespace DeploymentFramework.BuildTasks
     /// </summary>
     public class PopulateRulePoliciesMetadata : Task
     {
+        private bool _reverse;
         private ITaskItem[] _itemGroup;
         private ITaskItem[] _outputItemGroup;
 
@@ -30,6 +31,12 @@ namespace DeploymentFramework.BuildTasks
         {
             get { return _itemGroup; }
             set { _itemGroup = value; }
+        }
+
+        public bool Reverse
+        {
+            get { return _reverse; }
+            set { _reverse = value; }
         }
 
         [Output]
@@ -46,6 +53,11 @@ namespace DeploymentFramework.BuildTasks
             }
 
             base.Log.LogMessage("Populating metadata in ItemGroup from policy/vocabulary files content...");
+
+            if (_reverse)
+            {
+                Array.Reverse(_itemGroup);
+            }
 
             List<TaskItem> newTaskItems = new List<TaskItem>();
 

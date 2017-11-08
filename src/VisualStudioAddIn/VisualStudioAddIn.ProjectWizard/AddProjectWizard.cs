@@ -210,7 +210,8 @@ namespace DeploymentFramework.VisualStudioAddIn.ProjectWizard
             string bizTalkProductName = GetBizTalkProductName();
 
             if (string.Compare(bizTalkProductName, "Microsoft BizTalk Server 2010", true) == 0
-                || string.Compare(bizTalkProductName, "Microsoft BizTalk Server 2013", true) == 0)
+                || string.Compare(bizTalkProductName, "Microsoft BizTalk Server 2013", true) == 0
+                || string.Compare(bizTalkProductName, "Microsoft BizTalk Server 2013 R2", true) == 0)
             {
                 projectElement.SetAttribute("ToolsVersion", "4.0");
             }

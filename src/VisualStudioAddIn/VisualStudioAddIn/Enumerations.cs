@@ -15,6 +15,7 @@ namespace DeploymentFramework.VisualStudioAddIn
         Vs2005,
         Vs2008,
         Vs2010,
-        Vs2012
+        Vs2012,
+        Vs2013
     };
 }

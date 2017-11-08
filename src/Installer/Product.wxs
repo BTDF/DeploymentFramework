@@ -6,7 +6,7 @@
     This source file is subject to the Microsoft Public License (Ms-PL).
 -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-  <?define ProductVersion="5.5" ?>
+  <?define ProductVersion="5.6" ?>
 
   <Product Id="$(var.ProductID)" Name="Deployment Framework for BizTalk $(var.ProductVersion)"
            Language="1033" Version="$(var.ProductVersionFull)" Manufacturer="Abraham/Colestock" UpgradeCode="a0550f65-4338-4892-884e-594593e8b4f7">
@@ -31,6 +31,10 @@
       <RegistrySearch Id="ESBTOOLKIT22_DIR_REG" Root="HKLM" Key="SOFTWARE\Microsoft\BizTalk ESB Toolkit" Name="InstallPath" Type="directory" />
     </Property>
 
+    <Property Id="ESBTOOLKIT23_DIR" Secure="yes">
+      <RegistrySearch Id="ESBTOOLKIT23_DIR_REG" Root="HKLM" Key="SOFTWARE\Microsoft\BizTalk ESB Toolkit" Name="InstallPath" Type="directory" />
+    </Property>
+
     <Property Id="ARPHELPLINK" Value="http://biztalkdeployment.codeplex.com" />
     <Property Id="ARPURLINFOABOUT" Value="http://biztalkdeployment.codeplex.com" />
 
@@ -52,10 +56,11 @@
     <FeatureRef Id="VS2008IntegrationFeature" />
     <FeatureRef Id="VS2010IntegrationFeature" />
     <FeatureRef Id="VS2012IntegrationFeature" />
-    <FeatureRef Id="ToolsSourceFeature" />
+    <FeatureRef Id="VS2013IntegrationFeature" />
     <FeatureRef Id="EsbToolkit20IntegrationFeature" />
     <FeatureRef Id="EsbToolkit21IntegrationFeature" />
     <FeatureRef Id="EsbToolkit22IntegrationFeature" />
+    <FeatureRef Id="EsbToolkit23IntegrationFeature" />
 
     <PropertyRef Id="BTS_PRODUCTNAME" />
     <PropertyRef Id="WIX_DIR_COMMON_DOCUMENTS"/>
@@ -64,8 +69,9 @@
     <UIRef Id="VS2008UI" />
     <UIRef Id="VS2010UI" />
     <UIRef Id="VS2012UI" />
+    <UIRef Id="VS2013UI" />
 
-    <Condition Message="Microsoft BizTalk Server 2006, 2006 R2, 2009, 2010 or 2013 is required to install this product.">
+    <Condition Message="Microsoft BizTalk Server 2006, 2006 R2, 2009, 2010, 2013 or 2013 R2 is required to install this product.">
       Installed OR BTS_PRODUCTNAME
     </Condition>
 
@@ -152,7 +158,7 @@
     <DirectoryRef Id="TARGETDIR">
       <Component Id="RegistryEntries" Guid="*">
         <RegistryKey Root="HKLM" Key="Software\DeploymentFrameworkForBizTalk">
-          <RegistryValue Name="InstalledVersion" Type="string" Value="5.5"/>
+          <RegistryValue Name="InstalledVersion" Type="string" Value="$(var.ProductVersion)"/>
           <RegistryValue Name="InstallPath" Type="string" Value="[INSTALLLOCATION]"/>
         </RegistryKey>
       </Component>
@@ -162,13 +168,14 @@
   <?include RuntimeComponents.wxi ?>
   <?include DeveloperTools.wxi ?>
   <?include Samples.wxi ?>
-  <?include ToolsSource.wxi ?>
   <?include VS2005Integration.wxi ?>
   <?include VS2008Integration.wxi ?>
   <?include VS2010Integration.wxi ?>
   <?include VS2012Integration.wxi ?>
+  <?include VS2013Integration.wxi ?>
   <?include ESBToolkit20Integration.wxi ?>
   <?include ESBToolkit21Integration.wxi ?>
   <?include ESBToolkit22Integration.wxi ?>
+  <?include ESBToolkit23Integration.wxi ?>
 
 </Wix>

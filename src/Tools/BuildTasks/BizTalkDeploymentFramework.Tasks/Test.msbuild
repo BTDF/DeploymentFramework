@@ -15,6 +15,7 @@
   <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.dll" TaskName="Pause" />
   <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.dll" TaskName="ControlBizTalkHostInstance" />
   <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.dll" TaskName="CheckXmlSyntax" />
+  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.dll" TaskName="WriteXmlValue" />
 
   <ItemGroup>
     <RulePolicies Include="TestPolicy.1.0.xml">
@@ -79,8 +80,14 @@
   </Target>
 
   <Target Name="TestPopulateRulesPolicyMetadata">
-    <PopulateRulePoliciesMetadata RulePoliciesIn="@(RulePoliciesQualified)">
-      <Output TaskParameter="RulePoliciesOut" ItemName="RulePoliciesQualified" />
+    <PopulateRulePoliciesMetadata PolicyVocabFiles="@(RulePoliciesQualified)">
+      <Output TaskParameter="PolicyVocabWithMetadata" ItemName="RulePoliciesQualified" />
+    </PopulateRulePoliciesMetadata>
+  </Target>
+
+  <Target Name="TestPopulateRulesPolicyMetadataReverse">
+    <PopulateRulePoliciesMetadata PolicyVocabFiles="@(RulePoliciesQualified)" Reverse="true">
+      <Output TaskParameter="PolicyVocabWithMetadata" ItemName="RulePoliciesQualified" />
     </PopulateRulePoliciesMetadata>
   </Target>
 
@@ -141,5 +148,9 @@
 
   <Target Name="TestCheckXmlSyntax">
     <CheckXmlSyntax XmlFilenames="@(XmlToTest)" />
+  </Target>
+
+  <Target Name="TestWriteXmlValue">
+    <WriteXmlValue XmlFilenames="@(XmlToTest)" XPath="//ApplicationName" Value="ABCDEFG" />
   </Target>
 </Project>

@@ -46,12 +46,11 @@
     <ProductName>Deployment Framework for BizTalk - Advanced</ProductName>
     <Manufacturer>Deployment Framework for BizTalk Team</Manufacturer>
     <PackageDescription>Deployment Framework for BizTalk Sample - Advanced</PackageDescription>
-    <PackageComments>Sample demonstrating the Deployment Framework for BizTalk - Advanced</PackageComments>
     <!-- NEVER change the ProductUpgradeCode. -->
     <ProductUpgradeCode>7D9B3AF0-2292-44dd-BDC5-D6258BB08BEA</ProductUpgradeCode>
     <!-- OPTIONAL property DefaultInstallDir can be used to override the default install path. -->
-    <!-- %ProgramFiles% is a Windows-defined environment variable that holds the default Program Files path. -->
-    <!--<DefaultInstallDir>%ProgramFiles%\BizTalkDeploymentSample</DefaultInstallDir>-->
+    <!-- [ProgramFilesFolder] is a Windows Installer variable that holds the default Program Files path. -->
+    <!--<DefaultInstallDir>[ProgramFilesFolder]\BizTalkDeploymentSample</DefaultInstallDir>-->
   </PropertyGroup>
   <!-- Under TFS Team Build, set CustomizableOutDir property to true in TFS 2005/2008/2010 UpgradeTemplate. -->
   <!-- With a workflow build, copy the default template then modify the MSBuild task for the solution build. Set OutDir to blank and -->
@@ -60,15 +59,11 @@
     <DeploymentFrameworkTargetsPath>$(MSBuildExtensionsPath)\DeploymentFrameworkForBizTalk\5.0\</DeploymentFrameworkTargetsPath>
     <OutputPath Condition="'$(TeamBuildOutDir)' == ''">bin\Debug\</OutputPath>
     <OutputPath Condition="'$(TeamBuildOutDir)' != ''">$(TeamBuildOutDir)</OutputPath>
-    <!-- Get our PDBs into the GAC so we get file/line number information in stack traces. -->
-    <DeployPDBsToGac>false</DeployPDBsToGac>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <DeploymentFrameworkTargetsPath>$(MSBuildExtensionsPath)\DeploymentFrameworkForBizTalk\5.0\</DeploymentFrameworkTargetsPath>
     <OutputPath Condition="'$(TeamBuildOutDir)' == ''">bin\Release\</OutputPath>
     <OutputPath Condition="'$(TeamBuildOutDir)' != ''">$(TeamBuildOutDir)</OutputPath>
-    <!-- Get our PDBs into the GAC so we get file/line number information in stack traces. -->
-    <DeployPDBsToGac>false</DeployPDBsToGac>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Server'">
     <DeploymentFrameworkTargetsPath>Framework\</DeploymentFrameworkTargetsPath>

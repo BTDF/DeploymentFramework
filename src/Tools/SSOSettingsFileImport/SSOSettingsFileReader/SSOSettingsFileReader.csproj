@@ -169,6 +169,7 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>copy /Y "$(TargetPath)" "..\..\..\..\..\Framework\DeployTools\SSOSettingsFileReaderFx2.dll"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

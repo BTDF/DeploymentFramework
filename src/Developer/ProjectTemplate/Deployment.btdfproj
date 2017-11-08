@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- 
   Deployment Framework for BizTalk
-  Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
+  Copyright (C) 2008-15 Thomas F. Abraham, 2004-08 Scott Colestock
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Installer">
   <PropertyGroup>
@@ -22,10 +22,9 @@
     <ProductId>[GUID1]</ProductId>
     <!-- BizTalk App Version Upgrade -->
 
-    <ProductName>[PROJECTNAME] for BizTalk</ProductName>
+    <ProductName>[PROJECTNAME] for BizTalk $(ProductVersion)</ProductName>
     <Manufacturer>Deployment Framework User</Manufacturer>
     <PackageDescription>[PROJECTNAME]</PackageDescription>
-    <PackageComments>[PROJECTNAME]</PackageComments>
     <!-- NEVER change the ProductUpgradeCode. -->
     <ProductUpgradeCode>[GUID2]</ProductUpgradeCode>
   </PropertyGroup>
@@ -36,18 +35,16 @@
     <DeploymentFrameworkTargetsPath>$(MSBuildExtensionsPath)\DeploymentFrameworkForBizTalk\5.0\</DeploymentFrameworkTargetsPath>
     <OutputPath Condition="'$(TeamBuildOutDir)' == ''">bin\Debug\</OutputPath>
     <OutputPath Condition="'$(TeamBuildOutDir)' != ''">$(TeamBuildOutDir)</OutputPath>
-    <DeployPDBsToGac>false</DeployPDBsToGac>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <DeploymentFrameworkTargetsPath>$(MSBuildExtensionsPath)\DeploymentFrameworkForBizTalk\5.0\</DeploymentFrameworkTargetsPath>
     <OutputPath Condition="'$(TeamBuildOutDir)' == ''">bin\Release\</OutputPath>
     <OutputPath Condition="'$(TeamBuildOutDir)' != ''">$(TeamBuildOutDir)</OutputPath>
-    <DeployPDBsToGac>false</DeployPDBsToGac>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Server'">
     <DeploymentFrameworkTargetsPath>Framework\</DeploymentFrameworkTargetsPath>
     <!-- Get our PDBs into the GAC so we get file/line number information in stack traces. -->
-    <DeployPDBsToGac>true</DeployPDBsToGac>
+    <DeployPDBsToGac>false</DeployPDBsToGac>
   </PropertyGroup>
   <ItemGroup>
     <PropsFromEnvSettings Include="SsoAppUserGroup;SsoAppAdminGroup" />

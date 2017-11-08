@@ -49,6 +49,7 @@
   <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="PublishWcfServiceArtifacts" />
   <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="StartProcess" />
   <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="CheckXmlSyntax" />
+  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="WriteXmlValue" />
   <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.BizTalk.dll" TaskName="CheckForServiceInstances" />
   <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.BizTalk.dll" TaskName="AddAppReference" />
   <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.BizTalk.dll" TaskName="ControlBizTalkApp" />
@@ -163,7 +164,7 @@
         prior to deployment/undeployment, since loading PDBs causes the BTSNTSvc.exe process to
         hold on to assemblies even after orchestration unenlistment.  This means it might
         only be desirable on servers, to avoid delay for developers. -->
-    <DeployPDBsToGac Condition="'$(DeployPDBsToGac)' == ''">true</DeployPDBsToGac>
+    <DeployPDBsToGac Condition="'$(DeployPDBsToGac)' == ''">false</DeployPDBsToGac>
 
     <!-- Set this to true to indicate you are using a "master" bindings file - such that xmlpreprocess
         doesn't overwrite it. -->
@@ -197,7 +198,7 @@
     <PortBindingsMaster Condition="'$(PortBindingsMaster)' == ''">PortBindingsMaster.xml</PortBindingsMaster>
 
     <!-- Points to the location of the environment settings spreadsheet. -->
-    <!-- This only applies to developer deployments due to a hard-coded path in the batch files used on server deployments. -->
+    <SettingsSpreadsheetPath Condition="'$(SettingsSpreadsheetPath)' == '' and Exists('$(MSBuildProjectDirectory)\SettingsFileGenerator.xml')">$(MSBuildProjectDirectory)\SettingsFileGenerator.xml</SettingsSpreadsheetPath>
     <SettingsSpreadsheetPath Condition="'$(SettingsSpreadsheetPath)' == ''">$(MSBuildProjectDirectory)\EnvironmentSettings\SettingsFileGenerator.xml</SettingsSpreadsheetPath>
 
     <!-- Path to the directory that will store settings files exported from the environment settings spreadsheet. -->
@@ -225,8 +226,6 @@
 
     <!-- Customize if needed (in seconds) -->
     <IisResetTime Condition="'$(IisResetTime)' == ''">60</IisResetTime>
-    <!-- Customize if needed (in milliseconds) -->
-    <BiztalkHostResetTime Condition="'$(BiztalkHostResetTime)' == ''">60000</BiztalkHostResetTime>
 
     <!-- Indicates whether a BTS application start should be performed after deployment. -->
     <StartApplicationOnDeploy Condition="'$(StartApplicationOnDeploy)' == ''">true</StartApplicationOnDeploy>
@@ -279,11 +278,14 @@
 
     <!-- Allows a specific description to be set on the BizTalk application for display in BizTalk Admin. -->
     <BizTalkAppDescription Condition="'$(BizTalkAppDescription)' == ''">$(ProjectName)</BizTalkAppDescription>
+
+    <!-- Default regular expression used to assign assemblies into custom .NET AppDomains if no value is supplied for BizTalkAppDomain AssemblyNameRegexes and AssemblyNames -->
+    <BizTalkAppDomainAssemblyNameRegexesDefault Condition="'$(BizTalkAppDomainAssemblyNameRegexesDefault)' == ''">($(ProjectName),.*)|($(ProjectName)\..*)</BizTalkAppDomainAssemblyNameRegexesDefault>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' != 'Server'">
     <!-- Indicates that BAM profile definitions should not be undeployed.  Undeploying a profile may cause existing BAM
-        data to be lost.  Referenced by the "unless" attribute on the undeployBam target below. -->
+        data to be lost. -->
     <SkipBamUndeploy Condition="'$(SkipBamUndeploy)' == ''">false</SkipBamUndeploy>
 
     <!-- Indicates whether to undeploy IIS vdirs during undeployment. May not be desirable on a dev machine. -->
@@ -328,6 +330,7 @@
     <PortBindingsFile Include="$(PortBindings)" />
   </ItemGroup>
 
+  <!-- This ItemGroup is deprecated in favor of BizTalkAppDomain -->
   <ItemGroup>
     <AllPatternAssignmentRule Include="*">
       <AssemblyNamePattern>$(ProjectName).*</AssemblyNamePattern>
@@ -606,6 +609,20 @@
   </ItemGroup>
   -->
 
+  <!-- A list of .NET AppDomains to configure for the application -->
+  <!--
+  DO NOT UNCOMMENT. This is just to demonstrate the usage of the ItemGroup. Should only be included in a .btdfproj.
+  <BizTalkAppDomain Include="MyApp">
+    <ApplicationBase>$(MSBuildProjectDirectory)\</ConfigurationFilePath>
+    <AssemblyNameRegexes>(MyApp,.*)|(MyApp\..*);MyAppComponent.*</AssemblyNameRegexes>
+    <AssemblyNames>MyApp.Maps, Version=1.0.0.0, Culture=neutral, PublicKeyToken=51a4d4439455a1a7</AssemblyNames>
+    <ConfigurationFilePath>$(MSBuildProjectDirectory)\MyApp.config</ConfigurationFilePath>
+    <PrivateBinPath>bin</PrivateBinPath>
+    <SecondsEmptyBeforeShutdown>90</SecondsEmptyBeforeShutdown>
+    <SecondsIdleBeforeShutdown>60</SecondsIdleBeforeShutdown>
+  </BizTalkAppDomain>
+  -->
+
   <Target Name="SetWinVer">
     <GetOsVersion>
       <Output TaskParameter="OSVersion" PropertyName="OSVersion" />
@@ -626,10 +643,6 @@
   </Target>
 
   <Target Name="ExportSettings" DependsOnTargets="GetSoftwarePaths;CustomPreExportSettings">
-    <!--
-      We can use the custom paths for developer deployments, but not for server deployments due to hard-coded paths
-      in the batch files that launch the deployment. 
-     -->
     <CreateProperty Value="$(MSBuildProjectDirectory)\EnvironmentSettings\SettingsFileGenerator.xml" Condition="'$(Configuration)' == 'Server'">
       <Output TaskParameter="Value" PropertyName="EffectiveSettingsSpreadsheetPath" />
     </CreateProperty>
@@ -692,10 +705,14 @@
       PreprocessAndConfigureLog4net;
       CustomDeployTarget;
       ConditionalHostStop;
+      DeploySchemasToGac;
       DeploySharedAssemblies;
       DeployExternalAssemblies;
       DeployComponents;
       DeployPipelineComponents;
+      DeployPipelinesToGac;
+      DeployTransformsToGac;
+      DeployOrchestrationsToGac;
       DeployCustomFunctoids;
       DeployVDirs;
       DeployBtsNtSvcExeConfig;
@@ -704,20 +721,25 @@
     </DeployBizTalkMgmtDBfalseDependsOn>
   </PropertyGroup>
 
-  <!-- Used for a deployment that will NOT deploy assemblies to the BizTalk management database. 
-        Only one server in a BizTalk group should actually deploy assemblies to the management database. -->
-  <Target Name="DeployBizTalkMgmtDB_false" DependsOnTargets="$(DeployBizTalkMgmtDBfalseDependsOn)">
-    <!-- Support server deployments that do not include BizTalk management database. -->
-    <!-- Need to handle these differently than standard targets - just putting in gac... -->
-
+  <Target Name="DeploySchemasToGac">
     <Exec Command="&quot;$(Gacutil)&quot; /f /i &quot;@(SchemasQualified)&quot;" Condition="'$(IncludeSchemas)' == 'true' and '%(Identity)' == '%(Identity)'" />
+  </Target>
 
+  <Target Name="DeployPipelinesToGac">
     <Exec Command="&quot;$(Gacutil)&quot; /f /i &quot;@(PipelinesQualified)&quot;" Condition="'$(IncludePipelines)' == 'true' and '%(Identity)' == '%(Identity)'" />
+  </Target>
 
+  <Target Name="DeployTransformsToGac">
     <Exec Command="&quot;$(Gacutil)&quot; /f /i &quot;@(TransformsQualified)&quot;" Condition="'$(IncludeTransforms)' == 'true' and '%(Identity)' == '%(Identity)'" />
+  </Target>
 
+  <Target Name="DeployOrchestrationsToGac">
     <Exec Command="&quot;$(Gacutil)&quot; /f /i &quot;@(OrchestrationsQualified)&quot;" Condition="'$(IncludeOrchestrations)' == 'true' and '%(Identity)' == '%(Identity)'" />
   </Target>
+
+  <!-- Used for a deployment that will NOT deploy assemblies to the BizTalk management database. 
+        Only one server in a BizTalk group should actually deploy assemblies to the management database. -->
+  <Target Name="DeployBizTalkMgmtDB_false" DependsOnTargets="$(DeployBizTalkMgmtDBfalseDependsOn)" />
 
   <Target Name="UndeployBizTalkMgmtDB_true">
     <!-- Supports server undeployments that include undeploying from the BizTalk management database. -->
@@ -832,6 +854,7 @@
       TerminateServiceInstancesConditional;
       DeployAppDefinition;
       ConditionalHostStop;
+      DeploySSO;
       DeploySchemas;
       DeploySharedAssemblies;
       DeployExternalAssemblies;
@@ -844,13 +867,12 @@
       DeployVDirs;
       DeployVocabAndRules;
       DeployCustomFunctoids;
-      DeploySSO;
       DeployEsbItineraries;
       DeployBtsNtSvcExeConfig;
       DeployBam;
-      StartApplication;
       CustomPostDeployTarget;
       BounceBizTalk;
+      StartApplication;
       CustomFinalDeploy
     </DeployDependsOn>
 
@@ -944,9 +966,9 @@
 
   <Target Name="GetSoftwarePaths" DependsOnTargets="SetWinVer">
     <GetFrameworkPath>
-      <Output TaskParameter="Path" PropertyName="FrameworkDir" />
+      <Output TaskParameter="Path" PropertyName="DotNetFrameworkDir" />
     </GetFrameworkPath>
-    <Message Text="Using .NET Framework Install Path '$(FrameworkDir)'." />
+    <Message Text="Using .NET Framework Install Path '$(DotNetFrameworkDir)'." />
 
     <!-- Used for copying pipeline components to the correct directory, among other things.
         This registry key is unchanged between BizTalk 2004 and BizTalk 2006. -->
@@ -1099,7 +1121,7 @@
 
   <Target Name="DeployBtsNtSvcExeConfig">
     <UpdateBizTalkAppDomainConfig
-      AppDomainName="$(BizTalkAppName)" PatternAssignmentRules="@(AllPatternAssignmentRule)"
+      AppDomainName="$(BizTalkAppName)" PatternAssignmentRules="@(AllPatternAssignmentRule)" AppDomains="@(BizTalkAppDomain)" DefaultAssemblyNameRegexes="$(BizTalkAppDomainAssemblyNameRegexesDefault)"
       Condition="'$(UseIsolatedAppDomain)' == 'true'" />
     <UpdateBizTalkDebuggingConfig
       ValidateAssemblies="$(EnableBizTalkAssemblyValidation)" ValidateSchemas="$(EnableBizTalkSchemaValidation)"
@@ -1141,9 +1163,8 @@
     <Exec
       Command="iisreset.exe /noforce /restart /timeout:$(IisResetTime)"
       Condition="'$(SkipIISReset)' == 'false' and ('$(IisMajorVersion)' == '5' or '@(IisAppPools)' == '')" />
-    <Microsoft.Sdc.Tasks.Web.AppPool.Recycle
-      AppPoolName="@(IisAppPools)"
-      Condition="'$(SkipIISReset)' == 'false' and ('$(IisMajorVersion)' != '5' and '@(IisAppPools)' != '') and '%(Identity)' == '%(Identity)'" />
+    <Exec Command="&quot;$(AppCmd)&quot; recycle apppool /apppool.name:&quot;@(IisAppPools)&quot;"
+          Condition="'$(SkipIISReset)' == 'false' and ('$(IisMajorVersion)' != '5' and '@(IisAppPools)' != '') and '%(Identity)' == '%(Identity)'" />
 
     <CallTarget Targets="BounceAllBizTalkHosts" Condition="'@(BizTalkHosts)' == ''" />
     <CallTarget Targets="BounceSelectedBizTalkHosts" Condition="'@(BizTalkHosts)' != ''" />
@@ -1159,9 +1180,8 @@
     <Exec
       Command="iisreset.exe /noforce /restart /timeout:$(IisResetTime)"
       Condition="'$(SkipIISReset)' == 'false' and ('$(IisMajorVersion)' == '5' or '@(IisAppPools)' == '')" />
-    <Microsoft.Sdc.Tasks.Web.AppPool.Recycle
-      AppPoolName="@(IisAppPools)"
-      Condition="'$(SkipIISReset)' == 'false' and ('$(IisMajorVersion)' != '5' and '@(IisAppPools)' != '') and '%(Identity)' == '%(Identity)'" />
+    <Exec Command="&quot;$(AppCmd)&quot; recycle apppool /apppool.name:&quot;@(IisAppPools)&quot;"
+          Condition="'$(SkipIISReset)' == 'false' and ('$(IisMajorVersion)' != '5' and '@(IisAppPools)' != '') and '%(Identity)' == '%(Identity)'" />
 
     <CallTarget Targets="StopAllBizTalkHosts" Condition="'@(BizTalkHosts)' == ''" />
     <CallTarget Targets="StopSelectedBizTalkHosts" Condition="'@(BizTalkHosts)' != ''" />
@@ -1219,7 +1239,7 @@
       ContinueOnError="false" Condition="'$(EnableXmlPreprocess)' == 'true' and '$(RequireXmlPreprocessDirectives)' == 'false'" />
 
     <!-- Update the app name in the bindings file -->
-    <XmlFile.SetValue Path="$(PortBindings)" XPath="//ApplicationName" Value="$(BizTalkAppName)" IgnoreNoMatchFailure="true" Force="true" />
+    <WriteXmlValue XmlFilenames="$(PortBindings)" XPath="//ApplicationName" Value="$(BizTalkAppName)" />
 
     <PrependToBindingPortNames StringToPrepend="$(BizTalkAppName)" BindingFilePath="$(MSBuildProjectDirectory)\$(PortBindings)" Condition="'$(EnableSideBySide)' == 'true' and '$(DisableAutomaticPortNameVersioning)' == 'false'" />
 
@@ -1439,7 +1459,7 @@
 
     <Message Text="Running installutil.exe on components..." Condition="'$(IncludeInstallUtilForComponents)' == 'true'" />
     <Exec
-      Command="$(FrameworkDir)\installutil.exe /ShowCallStack &quot;@(ComponentsQualified)&quot;"
+      Command="$(DotNetFrameworkDir)\installutil.exe /ShowCallStack &quot;@(ComponentsQualified)&quot;"
       Condition="'$(IncludeInstallUtilForComponents)' == 'true' and %(Identity) == %(Identity)" />
     <Message Text="Finished running installutil.exe on components." Condition="'$(IncludeInstallUtilForComponents)' == 'true'" />
   </Target>
@@ -1460,7 +1480,7 @@
     <Exec Command="&quot;$(Gacutil)&quot; /u &quot;@(ComponentAssemblyNamesGroup)&quot;" Condition="%(Identity) == %(Identity)" />
 
     <Exec
-      Command="$(FrameworkDir)\installutil.exe /u /ShowCallStack &quot;@(ComponentsQualified)&quot;"
+      Command="$(DotNetFrameworkDir)\installutil.exe /u /ShowCallStack &quot;@(ComponentsQualified)&quot;"
       Condition="'$(IncludeInstallUtilForComponents)' == 'true' and %(Identity) == %(Identity)" />
   </Target>
 
@@ -1522,9 +1542,8 @@
     <Exec
       Command="iisreset.exe /noforce /restart /timeout:$(IisResetTime)"
       Condition="'$(SkipIISReset)' == 'false' and ('$(IisMajorVersion)' == '5' or '@(IisAppPools)' == '')" />
-    <Microsoft.Sdc.Tasks.Web.AppPool.Recycle
-      AppPoolName="@(IisAppPools)"
-      Condition="'$(SkipIISReset)' == 'false' and ('$(IisMajorVersion)' != '5' and '@(IisAppPools)' != '') and '%(Identity)' == '%(Identity)'" />
+    <Exec Command="&quot;$(AppCmd)&quot; recycle apppool /apppool.name:&quot;@(IisAppPools)&quot;"
+          Condition="'$(SkipIISReset)' == 'false' and ('$(IisMajorVersion)' != '5' and '@(IisAppPools)' != '') and '%(Identity)' == '%(Identity)'" />
 
     <!-- Delete pipeline component assemblies from BizTalk's Pipeline Components folder. -->
     <Delete Files="@(PipelineComponents->'$(BtsDir)Pipeline Components\%(Identity)')" ContinueOnError="true" />
@@ -1659,10 +1678,10 @@
     The task will create a new item for every available ruleset in the policy files, even if there are multiple
     rulesets in a single file. Each item will have metadata items for policy name and version number.
     -->
-    <PopulateRulePoliciesMetadata PolicyVocabFiles="@(RulePoliciesQualified)" Condition="'@(RulePoliciesQualified)' != '' and Exists('%(FullPath)')">
+    <PopulateRulePoliciesMetadata PolicyVocabFiles="@(RulePoliciesQualified)" Reverse="true" Condition="'@(RulePoliciesQualified)' != '' and Exists('%(FullPath)')">
       <Output TaskParameter="PolicyVocabWithMetadata" ItemName="RulePoliciesQualifiedPlusUndeploy" />
     </PopulateRulePoliciesMetadata>
-    <PopulateRulePoliciesMetadata PolicyVocabFiles="@(RuleVocabulariesQualified)" Condition="'@(RuleVocabulariesQualified)' != '' and Exists('%(FullPath)')">
+    <PopulateRulePoliciesMetadata PolicyVocabFiles="@(RuleVocabulariesQualified)" Reverse="true" Condition="'@(RuleVocabulariesQualified)' != '' and Exists('%(FullPath)')">
       <Output TaskParameter="PolicyVocabWithMetadata" ItemName="RuleVocabulariesQualifiedPlus" />
     </PopulateRulePoliciesMetadata>
 

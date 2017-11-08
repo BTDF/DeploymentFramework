@@ -57,6 +57,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="AddAppReference.cs" />
     <Compile Include="BizTalkGroupInfo.cs" />
     <Compile Include="CheckForServiceInstances.cs" />
@@ -80,7 +83,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(TargetPath)" "..\..\..\..\..\Framework\BizTalkDeploymentFramework.Tasks.BizTalk.dll"</PostBuildEvent>
-  </PropertyGroup>
 </Project>

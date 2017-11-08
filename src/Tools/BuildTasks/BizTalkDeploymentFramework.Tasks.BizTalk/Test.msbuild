@@ -12,22 +12,34 @@
   </ItemGroup>
 
   <ItemGroup>
-    <XYZExactAssignmentRule Include="*">
-      <AssemblyName>XYZ.Schemas, Version=1.0.0.0, Culture=neutral, PublicKeyToken=51a4d4439455a1a7</AssemblyName>
-    </XYZExactAssignmentRule>
-    <XYZExactAssignmentRule Include="*">
-      <AssemblyName>XYZ.Transforms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=51a4d4439455a1a7</AssemblyName>
-    </XYZExactAssignmentRule>
+    <BizTalkAppDomain Include="JKL_1.0">
+      <SecondsIdleBeforeShutdown>30</SecondsIdleBeforeShutdown>
+      <SecondsEmptyBeforeShutdown>30</SecondsEmptyBeforeShutdown>
+      <ConfigurationFilePath>$(MSBuildProjectDirectory)\JKL.config</ConfigurationFilePath>
+      <AssemblyNameRegexes>(JKL.Schemas,.*)|(JKL.Schemas\..*);JKLComponent.*</AssemblyNameRegexes>
+      <AssemblyNames>JKL.Maps, Version=1.0.0.0, Culture=neutral, PublicKeyToken=51a4d4439455a1a7</AssemblyNames>
+    </BizTalkAppDomain>
+    <BizTalkAppDomain Include="STU_1.0">
+      <SecondsIdleBeforeShutdown>60</SecondsIdleBeforeShutdown>
+      <SecondsEmptyBeforeShutdown>90</SecondsEmptyBeforeShutdown>
+      <ApplicationBase>$(MSBuildProjectDirectory)</ApplicationBase>
+      <PrivateBinPath>bin</PrivateBinPath>
+      <ConfigurationFilePath>$(MSBuildProjectDirectory)\STU.config</ConfigurationFilePath>
+      <AssemblyNameRegexes>(STU.Schemas,.*)|(STU.Schemas\..*);STUComponent.*</AssemblyNameRegexes>
+      <AssemblyNames>STU.Maps, Version=5.0.0.0, Culture=neutral, PublicKeyToken=51a4d4439455a1a7</AssemblyNames>
+    </BizTalkAppDomain>
   </ItemGroup>
 
   <Target Name="TestAppDomainConfig">
+    <UpdateBizTalkAppDomainConfig AppDomainName="ABC_1.0" Remove="true" PatternAssignmentRules="@(ABCPatternAssignmentRule)" />
+
+    <UpdateBizTalkAppDomainConfig AppDomainName="XYZ_1.0" Remove="true" />
+
+    <UpdateBizTalkAppDomainConfig AppDomains="@(BizTalkAppDomain)" Remove="false" />
+  </Target>
+
+  <Target Name="TestDebuggingConfig">
     <UpdateBizTalkDebuggingConfig ExtendedLogging="true" ValidateCorrelations="true" />
-
-    <UpdateBizTalkAppDomainConfig AppDomainName="ABC_1.0" SecondsIdleBeforeShutdown="1800" ConfigurationFilePath="c:\ABC.config" PatternAssignmentRules="@(ABCPatternAssignmentRule)" />
-
-    <!--<UpdateBizTalkAppDomainConfig AppDomainName="ABC_1.0" Remove="true"/>-->
-
-    <UpdateBizTalkAppDomainConfig AppDomainName="XYZ_1.0" SecondsIdleBeforeShutdown="1800" ConfigurationFilePath="c:\XYZ.config" Remove="false" ExactAssignmentRules="@(XYZExactAssignmentRule)" PatternAssignmentRules="@(ABCPatternAssignmentRule)" />
   </Target>
 
   <Target Name="TestCheckForServiceInstances">

@@ -25,27 +25,34 @@ namespace DeploymentFramework.BuildTasks
         /// Override in derived classes to update the xlangs configuration loaded from the config file.
         /// </summary>
         /// <param name="config"></param>
-        protected abstract void UpdateConfiguration(Configuration config);
+        protected abstract bool UpdateConfiguration(Configuration config);
 
         public override bool Execute()
         {
+            bool success = true;
+
             string configFilePath = GetBizTalkConfigFilePath(true);
             if (File.Exists(configFilePath))
             {
-                UpdateBizTalkConfigFile(configFilePath);
+                success = UpdateBizTalkConfigFile(configFilePath);
             }
 
-            configFilePath = GetBizTalkConfigFilePath(false);
-            if (File.Exists(configFilePath))
+            if (success)
             {
-                UpdateBizTalkConfigFile(configFilePath);
+                configFilePath = GetBizTalkConfigFilePath(false);
+                if (File.Exists(configFilePath))
+                {
+                    success = UpdateBizTalkConfigFile(configFilePath);
+                }
             }
 
-            return true;
+            return success;
         }
 
-        private void UpdateBizTalkConfigFile(string configFilePath)
+        private bool UpdateBizTalkConfigFile(string configFilePath)
         {
+            bool success = true;
+
             this.Log.LogMessage("Updating {0}...", configFilePath);
 
             XmlDocument btsConfig = new XmlDocument();
@@ -55,16 +62,21 @@ namespace DeploymentFramework.BuildTasks
             Configuration config = GetXlangsSection(btsConfig);
 
             // Call the virtual method to allow derived classes to update the configuration
-            UpdateConfiguration(config);
+            success = UpdateConfiguration(config);
 
-            // Store the updated configuration back into the config XML document
-            PutXlangsSection(btsConfig, config);
+            if (success)
+            {
+                // Store the updated configuration back into the config XML document
+                PutXlangsSection(btsConfig, config);
 
-            // Save to disk
-            CreateConfigFileBackup(configFilePath);
-            btsConfig.Save(configFilePath);
+                // Save to disk
+                CreateConfigFileBackup(configFilePath);
+                btsConfig.Save(configFilePath);
 
-            this.Log.LogMessage("Saved updated BizTalk configuration file.");
+                this.Log.LogMessage("Saved updated BizTalk configuration file.");
+            }
+
+            return success;
         }
 
         protected string GetBizTalkConfigFilePath(bool get32Bit)

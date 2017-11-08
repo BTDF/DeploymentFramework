@@ -143,7 +143,15 @@ namespace DeploymentFramework.BuildTasks
                     if ((_mode == ModeType.Restart || _mode == ModeType.Stop)
                         && (currentServiceState != ServiceStateType.Stopped && currentServiceState != ServiceStateType.StopPending))
                     {
-                        this.Log.LogMessage("Stopping host instance: " + hostName + " on " + runningServer);
+                        if (_mode == ModeType.Stop)
+                        {
+                            this.Log.LogMessage("Stopping host instance: " + hostName + " on " + runningServer);
+                        }
+                        else if (_mode == ModeType.Restart)
+                        {
+                            this.Log.LogMessage("Restarting host instance: " + hostName + " on " + runningServer);
+                        }
+
                         try
                         {
                             inst.InvokeMethod("Stop", null);
@@ -155,7 +163,11 @@ namespace DeploymentFramework.BuildTasks
                                 throw;
                             }
                         }
-                        this.Log.LogMessage("Stopped host instance : " + hostName + " on " + runningServer);
+
+                        if (_mode == ModeType.Stop)
+                        {
+                            this.Log.LogMessage("Stopped host instance : " + hostName + " on " + runningServer);
+                        }
 
                         inst.Get();
                         currentServiceState = (ServiceStateType)(uint)inst["ServiceState"];
@@ -168,7 +180,11 @@ namespace DeploymentFramework.BuildTasks
                             && currentServiceState != ServiceStateType.StartPending
                             && currentServiceState != ServiceStateType.ContinuePending))
                     {
-                        this.Log.LogMessage("Starting host instance: " + hostName + " on " + runningServer);
+                        if (_mode == ModeType.Start)
+                        {
+                            this.Log.LogMessage("Starting host instance: " + hostName + " on " + runningServer);
+                        }
+
                         try
                         {
                             inst.InvokeMethod("Start", null);
@@ -184,7 +200,15 @@ namespace DeploymentFramework.BuildTasks
                                 this.Log.LogMessage(ex.Message);
                             }
                         }
-                        this.Log.LogMessage("Started host instance : " + hostName + " on " + runningServer);
+
+                        if (_mode == ModeType.Start)
+                        {
+                            this.Log.LogMessage("Started host instance : " + hostName + " on " + runningServer);
+                        }
+                        else if (_mode == ModeType.Restart)
+                        {
+                            this.Log.LogMessage("Restarted host instance : " + hostName + " on " + runningServer);
+                        }
                     }
                 }
             }

@@ -44,7 +44,7 @@ namespace DeploymentFramework.BuildTasks
             set { _extendedLogging = value; }
         }
 
-        protected override void UpdateConfiguration(Configuration config)
+        protected override bool UpdateConfiguration(Configuration config)
         {
             this.Log.LogMessage("Adding/updating debugging configuration data...");
 
@@ -67,6 +67,8 @@ namespace DeploymentFramework.BuildTasks
             {
                 config.Debugging.ExtendedLogging = bool.Parse(_extendedLogging);
             }
+
+            return true;
         }
     }
 }

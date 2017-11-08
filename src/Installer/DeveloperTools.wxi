@@ -216,9 +216,9 @@
     </DirectoryRef>
   </Fragment>
   <Fragment>
-    <DirectoryRef Id="EnvironmentSettings" FileSource="..\Developer\ProjectTemplate\EnvironmentSettings">
+    <DirectoryRef Id="ProjectTemplate" FileSource="..\Developer\ProjectTemplate">
       <Component Id="SettingsFileGenerator.xml" Guid="*">
-        <File Id="SettingsFileGenerator.xml" Name="SettingsFileGenerator.xml" KeyPath="yes" Source="..\Developer\ProjectTemplate\EnvironmentSettings\SettingsFileGenerator.xml" />
+        <File Id="SettingsFileGenerator.xml" Name="SettingsFileGenerator.xml" KeyPath="yes" Source="..\Developer\ProjectTemplate\SettingsFileGenerator.xml" />
       </Component>
     </DirectoryRef>
   </Fragment>
@@ -236,11 +236,6 @@
   <Fragment>
     <DirectoryRef Id="Developer">
       <Directory Id="ProjectTemplate" Name="ProjectTemplate" />
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="ProjectTemplate">
-      <Directory Id="EnvironmentSettings" Name="EnvironmentSettings" />
     </DirectoryRef>
   </Fragment>
 </Include>

@@ -46,7 +46,6 @@
     <ProductName>Deployment Framework for BizTalk - ESBToolkitSSOResolver</ProductName>
     <Manufacturer>Deployment Framework for BizTalk Team</Manufacturer>
     <PackageDescription>Deployment Framework for BizTalk Sample - ESBToolkitSSOResolver</PackageDescription>
-    <PackageComments>Sample demonstrating the Deployment Framework for BizTalk - ESBToolkitSSOResolver</PackageComments>
     <!-- NEVER change the ProductUpgradeCode. -->
     <ProductUpgradeCode>48F16BE8-643A-44da-B568-7DF1733097DB</ProductUpgradeCode>
   </PropertyGroup>
@@ -58,15 +57,11 @@
     <DeploymentFrameworkTargetsPath>$(MSBuildExtensionsPath)\DeploymentFrameworkForBizTalk\5.0\</DeploymentFrameworkTargetsPath>
     <OutputPath Condition="'$(TeamBuildOutDir)' == ''">bin\Debug\</OutputPath>
     <OutputPath Condition="'$(TeamBuildOutDir)' != ''">$(TeamBuildOutDir)</OutputPath>
-    <!-- Get our PDBs into the GAC so we get file/line number information in stack traces. -->
-    <DeployPDBsToGac>false</DeployPDBsToGac>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <DeploymentFrameworkTargetsPath>$(MSBuildExtensionsPath)\DeploymentFrameworkForBizTalk\5.0\</DeploymentFrameworkTargetsPath>
     <OutputPath Condition="'$(TeamBuildOutDir)' == ''">bin\Release\</OutputPath>
     <OutputPath Condition="'$(TeamBuildOutDir)' != ''">$(TeamBuildOutDir)</OutputPath>
-    <!-- Get our PDBs into the GAC so we get file/line number information in stack traces. -->
-    <DeployPDBsToGac>false</DeployPDBsToGac>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Server'">
     <DeploymentFrameworkTargetsPath>Framework\</DeploymentFrameworkTargetsPath>

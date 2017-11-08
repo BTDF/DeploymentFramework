@@ -94,6 +94,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
     <None Include="App.config" />
     <Content Include="App.ico" />
     <None Include="SetEnvUIConfig.xsd">

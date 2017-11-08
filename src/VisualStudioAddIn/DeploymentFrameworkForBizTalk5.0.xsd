@@ -545,6 +545,62 @@
             </xs:complexContent>
         </xs:complexType>
     </xs:element>    
+    <xs:element name="BizTalkAppDomain" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: Custom .NET AppDomain(s) to be configured in BTSNTSvc.exe.config</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:choice>
+                            <xs:element name="ApplicationBase">
+                                <xs:annotation>
+                                    <xs:documentation>Path to the base directory for the AppDomain</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                            <xs:element name="AssemblyNameRegexes">
+                                <xs:annotation>
+                                    <xs:documentation>RegEx(es) matching on full assembly name(s) to load into this AppDomain (semicolon-delimited)</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                            <xs:element name="AssemblyNames">
+                                <xs:annotation>
+                                    <xs:documentation>Full assembly name(s) to load into this AppDomain (semicolon-delimited)</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="ConfigurationFilePath">
+                                <xs:annotation>
+                                    <xs:documentation>Path to a custom app config file for the AppDomain, overriding BTSNTSvc[64].exe.config</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="PrivateBinPath">
+                                <xs:annotation>
+                                    <xs:documentation>Subfolder of ApplicationBase to search for private assemblies</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="SecondsEmptyBeforeShutdown">
+                                <xs:annotation>
+                                    <xs:documentation>Seconds after the AppDomain is empty before BizTalk shuts it down</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="SecondsIdleBeforeShutdown">
+                                <xs:annotation>
+                                    <xs:documentation>Seconds after the AppDomain is idle before BizTalk shuts it down</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                        </xs:choice>
+                    </xs:sequence>
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>Name of the AppDomain</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
 
     <!-- ======================== PROPERTIES =====================================-->
     <!-- Possible Types include StringPropertyType (text with no subelements), GenericPropertyType (any content), or something more specific.-->
@@ -841,6 +897,11 @@
     <xs:element name="CreateStartMenuShortcuts" type="msb:StringPropertyType" substitutionGroup="msb:Property">
         <xs:annotation>
             <xs:documentation>BTDF: Specifies whether to create Start menu shortcuts on MSI install. Default is true.</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="DefaultInstallDir" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies the default installation path used in the MSI. Default is [ProgramFiles]\[ProductName]\[ProjectVersion].</xs:documentation>
         </xs:annotation>
 	</xs:element>
 </xs:schema>

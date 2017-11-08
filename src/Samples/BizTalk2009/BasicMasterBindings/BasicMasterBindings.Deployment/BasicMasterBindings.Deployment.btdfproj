@@ -45,7 +45,6 @@
     <ProductName>Deployment Framework for BizTalk - BasicMasterBindings</ProductName>
     <Manufacturer>Deployment Framework for BizTalk Team</Manufacturer>
     <PackageDescription>Deployment Framework for BizTalk Sample - BasicMasterBindings</PackageDescription>
-    <PackageComments>Sample demonstrating the Deployment Framework for BizTalk - BasicMasterBindings</PackageComments>
     <!-- NEVER change the ProductUpgradeCode. -->
     <ProductUpgradeCode>9642D2C0-9D31-43ef-9C7D-7092BCB60600</ProductUpgradeCode>
   </PropertyGroup>
@@ -57,15 +56,11 @@
     <DeploymentFrameworkTargetsPath>$(MSBuildExtensionsPath)\DeploymentFrameworkForBizTalk\5.0\</DeploymentFrameworkTargetsPath>
     <OutputPath Condition="'$(TeamBuildOutDir)' == ''">bin\Debug\</OutputPath>
     <OutputPath Condition="'$(TeamBuildOutDir)' != ''">$(TeamBuildOutDir)</OutputPath>
-    <!-- Get our PDBs into the GAC so we get file/line number information in stack traces. -->
-    <DeployPDBsToGac>false</DeployPDBsToGac>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <DeploymentFrameworkTargetsPath>$(MSBuildExtensionsPath)\DeploymentFrameworkForBizTalk\5.0\</DeploymentFrameworkTargetsPath>
     <OutputPath Condition="'$(TeamBuildOutDir)' == ''">bin\Release\</OutputPath>
     <OutputPath Condition="'$(TeamBuildOutDir)' != ''">$(TeamBuildOutDir)</OutputPath>
-    <!-- Get our PDBs into the GAC so we get file/line number information in stack traces. -->
-    <DeployPDBsToGac>false</DeployPDBsToGac>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Server'">
     <DeploymentFrameworkTargetsPath>Framework\</DeploymentFrameworkTargetsPath>

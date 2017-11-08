@@ -42,49 +42,70 @@ namespace DeploymentFramework.BuildTasks
                 return false;
             }
 
-            int terminatedServiceCount = 0;
+            const int MaxRetries = 3;
+
             bool success = true;
+            int terminatedServiceCount = 0;
             bool removeAll = (_applicationName.Trim() == "*");
 
             base.Log.LogMessage(
                 MessageImportance.Normal,
                 "Attempting to terminate all service instances for BizTalk app '{0}'...", removeAll ? "[ALL APPS]" : _applicationName);
 
-            // Get all service instances in the message box.
-            // This is terribly inefficient -- BizTalkOperations has a way to directly query and filter by app, but the classes are Internal.
-            // Could use reflection to call it anyway, but risks compatibility across BizTalk releases.
-            foreach (Instance instance in _operations.GetServiceInstances())
+            for (int retryCount = 0; retryCount < MaxRetries; retryCount++)
             {
-                MessageBoxServiceInstance mbsi = instance as MessageBoxServiceInstance;
+                success = true;
 
-                if (mbsi != null)
+                // Create a new BizTalkOperations instance each time to avoid potential caching issues
+                using (BizTalkOperations operations = new BizTalkOperations())
                 {
-                    // Only terminate if the application matches the one we are interested in.  "*" will match all apps.
-                    bool removeThisInstance = (removeAll || (string.Compare(mbsi.Application, _applicationName, true) == 0));
-                    bool running = ((mbsi.InstanceStatus & InstanceStatus.RunningAll) != InstanceStatus.None);
-                    bool suspended = ((mbsi.InstanceStatus & InstanceStatus.SuspendedAll) != InstanceStatus.None);
-
-                    if (removeThisInstance && (running || suspended))
+                    // Get all service instances in the message box.
+                    // This is terribly inefficient -- BizTalkOperations has a way to directly query and filter by app, but the classes are Internal.
+                    // Could use reflection to call it anyway, but risks compatibility across BizTalk releases.
+                    foreach (Instance instance in operations.GetServiceInstances())
                     {
-                        CompletionStatus status = _operations.TerminateInstance(mbsi.ID);
+                        MessageBoxServiceInstance mbsi = instance as MessageBoxServiceInstance;
 
-                        if (status != CompletionStatus.Succeeded)
+                        if (mbsi == null)
                         {
-                            if (instance.Class == ServiceClass.RoutingFailure)
+                            continue;
+                        }
+
+                        // Only terminate if the application matches the one we are interested in.  "*" will match all apps.
+                        bool removeThisInstance = (removeAll || (string.Compare(mbsi.Application, _applicationName, true) == 0));
+                        bool running = ((mbsi.InstanceStatus & InstanceStatus.RunningAll) != InstanceStatus.None);
+                        bool suspended = ((mbsi.InstanceStatus & InstanceStatus.SuspendedAll) != InstanceStatus.None);
+
+                        if (removeThisInstance && (running || suspended))
+                        {
+                            CompletionStatus status = operations.TerminateInstance(mbsi.ID);
+
+                            if (status != CompletionStatus.Succeeded)
                             {
-                                this.Log.LogMessage(MessageImportance.Normal, "Could not terminate routing failure {0}.  It was probably terminated by a linked instance.", mbsi.ID);
+                                if (instance.Class == ServiceClass.RoutingFailure)
+                                {
+                                    this.Log.LogMessage(MessageImportance.Low, "Could not terminate routing failure {0}.  It was probably terminated by a linked instance.", mbsi.ID);
+                                }
+                                else
+                                {
+                                    if (retryCount == MaxRetries - 1)
+                                    {
+                                        this.Log.LogError("Could not terminate instance {0}.  Status is {1}.", mbsi.ID, status.ToString());
+                                    }
+                                    success = false;
+                                }
                             }
                             else
                             {
-                                this.Log.LogError("Could not terminate instance {0}.  Status is {1}.", mbsi.ID, status.ToString());
-                                success = false;
+                                terminatedServiceCount++;
                             }
                         }
-                        else
-                        {
-                            terminatedServiceCount++;
-                        }
                     }
+                }
+
+                if (success)
+                {
+                    break;
                 }
             }
 

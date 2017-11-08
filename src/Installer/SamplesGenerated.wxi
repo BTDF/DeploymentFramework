@@ -159,11 +159,9 @@
                             <Component Id="cmp009B9C1BC7704D29007987F1E24F431F" Guid="{709872C0-F876-482A-B367-ED334A03462A}">
                                 <File Id="filFA5EEEC7C974DB81D643F3EC2685F8A7" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Deployment\UnInstallWizard.xml" />
                             </Component>
-                            <Directory Id="dirCA97003D69C4DC393A5ED46A6FFAB193" Name="EnvironmentSettings">
-                                <Component Id="cmp34DB7AB68F42BF86BEE056F3AD615727" Guid="{D35616D2-538E-44ED-B357-1B14DB31BAEF}">
-                                    <File Id="fil06017A894F54D067BBC8BD259741C336" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Deployment\EnvironmentSettings\SettingsFileGenerator.xml" />
-                                </Component>
-                            </Directory>
+                            <Component Id="cmp34DB7AB68F42BF86BEE056F3AD615727" Guid="{D35616D2-538E-44ED-B357-1B14DB31BAEF}">
+                                <File Id="fil06017A894F54D067BBC8BD259741C336" KeyPath="yes" Source="..\Samples\BizTalk2009\Advanced\Deployment\SettingsFileGenerator.xml" />
+                            </Component>
                         </Directory>
                         <Directory Id="dir6FAA31EA3A9A4225C023E3241E31F98A" Name="DeploymentTest">
                             <Component Id="cmpCA1816595A3BFF685CDA173EB8DD95D2" Guid="{60460261-4D68-4660-BC9B-30D7828A373C}">
@@ -294,11 +292,9 @@
                             <Component Id="cmpA43E84EAC838EDA615B750F62DEA0DF4" Guid="{F10C2470-B0CB-4F05-BA25-76F46A762E61}">
                                 <File Id="fil4F2BFF06AD0510653EF4FD143959BC81" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Deployment\UnInstallWizard.xml" />
                             </Component>
-                            <Directory Id="dirCE1128085AC8D61779203C95E768BABC" Name="EnvironmentSettings">
-                                <Component Id="cmp45B7E1EC7841C24068BBB3C98F355F08" Guid="{05ED2DD5-54F9-4E87-B900-ED624EADB543}">
-                                    <File Id="filB5B39DB45F1F332CBA693576B1C700C4" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Deployment\EnvironmentSettings\SettingsFileGenerator.xml" />
-                                </Component>
-                            </Directory>
+                            <Component Id="cmp45B7E1EC7841C24068BBB3C98F355F08" Guid="{05ED2DD5-54F9-4E87-B900-ED624EADB543}">
+                                <File Id="filB5B39DB45F1F332CBA693576B1C700C4" KeyPath="yes" Source="..\Samples\BizTalk2009\Bam\Deployment\SettingsFileGenerator.xml" />
+                            </Component>
                         </Directory>
                         <Directory Id="dir04768EB0E690FF16B7F54D43BA460E9E" Name="PipelineComponents">
                             <Component Id="cmpA04AC8BE63C6A1577AF07F8C7171AAFF" Guid="{2F704D73-CC3F-4E37-B024-FBCD8340EEF1}">
@@ -430,11 +426,9 @@
                             <Component Id="cmp4C2D493D4E1CB20CA7BB20F8DEAC8528" Guid="{4976034F-0813-4764-9FFD-F1FFE3A134A3}">
                                 <File Id="filA248D40BE5D43E6352577C4D8333B5A2" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings.Deployment\UnInstallWizard.xml" />
                             </Component>
-                            <Directory Id="dirEF6A34738E08CE013DC03A4D6B363808" Name="EnvironmentSettings">
-                                <Component Id="cmp379B5C0D8CF71ECF63238B563BBFC7C5" Guid="{8E04F4F4-0A0A-48FA-B3DC-6DE6FC03EF5E}">
-                                    <File Id="fil31CA888150FE37210DE118D58F7EB46D" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings.Deployment\EnvironmentSettings\SettingsFileGenerator.xml" />
-                                </Component>
-                            </Directory>
+                            <Component Id="cmp379B5C0D8CF71ECF63238B563BBFC7C5" Guid="{8E04F4F4-0A0A-48FA-B3DC-6DE6FC03EF5E}">
+                                <File Id="fil31CA888150FE37210DE118D58F7EB46D" KeyPath="yes" Source="..\Samples\BizTalk2009\BasicMasterBindings\BasicMasterBindings.Deployment\SettingsFileGenerator.xml" />
+                            </Component>
                         </Directory>
                         <Directory Id="dirD69772554C721E8FF782111226368A50" Name="TestFiles">
                             <Component Id="cmp8F2D32AD6C743F559C23673D35704E0A" Guid="{29DBD770-1573-4383-AA8E-6B4147007999}">
@@ -484,11 +478,9 @@
                             <Component Id="cmpF9DFB20CE7839328D19C9DD04D4583C2" Guid="{3FD760CF-0CA3-4E87-AB52-5F062246C027}">
                                 <File Id="fil04F267A50D277ABF5C06583ACFB767BA" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Deployment\UnInstallWizard.xml" />
                             </Component>
-                            <Directory Id="dir417F636A012A8FC46E7E0D87312C92E8" Name="EnvironmentSettings">
-                                <Component Id="cmpC83CE32A6F4D0AA093AAA43C9A581AE1" Guid="{B3A8B8B5-58CB-43BC-A962-EA302D7A32EB}">
-                                    <File Id="fil68A3FEE9D4C57FFA3A92E34B9DBDC9B0" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Deployment\EnvironmentSettings\SettingsFileGenerator.xml" />
-                                </Component>
-                            </Directory>
+                            <Component Id="cmpC83CE32A6F4D0AA093AAA43C9A581AE1" Guid="{B3A8B8B5-58CB-43BC-A962-EA302D7A32EB}">
+                                <File Id="fil68A3FEE9D4C57FFA3A92E34B9DBDC9B0" KeyPath="yes" Source="..\Samples\BizTalk2009\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Deployment\SettingsFileGenerator.xml" />
+                            </Component>
                         </Directory>
                         <Directory Id="dirB7E10B9B2D417943212F01A9998FCAF6" Name="ESBToolkitSSOResolver.Itineraries">
                             <Component Id="cmp946994ABBDFFA72BCC9C16D38A696F72" Guid="{DFAC79D9-5E8C-4F97-8042-D322E11B79B6}">

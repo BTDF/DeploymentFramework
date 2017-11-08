@@ -38,6 +38,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="AssignVirtualDirectoryToAppPool.cs" />
     <Compile Include="ConfigureAppPool.cs" />
     <Compile Include="ConfigureWebServiceExtension.cs" />
@@ -67,6 +70,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetPropFromEnvSetting.cs" />
     <Compile Include="StartProcess.cs" />
+    <Compile Include="WriteXmlValue.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Test.msbuild" />
@@ -84,7 +88,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(TargetPath)" "..\..\..\..\..\Framework\BizTalkDeploymentFramework.Tasks.dll"</PostBuildEvent>
-  </PropertyGroup>
 </Project>

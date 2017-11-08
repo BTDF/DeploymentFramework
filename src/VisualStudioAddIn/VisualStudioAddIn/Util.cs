@@ -20,6 +20,7 @@ namespace DeploymentFramework.VisualStudioAddIn
             const string VS2005KEY = @"SOFTWARE\Microsoft\VisualStudio\8.0\MSBuild";
             const string VS2008KEY = @"SOFTWARE\Microsoft\MSBuild\ToolsVersions\3.5";
             const string VS2010KEY = @"SOFTWARE\Microsoft\MSBuild\ToolsVersions\4.0";
+            //const string VS2013KEY = @"SOFTWARE\Microsoft\MSBuild\ToolsVersions\12.0";
 
             if (ideVersion == VSVersion.Vs2008)
             {
@@ -28,13 +29,20 @@ namespace DeploymentFramework.VisualStudioAddIn
                     return string.Format("{0}MSBuild.exe", (string)rk.GetValue("MSBuildToolsPath"));
                 }
             }
-            else if (ideVersion == VSVersion.Vs2010 || ideVersion == VSVersion.Vs2012)
+            else if (ideVersion == VSVersion.Vs2010 || ideVersion == VSVersion.Vs2012 || ideVersion == VSVersion.Vs2013)
             {
                 using (RegistryKey rk = Registry.LocalMachine.OpenSubKey(VS2010KEY, false))
                 {
                     return string.Format("{0}MSBuild.exe", (string)rk.GetValue("MSBuildToolsPath"));
                 }
             }
+            //else if (ideVersion == VSVersion.Vs2013)
+            //{
+            //    using (RegistryKey rk = Registry.LocalMachine.OpenSubKey(VS2013KEY, false))
+            //    {
+            //        return string.Format("{0}MSBuild.exe", (string)rk.GetValue("MSBuildToolsPath"));
+            //    }
+            //}
             else
             {
                 using (RegistryKey rk = Registry.LocalMachine.OpenSubKey(VS2005KEY, false))

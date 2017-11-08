@@ -1,3 +1,5 @@
+/BindingInfo/ReceivePortCollection/ReceivePort/ReceiveLocations/ReceiveLocation/ReceiveLocationTransportTypeData/CustomProps/VariablePropertyMapping
+/BindingInfo/ReceivePortCollection/ReceivePort/ReceiveLocations/ReceiveLocation/ReceiveLocationTransportTypeData/CustomProps/HttpMethodAndUrl
 /BindingInfo/ReceivePortCollection/ReceivePort/ReceiveLocations/ReceiveLocation/ReceiveLocationTransportTypeData/CustomProps/OutboundXmlTemplate
 /BindingInfo/ReceivePortCollection/ReceivePort/ReceiveLocations/ReceiveLocation/ReceiveLocationTransportTypeData/CustomProps/AdapterConfig
 /BindingInfo/ReceivePortCollection/ReceivePort/ReceiveLocations/ReceiveLocation/ReceiveLocationTransportTypeData/CustomProps/BindingConfiguration
@@ -5,6 +7,8 @@
 /BindingInfo/ReceivePortCollection/ReceivePort/ReceiveLocations/ReceiveLocation/ReceivePipelineData
 /BindingInfo/ReceivePortCollection/ReceivePort/ReceiveLocations/ReceiveLocation/SendPipelineData
 
+/BindingInfo/SendPortCollection/SendPort/*/TransportTypeData/CustomProps/VariablePropertyMapping
+/BindingInfo/SendPortCollection/SendPort/*/TransportTypeData/CustomProps/HttpMethodAndUrl
 /BindingInfo/SendPortCollection/SendPort/*/TransportTypeData/CustomProps/OutboundXmlTemplate
 /BindingInfo/SendPortCollection/SendPort/*/TransportTypeData/CustomProps/StaticAction
 /BindingInfo/SendPortCollection/SendPort/*/TransportTypeData/CustomProps/AdapterConfig

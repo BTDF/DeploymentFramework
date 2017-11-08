@@ -169,6 +169,7 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>copy /Y "$(TargetPath)" "..\..\..\..\..\Framework\DeployTools\SSOSettingsFileImportFx2.exe"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

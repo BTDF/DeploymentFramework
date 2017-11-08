@@ -54,6 +54,7 @@
       <Tracking>0</Tracking>
       <Filter />
       <Transforms />
+      <ApplicationName>TestValue</ApplicationName>
     </SendPort>
   </SendPortCollection>
   <DistributionListCollection />
@@ -74,6 +75,7 @@
       <SendPipelineData xsi:nil="true" />
       <Authentication>0</Authentication>
       <Tracking>0</Tracking>
+      <ApplicationName>TestValue</ApplicationName>
     </ReceivePort>
   </ReceivePortCollection>
   <PartyCollection />

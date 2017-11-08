@@ -53,6 +53,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Tools\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="AddProjectWizard.cs" />
     <Compile Include="DeploymentOptions.cs" />
     <Compile Include="OptionsForm.cs">
