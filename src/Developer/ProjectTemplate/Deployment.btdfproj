@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- 
   Deployment Framework for BizTalk
-  Copyright (C) 2008-15 Thomas F. Abraham, 2004-08 Scott Colestock
+  Copyright (C) Thomas F. Abraham, Scott Colestock
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Installer">
   <PropertyGroup>

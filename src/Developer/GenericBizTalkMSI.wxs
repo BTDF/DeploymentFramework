@@ -73,32 +73,12 @@
       <RegistrySearch Id="SearchForBTSProductName" Root="HKLM" Key="SOFTWARE\Microsoft\BizTalk Server\3.0" Name="ProductName" Type="raw" />
     </Property>
 
-    <PropertyRef Id="NETFRAMEWORK20INSTALLROOTDIR" />
-    <PropertyRef Id="NETFRAMEWORK35INSTALLROOTDIR" />
     <PropertyRef Id="NETFRAMEWORK40FULLINSTALLROOTDIR" />
 
     <SetProperty Id="DEPLOYMENTDIR" Value="[INSTALLDIR]\Deployment" Sequence="both" After="CostFinalize"/>
 
-    <SetProperty Id="MSBUILDPATH" Action="SetMSBUILDPATH2006" Value="[NETFRAMEWORK20INSTALLROOTDIR]\MSBuild.exe" Sequence="both" After="CostFinalize">
-      <![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2006" OR BTS_PRODUCTNAME = "Microsoft BizTalk Server 2006 R2"]]>
-    </SetProperty>
-    <SetProperty Id="MSBUILDTOOLSVER" Action="SetMSBUILDTOOLSVER2006" Value="" Sequence="both" After="SetMSBUILDPATH2006">
-      <![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2006" OR BTS_PRODUCTNAME = "Microsoft BizTalk Server 2006 R2"]]>
-    </SetProperty>
-
-    <SetProperty Id="MSBUILDPATH" Action="SetMSBUILDPATH2009" Value="[NETFRAMEWORK35INSTALLROOTDIR]\MSBuild.exe" Sequence="both" After="CostFinalize">
-      <![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2009"]]>
-    </SetProperty>
-    <SetProperty Id="MSBUILDTOOLSVER" Action="SetMSBUILDTOOLSVER2009" Value="/tv:3.5" Sequence="both" After="SetMSBUILDPATH2009">
-      <![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2009"]]>
-    </SetProperty>
-
-    <SetProperty Id="MSBUILDPATH" Action="SetMSBUILDPATH2010" Value="[NETFRAMEWORK40FULLINSTALLROOTDIR]\MSBuild.exe" Sequence="both" After="CostFinalize">
-      <![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2010" OR BTS_PRODUCTNAME = "Microsoft BizTalk Server 2013" OR BTS_PRODUCTNAME = "Microsoft BizTalk Server 2013 R2"]]>
-    </SetProperty>
-    <SetProperty Id="MSBUILDTOOLSVER" Action="SetMSBUILDTOOLSVER2010" Value="/tv:4.0" Sequence="both" After="SetMSBUILDPATH2010">
-      <![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2010" OR BTS_PRODUCTNAME = "Microsoft BizTalk Server 2013" OR BTS_PRODUCTNAME = "Microsoft BizTalk Server 2013 R2"]]>
-    </SetProperty>
+    <SetProperty Id="MSBUILDPATH" Action="SetMSBUILDPATH2010" Value="[NETFRAMEWORK40FULLINSTALLROOTDIR]\MSBuild.exe" Sequence="both" After="CostFinalize" />
+    <SetProperty Id="MSBUILDTOOLSVER" Action="SetMSBUILDTOOLSVER2010" Value="/tv:4.0" Sequence="both" After="SetMSBUILDPATH2010" />
 
     <!-- Set up for checkbox to auto-start deploy script at end of install wizard -->
     <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Start deploying to BizTalk when I click Finish" />

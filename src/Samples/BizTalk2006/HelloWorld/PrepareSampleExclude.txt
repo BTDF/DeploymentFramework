@@ -1,3 +1,0 @@
-HelloWorld.sln
-HelloWorld\HelloWorld.btproj
-HelloWorld\Properties

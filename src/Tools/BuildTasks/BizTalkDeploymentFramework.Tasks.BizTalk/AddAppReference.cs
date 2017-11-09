@@ -17,15 +17,9 @@ namespace DeploymentFramework.BuildTasks
     {
         private string _applicationName;
         private ITaskItem[] _appsToReference;
-        BtsCatalogExplorer _catalog = null;
 
         public AddAppReference()
         {
-            // connect to the BizTalk configuration database that corresponds to our group membership.
-            _catalog = new BtsCatalogExplorer();
-            _catalog.ConnectionString = string.Format("Server={0};Initial Catalog={1};Integrated Security=SSPI;",
-               BizTalkGroupInfo.GroupDBServerName,
-               BizTalkGroupInfo.GroupMgmtDBName);
         }
 
         [Required]
@@ -44,32 +38,35 @@ namespace DeploymentFramework.BuildTasks
 
         public override bool Execute()
         {
-            Application application = _catalog.Applications[_applicationName];
-            if (application == null)
+            using (BtsCatalogExplorer catalog = BizTalkCatalogExplorerFactory.GetCatalogExplorer())
             {
-                this.Log.LogError("Unable to find BizTalk application '{0}'.", _applicationName);
-                return false;
-            }
-
-            foreach (ITaskItem ti in _appsToReference)
-            {
-                Application appToRef = _catalog.Applications[ti.ItemSpec];
-                if (appToRef == null)
+                Application application = catalog.Applications[_applicationName];
+                if (application == null)
                 {
-                    this.Log.LogError("Unable to find BizTalk application '{0}' to reference from application '{1}'.", ti.ItemSpec, _applicationName);
+                    this.Log.LogError("Unable to find BizTalk application '{0}'.", _applicationName);
                     return false;
                 }
 
-                this.Log.LogMessage("Adding reference to BizTalk application '{0}' from BizTalk application '{1}'.", _applicationName, ti.ItemSpec);
-                application.AddReference(appToRef);
-            }
+                foreach (ITaskItem ti in _appsToReference)
+                {
+                    Application appToRef = catalog.Applications[ti.ItemSpec];
+                    if (appToRef == null)
+                    {
+                        this.Log.LogError("Unable to find BizTalk application '{0}' to reference from application '{1}'.", ti.ItemSpec, _applicationName);
+                        return false;
+                    }
 
-            if (_appsToReference.Length > 0)
-            {
-                _catalog.SaveChanges();
-            }
+                    this.Log.LogMessage("Adding reference to BizTalk application '{0}' from BizTalk application '{1}'.", _applicationName, ti.ItemSpec);
+                    application.AddReference(appToRef);
+                }
 
-            this.Log.LogMessage("Finished adding application references to BizTalk application '{0}'.", _applicationName);
+                if (_appsToReference.Length > 0)
+                {
+                    catalog.SaveChanges();
+                }
+
+                this.Log.LogMessage("Finished adding application references to BizTalk application '{0}'.", _applicationName);
+            }
 
             return true;
         }

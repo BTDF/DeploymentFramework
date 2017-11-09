@@ -70,9 +70,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SSOSettingsFileReaderBTS2013\SSOSettingsFileReaderBTS2013.csproj">
+    <ProjectReference Include="..\SSOSettingsFileReader\SSOSettingsFileReader.csproj">
       <Project>{1F46CCEA-CC97-42AB-A152-1C0DA5E6E191}</Project>
-      <Name>SSOSettingsFileReaderBTS2013</Name>
+      <Name>SSOSettingsFileReader</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

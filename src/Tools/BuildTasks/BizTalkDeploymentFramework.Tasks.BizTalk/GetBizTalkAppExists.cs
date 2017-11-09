@@ -17,15 +17,9 @@ namespace DeploymentFramework.BuildTasks
     {
         private bool _appExists;
         private string _applicationName;
-        private BtsCatalogExplorer _catalog = null;
 
         public GetBizTalkAppExists()
         {
-            // connect to the BizTalk configuration database that corresponds to our group membership.
-            _catalog = new BtsCatalogExplorer();
-            _catalog.ConnectionString = string.Format("Server={0};Initial Catalog={1};Integrated Security=SSPI;",
-               BizTalkGroupInfo.GroupDBServerName,
-               BizTalkGroupInfo.GroupMgmtDBName);
         }
 
         [Required]
@@ -45,8 +39,12 @@ namespace DeploymentFramework.BuildTasks
         public override bool Execute()
         {
             this.Log.LogMessage("Checking for existence of BizTalk application '{0}'...", _applicationName);
-            Application application = _catalog.Applications[_applicationName];
-            _appExists = (application != null);
+
+            using (BtsCatalogExplorer catalog = BizTalkCatalogExplorerFactory.GetCatalogExplorer())
+            {
+                Application application = catalog.Applications[_applicationName];
+                _appExists = (application != null);
+            }
 
             if (_appExists)
             {

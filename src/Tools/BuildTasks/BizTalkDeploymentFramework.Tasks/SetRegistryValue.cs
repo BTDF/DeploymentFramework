@@ -58,6 +58,13 @@ namespace DeploymentFramework.BuildTasks
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(_valueName))
+                {
+                    string[] parts = _keyName.Split('\\');
+                    _valueName = parts[parts.Length - 1];
+                    _keyName = _keyName.Remove(_keyName.Length - _valueName.Length - 1);
+                }
+
                 base.Log.LogMessage(MessageImportance.Normal, "SetRegistryValue: Attempting to create/update value '{0}' in registry value '{1}' at key '{2}'...", _value, _valueName, _keyName);
                 Registry.SetValue(_keyName, _valueName, _value, _valueKind);
                 base.Log.LogMessage(MessageImportance.Normal, "SetRegistryValue: Successfully created/updated value.");

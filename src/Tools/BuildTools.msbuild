@@ -5,24 +5,35 @@
     
     This source file is subject to the Microsoft Public License (Ms-PL).
 -->
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="BuildTools">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" DefaultTargets="BuildTools">
 
   <PropertyGroup>
     <BuildToolsDependsOn>
+      UpdateCommonAssemblyInfo;
       BuildTasksNonBizTalk;
       BuildTasksBizTalk;
+      BuildTasksIIS;
       BuildDeployBTRules;
       BuildElementTunnel;
       BuildSetEnvUI;
       BuildUACElevate;
       BuildSSOSettingsFileImport;
-      WarnAboutUacElevateManifest
+      BuildESBResolvers;
+      RevertCommonAssemblyInfo
     </BuildToolsDependsOn>
   </PropertyGroup>
 
   <Target Name="BuildTools" DependsOnTargets="$(BuildToolsDependsOn)" />
 
   <Target Name="BuildTasks" DependsOnTargets="BuildTasksNonBizTalk;BuildTasksBizTalk" />
+
+  <Target Name="UpdateCommonAssemblyInfo">
+    <ReplaceAssemblyVersionInFile Path="CommonAssemblyInfo.cs" NewVersion="$(ProductVersionFull)" />
+  </Target>
+
+  <Target Name="RevertCommonAssemblyInfo">
+    <ReplaceAssemblyVersionInFile Path="CommonAssemblyInfo.cs" NewVersion="1.0.0.0" />
+  </Target>
 
   <Target Name="BuildTasksNonBizTalk">
     <ItemGroup>
@@ -42,6 +53,17 @@
     <MSBuild Projects="BuildTasks\BizTalkDeploymentFramework.Tasks.BizTalk.sln" Properties="Configuration=Release;Platform=Any CPU" Targets="Rebuild" />
 
     <Copy SourceFiles="@(BuildTasksBizTalkFilesToCopy)" DestinationFolder="..\Framework" />
+  </Target>
+
+  <Target Name="BuildTasksIIS">
+    <ItemGroup>
+      <BuildTasksIISFilesToCopy Include="BuildTasks\BizTalkDeploymentFramework.Tasks.IIS\bin\Release\BizTalkDeploymentFramework.Tasks.IIS.dll" />
+      <BuildTasksIISFilesToCopy Include="BuildTasks\BizTalkDeploymentFramework.Tasks.IIS\bin\Release\Microsoft.Web.Administration.dll" />
+    </ItemGroup>
+
+    <MSBuild Projects="BuildTasks\BizTalkDeploymentFramework.Tasks.IIS.sln" Properties="Configuration=Release;Platform=Any CPU" Targets="Rebuild" />
+
+    <Copy SourceFiles="@(BuildTasksIISFilesToCopy)" DestinationFolder="..\Framework" />
   </Target>
 
   <Target Name="BuildDeployBTRules">
@@ -79,62 +101,115 @@
       <BuildUACElevateFilesToCopy Include="UACElevate\bin\Release\UACElevate.exe" />
     </ItemGroup>
 
+    <ReplaceInFile Path="UacElevate\UacElevate.exe.manifest" OldString="1.0.0.0" NewString="$(ProductVersionFull)" />
     <MSBuild Projects="UACElevate\UACElevate.sln" Properties="Configuration=Release;Platform=Any CPU" Targets="Rebuild" />
+    <ReplaceInFile Path="UacElevate\UacElevate.exe.manifest" OldString="$(ProductVersionFull)" NewString="1.0.0.0" />
 
     <Copy SourceFiles="@(BuildUACElevateFilesToCopy)" DestinationFolder="..\Framework\DeployTools" />
   </Target>
 
   <Target Name="BuildESBResolvers">
     <ItemGroup>
-      <BuildESBResolversFilesToCopy Include="ESB.Resolvers\ESB.Resolver.Sso.2_1\bin\Release\DeploymentFrameworkForBizTalk.ESB.Resolver.Sso.2.1.dll" />
-      <BuildESBResolversFilesToCopy Include="ESB.Resolvers\ESB.Resolver.Sso.2_2\bin\Release\DeploymentFrameworkForBizTalk.ESB.Resolver.Sso.2.2.dll" />
-      <BuildESBResolversFilesToCopy Include="ESB.Resolvers\Services.Extenders.Resolvers.Sso.2_1\bin\Release\DeploymentFrameworkForBizTalk.Services.Extenders.Resolvers.Sso.2.1.dll" />
-      <BuildESBResolversFilesToCopy Include="ESB.Resolvers\Services.Extenders.Resolvers.Sso.2_2\bin\Release\DeploymentFrameworkForBizTalk.Services.Extenders.Resolvers.Sso.2.2.dll" />
+      <BuildESBResolversFilesToCopy Include="ESB.Resolvers\ESB.Resolver.Sso\bin\Release">
+        <DestFilename>DeploymentFrameworkForBizTalk.ESB.Resolver.Sso.</DestFilename>
+        <DestExt>.dll</DestExt>
+      </BuildESBResolversFilesToCopy>
+      <BuildESBResolversFilesToCopy Include="ESB.Resolvers\Services.Extenders.Resolvers.Sso\bin\Release">
+        <DestFilename>DeploymentFrameworkForBizTalk.Services.Extenders.Resolvers.Sso.</DestFilename>
+        <DestExt>.dll</DestExt>
+      </BuildESBResolversFilesToCopy>
     </ItemGroup>
 
-    <MSBuild Projects="ESB.Resolvers\ESB.Resolver.SSO.sln" Properties="Configuration=Release;Platform=Any CPU" Targets="Rebuild" />
+    <RemoveDir Directories="ESB.Resolvers\Bin" />
+    <MakeDir Directories="ESB.Resolvers\Bin" />
 
-    <Copy SourceFiles="@(BuildESBResolversFilesToCopy)" DestinationFolder="ESB.Resolvers\Bin" />
+    <ReplaceAssemblyVersionInFile Path="ESB.Resolvers\ESB.Resolver.Sso\Properties\AssemblyInfo.cs" NewVersion="2.2.0.0" />
+    <ReplaceAssemblyVersionInFile Path="ESB.Resolvers\Services.Extenders.Resolvers.Sso\Properties\AssemblyInfo.cs" NewVersion="2.2.0.0" />
+    <MSBuild Projects="ESB.Resolvers\ESB.Resolver.Sso.sln" Properties="Configuration=Release;Platform=Any CPU;TargetFrameworkVersion=v4.5;Ver=2.2;BizTalkVersion=2013" Targets="Rebuild" />
+    <Copy SourceFiles="@(BuildESBResolversFilesToCopy->'%(Identity)\%(DestFilename)2.2%(DestExt)')" DestinationFiles="@(BuildESBResolversFilesToCopy->'ESB.Resolvers\Bin\%(DestFilename)2.2%(DestExt)')" />
+
+    <ReplaceAssemblyVersionInFile Path="ESB.Resolvers\ESB.Resolver.Sso\Properties\AssemblyInfo.cs" NewVersion="2.1.0.0" />
+    <ReplaceAssemblyVersionInFile Path="ESB.Resolvers\Services.Extenders.Resolvers.Sso\Properties\AssemblyInfo.cs" NewVersion="2.1.0.0" />
+    <MSBuild Projects="ESB.Resolvers\ESB.Resolver.Sso.sln" Properties="Configuration=Release;Platform=Any CPU;TargetFrameworkVersion=v4.0;Ver=2.1" Targets="Rebuild" />
+    <Copy SourceFiles="@(BuildESBResolversFilesToCopy->'%(Identity)\%(DestFilename)2.1%(DestExt)')" DestinationFiles="@(BuildESBResolversFilesToCopy->'ESB.Resolvers\Bin\%(DestFilename)2.1%(DestExt)')" />
+
+    <ReplaceAssemblyVersionInFile Path="ESB.Resolvers\ESB.Resolver.Sso\Properties\AssemblyInfo.cs" NewVersion="1.0.0.0" />
+    <ReplaceAssemblyVersionInFile Path="ESB.Resolvers\Services.Extenders.Resolvers.Sso\Properties\AssemblyInfo.cs" NewVersion="1.0.0.0" />
   </Target>
 
   <Target Name="BuildSSOSettingsFileImport">
     <ItemGroup>
       <BuildSSOSettingsFileImportFilesToCopy Include="SSOSettingsFileImport\SSOSettingsEditor\bin\Release\SSOSettingsEditor.exe">
-        <DestFilename>SSOSettingsEditorBTS2010.exe</DestFilename>
-      </BuildSSOSettingsFileImportFilesToCopy>
-      <BuildSSOSettingsFileImportFilesToCopy Include="SSOSettingsFileImport\SSOSettingsEditorBTS2013\bin\Release\SSOSettingsEditor.exe">
-        <DestFilename>SSOSettingsEditorBTS2013.exe</DestFilename>
-      </BuildSSOSettingsFileImportFilesToCopy>
-      <BuildSSOSettingsFileImportFilesToCopy Include="SSOSettingsFileImport\SSOSettingsEditorBTS2013R2\bin\Release\SSOSettingsEditor.exe">
-        <DestFilename>SSOSettingsEditorBTS2013R2.exe</DestFilename>
+        <DestFilename>SSOSettingsEditor</DestFilename>
+        <DestExt>.exe</DestExt>
       </BuildSSOSettingsFileImportFilesToCopy>
       <BuildSSOSettingsFileImportFilesToCopy Include="SSOSettingsFileImport\SSOSettingsFileImport\bin\Release\SSOSettingsFileImport.exe">
-        <DestFilename>SSOSettingsFileImportBTS2010.exe</DestFilename>
-      </BuildSSOSettingsFileImportFilesToCopy>
-      <BuildSSOSettingsFileImportFilesToCopy Include="SSOSettingsFileImport\SSOSettingsFileImportBTS2013\bin\Release\SSOSettingsFileImport.exe">
-        <DestFilename>SSOSettingsFileImportBTS2013.exe</DestFilename>
-      </BuildSSOSettingsFileImportFilesToCopy>
-      <BuildSSOSettingsFileImportFilesToCopy Include="SSOSettingsFileImport\SSOSettingsFileImportBTS2013R2\bin\Release\SSOSettingsFileImport.exe">
-        <DestFilename>SSOSettingsFileImportBTS2013R2.exe</DestFilename>
+        <DestFilename>SSOSettingsFileImport</DestFilename>
+        <DestExt>.exe</DestExt>
       </BuildSSOSettingsFileImportFilesToCopy>
       <BuildSSOSettingsFileImportFilesToCopy Include="SSOSettingsFileImport\SSOSettingsFileReader\bin\Release\SSOSettingsFileReader.dll">
-        <DestFilename>SSOSettingsFileReaderBTS2010.dll</DestFilename>
-      </BuildSSOSettingsFileImportFilesToCopy>
-      <BuildSSOSettingsFileImportFilesToCopy Include="SSOSettingsFileImport\SSOSettingsFileReaderBTS2013\bin\Release\SSOSettingsFileReader.dll">
-        <DestFilename>SSOSettingsFileReaderBTS2013.dll</DestFilename>
-      </BuildSSOSettingsFileImportFilesToCopy>
-      <BuildSSOSettingsFileImportFilesToCopy Include="SSOSettingsFileImport\SSOSettingsFileReaderBTS2013R2\bin\Release\SSOSettingsFileReader.dll">
-        <DestFilename>SSOSettingsFileReaderBTS2013R2.dll</DestFilename>
+        <DestFilename>SSOSettingsFileReader</DestFilename>
+        <DestExt>.dll</DestExt>
       </BuildSSOSettingsFileImportFilesToCopy>
     </ItemGroup>
 
-    <MSBuild Projects="SSOSettingsFileImport\SSOSettingsFileImport.sln" Properties="Configuration=Release;Platform=Any CPU" Targets="Rebuild" />
+    <ReplaceAssemblyFileVersionInFile Path="SSOSettingsFileImport\CommonAssemblyInfo.cs" NewVersion="$(ProductVersionFull)" />
 
-    <Copy SourceFiles="@(BuildSSOSettingsFileImportFilesToCopy)" DestinationFiles="@(BuildSSOSettingsFileImportFilesToCopy->'..\Framework\DeployTools\%(DestFilename)')" />
+    <MSBuild Projects="SSOSettingsFileImport\SSOSettingsFileImport.sln" Properties="Configuration=Release;Platform=Any CPU;TargetFrameworkVersion=v4.0" Targets="Rebuild" />
+    <Copy SourceFiles="@(BuildSSOSettingsFileImportFilesToCopy)" DestinationFiles="@(BuildSSOSettingsFileImportFilesToCopy->'..\Framework\DeployTools\%(DestFilename)BTS2013%(DestExt)')" />
+    <MSBuild Projects="SSOSettingsFileImport\SSOSettingsFileImport.sln" Properties="Configuration=Release;Platform=Any CPU;TargetFrameworkVersion=v4.0;BizTalkVersion=2013R2" Targets="Rebuild" />
+    <Copy SourceFiles="@(BuildSSOSettingsFileImportFilesToCopy)" DestinationFiles="@(BuildSSOSettingsFileImportFilesToCopy->'..\Framework\DeployTools\%(DestFilename)BTS2013R2%(DestExt)')" />
+    <MSBuild Projects="SSOSettingsFileImport\SSOSettingsFileImport.sln" Properties="Configuration=Release;Platform=Any CPU;TargetFrameworkVersion=v4.6;BizTalkVersion=2016" Targets="Rebuild" />
+    <Copy SourceFiles="@(BuildSSOSettingsFileImportFilesToCopy)" DestinationFiles="@(BuildSSOSettingsFileImportFilesToCopy->'..\Framework\DeployTools\%(DestFilename)BTS2016%(DestExt)')" />
+    <MSBuild Projects="SSOSettingsFileImport\SSOSettingsFileImport.sln" Properties="Configuration=Release;Platform=Any CPU;TargetFrameworkVersion=v2.0;BizTalkVersion=Pre2013" Targets="Rebuild" />
+    <Copy SourceFiles="@(BuildSSOSettingsFileImportFilesToCopy)" DestinationFiles="@(BuildSSOSettingsFileImportFilesToCopy->'..\Framework\DeployTools\%(DestFilename)BTS2010%(DestExt)')" />
+
+    <ReplaceAssemblyFileVersionInFile Path="SSOSettingsFileImport\CommonAssemblyInfo.cs" NewVersion="1.0.0.0" />
   </Target>
 
-  <Target Name="WarnAboutUacElevateManifest">
-    <Message Text="Remember to update UacElevate.exe.manifest!" />
-  </Target>
+  <UsingTask TaskName="ReplaceInFile" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" >
+    <ParameterGroup>
+      <Path ParameterType="System.String" Required="true" />
+      <OldString ParameterType="System.String" Required="true" />
+      <NewString ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Code Type="Fragment" Language="cs">
+        System.IO.File.SetAttributes(Path, System.IO.FileAttributes.Normal);
+        string contents = System.IO.File.ReadAllText(Path);
+        contents = contents.Replace(OldString, NewString);
+        System.IO.File.WriteAllText(Path, contents);
+      </Code>
+    </Task>
+  </UsingTask>
 
+  <UsingTask TaskName="ReplaceAssemblyVersionInFile" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" >
+    <ParameterGroup>
+      <Path ParameterType="System.String" Required="true" />
+      <NewVersion ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Code Type="Fragment" Language="cs">
+        System.IO.File.SetAttributes(Path, System.IO.FileAttributes.Normal);
+        string contents = System.IO.File.ReadAllText(Path);
+        contents = System.Text.RegularExpressions.Regex.Replace(contents, @"\d+\.\d+\.\d+\.\d+", NewVersion);
+        System.IO.File.WriteAllText(Path, contents);
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <UsingTask TaskName="ReplaceAssemblyFileVersionInFile" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" >
+    <ParameterGroup>
+      <Path ParameterType="System.String" Required="true" />
+      <NewVersion ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Code Type="Fragment" Language="cs">
+        System.IO.File.SetAttributes(Path, System.IO.FileAttributes.Normal);
+        string contents = System.IO.File.ReadAllText(Path);
+        contents = System.Text.RegularExpressions.Regex.Replace(contents, @"AssemblyFileVersion\(\""\d+\.\d+\.\d+\.\d+", @"AssemblyFileVersion(""" + NewVersion);
+        System.IO.File.WriteAllText(Path, contents);
+      </Code>
+    </Task>
+  </UsingTask>
 </Project>

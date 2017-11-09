@@ -18,15 +18,9 @@ namespace DeploymentFramework.BuildTasks
         private string _applicationName;
         private string _startOption;
         private string _stopOption;
-        private BtsCatalogExplorer _catalog = null;
 
         public ControlBizTalkApp()
         {
-            // connect to the BizTalk configuration database that corresponds to our group membership.
-            _catalog = new BtsCatalogExplorer();
-            _catalog.ConnectionString = string.Format("Server={0};Initial Catalog={1};Integrated Security=SSPI;",
-               BizTalkGroupInfo.GroupDBServerName,
-               BizTalkGroupInfo.GroupMgmtDBName);
         }
 
         /// <summary>
@@ -64,56 +58,55 @@ namespace DeploymentFramework.BuildTasks
                 return false;
             }
 
-            Application application = _catalog.Applications[_applicationName];
-            if (application == null)
+            using (BtsCatalogExplorer catalog = BizTalkCatalogExplorerFactory.GetCatalogExplorer())
             {
-                this.Log.LogError("Unable to find application '{0}' in catalog.", _applicationName);
-                return false;
-            }
-
-            ApplicationStartOption startOption = 0;
-            ApplicationStopOption stopOption = 0;
-
-            if (!string.IsNullOrEmpty(_startOption))
-            {
-                startOption = ParseStartEnum(_startOption);
-            }
-            else
-            {
-                stopOption = ParseStopEnum(_stopOption);
-            }
-
-            for (int i = 0; i < retryCount; i++)
-            {
-                this.Log.LogMessage("(Retry count {0})", i);
-                try
+                Application application = catalog.Applications[_applicationName];
+                if (application == null)
                 {
-                    if (startOption != 0)
-                    {
-                        this.Log.LogMessage("Starting {0} application...", _applicationName);
-                        application.Start(startOption);
-                    }
-                    else
-                    {
-                        this.Log.LogMessage("Stopping {0} application...", _applicationName);
-                        application.Stop(stopOption);
-                    }
-
-                    _catalog.SaveChanges();
-                    break;
+                    this.Log.LogError("Unable to find application '{0}' in catalog.", _applicationName);
+                    return false;
                 }
-                catch (Microsoft.BizTalk.ExplorerOM.BtsException ex)
+
+                ApplicationStartOption startOption = 0;
+                ApplicationStopOption stopOption = 0;
+
+                if (!string.IsNullOrEmpty(_startOption))
                 {
+                    startOption = ParseStartEnum(_startOption);
+                }
+                else
+                {
+                    stopOption = ParseStopEnum(_stopOption);
+                }
+
+                for (int i = 0; i < retryCount; i++)
+                {
+                    this.Log.LogMessage("(Retry count {0})", i);
                     try
                     {
-                        _catalog.DiscardChanges();
-                    }
-                    catch { }
+                        if (startOption != 0)
+                        {
+                            this.Log.LogMessage("Starting {0} application...", _applicationName);
+                            application.Start(startOption);
+                        }
+                        else
+                        {
+                            this.Log.LogMessage("Stopping {0} application...", _applicationName);
+                            application.Stop(stopOption);
+                        }
 
-                    if (!ex.Message.Contains("deadlocked"))
+                        catalog.SaveChanges();
+                        break;
+                    }
+                    catch (Exception ex)
                     {
-                        this.Log.LogErrorFromException(ex, false);
-                        return false;
+                        catalog.DiscardChanges();
+
+                        if (!ex.Message.Contains("deadlocked"))
+                        {
+                            this.Log.LogErrorFromException(ex, false);
+                            return false;
+                        }
                     }
                 }
             }
@@ -121,7 +114,7 @@ namespace DeploymentFramework.BuildTasks
             return true;
         }
 
-        private ApplicationStartOption ParseStartEnum(string enumComponents)
+        internal static ApplicationStartOption ParseStartEnum(string enumComponents)
         {
             ApplicationStartOption result = 0;
 
@@ -135,7 +128,7 @@ namespace DeploymentFramework.BuildTasks
             return result;
         }
 
-        private ApplicationStopOption ParseStopEnum(string enumComponents)
+        private static ApplicationStopOption ParseStopEnum(string enumComponents)
         {
             ApplicationStopOption result = 0;
 

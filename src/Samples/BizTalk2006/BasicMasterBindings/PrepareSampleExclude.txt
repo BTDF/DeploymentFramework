@@ -1,3 +1,0 @@
-BasicMasterBindings.sln
-BasicMasterBindings\BasicMasterBindings.btproj
-BasicMasterBindings\Properties

@@ -6,7 +6,6 @@
     This source file is subject to the Microsoft Public License (Ms-PL).
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="Microsoft.Sdc.Common.tasks"/>
   <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="Pause" />
   <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="StartProcess" />
 
@@ -14,7 +13,7 @@
   This MSBuild targets file may be used to deploy, undeploy or redeploy your BizTalk app from a command-line/unattended script.
   
   Command line parameters:
-    tv - 4.0 for BizTalk 2010, 3.5 for BizTalk 2009 and DO NOT USE for BizTalk 2006 or 2006 R2  (example /tv:4.0)
+    tv - 4.0 for BizTalk 2010 (example /tv:4.0)
 	t - Deploy, Undeploy, Redeploy or QuickDeploy (example /t:Deploy)
 	
   Property Parameters or Environment Variables (set these either as an environment variable (as the SetEnvUI wizard does) or with the /p command line parameter
@@ -88,13 +87,13 @@
   </Target>
 
   <Target Name="Copy">
-    <Time.GetTime Format="yyyyMMdd_HHmm">
-      <Output TaskParameter="Time" PropertyName="Now" />
-    </Time.GetTime>
+    <PropertyGroup>
+      <LogFilename>DeployResults_$(COMPUTERNAME)_$([System.DateTime]::Now.ToString('yyyyMMdd_HHmm')).txt</LogFilename>
+    </PropertyGroup>
     <Copy
       SourceFiles="..\..\DeployResults\DeployResults.txt"
-      DestinationFiles="..\..\DeployResults\DeployResults_$(COMPUTERNAME)_$(Now).txt"
-	  ContinueOnError="true" />
+      DestinationFiles="..\..\DeployResults\$(LogFilename)"
+  	  ContinueOnError="true" />
   </Target>
 
   <Target Name="PauseForError" DependsOnTargets="Copy">

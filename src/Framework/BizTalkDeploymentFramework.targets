@@ -31,13 +31,17 @@
   <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="ItemGroupFromSeparatedList" />
   <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="GeneratePdbCopyItemGroups" />
   <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="GenerateAssemblyNamesItemGroup" />
-  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="ItemGroupFromCSVFile" />
   <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="GetParentPath" />
-  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="CreateVirtualDirectory" />
-  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="DeleteVirtualDirectory" />
-  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="AssignVirtualDirectoryToAppPool" />
-  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="ConfigureAppPool" />
-  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="ConfigureWebServiceExtension" />
+  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="CreateVirtualDirectory" />
+  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="DeleteVirtualDirectory" />
+  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="AssignVirtualDirectoryToAppPool" />
+  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="ConfigureAppPool" />
+  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="ConfigureWebServiceExtension" />
+  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="ConfigureIISVirtualDirectory" />
+  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="ConfigureIISVirtualDirectoryNtfsPermissions" />
+  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="ConfigureIISAppPool" />
+  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="ConfigureIISWebServiceExtension" />
+  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="RecycleAppPool" />
   <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="StripFileSpecFromPath" />
   <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="SetUpFileAdapterPaths" />
   <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="PopulateRulePoliciesMetadata" />
@@ -210,6 +214,9 @@
         your targeted host account is a member of, or use SettingsFileGenerator.xls with PropsFromEnvSettings  -->
     <SsoAppUserGroup Condition="'$(SsoAppUserGroup)' == ''">BizTalk Application Users</SsoAppUserGroup>
     <SsoAppAdminGroup Condition="'$(SsoAppAdminGroup)' == ''">BizTalk Server Administrators</SsoAppAdminGroup>
+
+    <IISAppPoolDefaultDeployAction Condition="'$(IISAppPoolDefaultDeployAction)' == ''">CreateOrUpdate</IISAppPoolDefaultDeployAction>
+    <IISAppPoolDefaultUndeployAction Condition="'$(IISAppPoolDefaultUndeployAction)' == ''">Delete</IISAppPoolDefaultUndeployAction>
 
     <!-- Subdirectory that contains a btshttpreceive.dll and btshttpreceive64.dll that should be added to IIS6 web service extension list. -->
     <!--   
@@ -562,6 +569,39 @@
     <EsbItinerariesQualified Include="@(EsbItineraries->'..\ESB\%(Identity)')" />
   </ItemGroup>
 
+  <!-- If you wish to set up IIS application pools, specify one or more IISAppPool definitions. -->
+  <!--
+  DO NOT UNCOMMENT. This is just to demonstrate the usage of the ItemGroup. Should only be included in a .btdfproj.
+  AppPoolNetVersion may be v1.0, v1.1, v2.0 or v4.0
+  <ItemGroup>
+    <IISAppPool Include="TestProjectPool">
+      <DotNetFrameworkVersion>v4.0</DotNetFrameworkVersion>
+      <PipelineMode>Integrated</PipelineMode>
+      <Enable32Bit>False</Enable32Bit>
+      <IdentityType>SpecificUser</IdentityType>
+      <UserName>BizTalk</UserName>
+      <Password>password</Password>
+      <DeployAction>Create</DeployAction>
+      <UndeployAction>Delete</UndeployAction>
+    </IISAppPool>
+  </ItemGroup>
+  -->
+
+  <!-- If you wish to set up IIS applications, specify one or more IISApp definitions. -->
+  <!--
+  DO NOT UNCOMMENT. This is just to demonstrate the usage of the ItemGroup. Should only be included in a .btdfproj.
+  <ItemGroup>
+    <IISApp Include="TestProject">
+      <AppPoolName>TestProjectPool</AppPoolName>
+      <SiteName>Default Web Site</SiteName>
+      <VirtualPath>/TestProject</VirtualPath>
+      <PhysicalPath>..\TestProjectVDir</PhysicalPath>
+      <DeployAction>Create</DeployAction>
+      <UndeployAction>Delete</UndeployAction>
+    </IISApp>
+  </ItemGroup>
+  -->
+
   <!-- If you wish to set up IIS virtual directories, specify one or more vdir definitions. -->
   <!--
   DO NOT UNCOMMENT. This is just to demonstrate the usage of the ItemGroup. Should only be included in a .btdfproj.
@@ -854,9 +894,9 @@
       TerminateServiceInstancesConditional;
       DeployAppDefinition;
       ConditionalHostStop;
+      DeploySharedAssemblies;
       DeploySSO;
       DeploySchemas;
-      DeploySharedAssemblies;
       DeployExternalAssemblies;
       DeployComponents;
       DeployPipelineComponents;
@@ -971,7 +1011,7 @@
     <Message Text="Using .NET Framework Install Path '$(DotNetFrameworkDir)'." />
 
     <!-- Used for copying pipeline components to the correct directory, among other things.
-        This registry key is unchanged between BizTalk 2004 and BizTalk 2006. -->
+        This registry key is unchanged between BizTalk releases. -->
     <GetRegistryValue KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\BizTalk Server\3.0" ValueName="InstallPath">
       <Output TaskParameter="Value" PropertyName="BtsDir"/>
     </GetRegistryValue>
@@ -1011,7 +1051,7 @@
       <Output TaskParameter="Value" PropertyName="Gacutil" />
     </CreateProperty>
 
-    <CreateProperty Value="$(SystemRoot)\System32\inetsrv\appcmd.exe" Condition="'$(IisMajorVersion)' != '5' and '$(IisMajorVersion)' != '6'">
+    <CreateProperty Value="$(SystemRoot)\System32\inetsrv\appcmd.exe">
       <Output TaskParameter="Value" PropertyName="AppCmd" />
     </CreateProperty>
 
@@ -1040,10 +1080,6 @@
       <Output TaskParameter="Value" PropertyName="Btshttpreceive" />
     </CreateProperty>
 
-    <!-- Look for the BizTalk ESB Toolkit 2.0 install path -->
-    <GetRegistryValue KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\BizTalk ESB Toolkit\2.0" ValueName="InstallPath">
-      <Output TaskParameter="Value" PropertyName="EsbDir"/>
-    </GetRegistryValue>
     <!-- Look for the BizTalk ESB Toolkit 2.1 install path -->
     <GetRegistryValue KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\BizTalk ESB Toolkit\2.1" ValueName="InstallPath" Condition="'$(EsbDir)' == ''">
       <Output TaskParameter="Value" PropertyName="EsbDir"/>
@@ -1145,6 +1181,7 @@
     <SetPropFromEnvSetting
       SettingsFilePath="$(SettingsFilePath)"
       XPath="/settings/property[@name='@(PropsFromEnvSettings)']"
+      PropertyName="@(PropsFromEnvSettings)"
       Identity="%(Identity)"
       Condition="'$(SettingsFilePath)' != '' and Exists('$(SettingsFilePath)')">
       <Output TaskParameter="Value" PropertyName="@(PropsFromEnvSettings)" />
@@ -1158,13 +1195,11 @@
   <Target Name="BounceBizTalk" DependsOnTargets="SetWinVer">
     <!-- Reset BizTalk hosts and IIS -->
 
-    <!-- An iisreset is needed when doing things with http & the isolated host, since your binaries will be loaded into 
-            dllhost.exe proceses. -->
-    <Exec
-      Command="iisreset.exe /noforce /restart /timeout:$(IisResetTime)"
-      Condition="'$(SkipIISReset)' == 'false' and ('$(IisMajorVersion)' == '5' or '@(IisAppPools)' == '')" />
+    <!-- An iisreset is needed with http & the isolated host, since your binaries will be loaded into IIS proceses. -->
+    <Exec Command="iisreset.exe /noforce /restart /timeout:$(IisResetTime)" Condition="'$(SkipIISReset)' == 'false' and ('@(IisAppPools)' == '' and '@(IisAppPool)' == '')" />
     <Exec Command="&quot;$(AppCmd)&quot; recycle apppool /apppool.name:&quot;@(IisAppPools)&quot;"
-          Condition="'$(SkipIISReset)' == 'false' and ('$(IisMajorVersion)' != '5' and '@(IisAppPools)' != '') and '%(Identity)' == '%(Identity)'" />
+          Condition="'$(SkipIISReset)' == 'false' and '@(IisAppPools)' != '' and '%(Identity)' == '%(Identity)'" />
+    <RecycleAppPool Items="@(IISAppPool)" Condition="'$(SkipIISReset)' == 'false' and '@(IISAppPool)' != ''" />
 
     <CallTarget Targets="BounceAllBizTalkHosts" Condition="'@(BizTalkHosts)' == ''" />
     <CallTarget Targets="BounceSelectedBizTalkHosts" Condition="'@(BizTalkHosts)' != ''" />
@@ -1175,13 +1210,11 @@
   </Target>
 
   <Target Name="StopBizTalk" DependsOnTargets="SetWinVer">
-    <!-- An iisreset is needed when doing things with http & the isolated host, since your binaries will be loaded into 
-            dllhost.exe or inetinfo.exe proceses. -->
-    <Exec
-      Command="iisreset.exe /noforce /restart /timeout:$(IisResetTime)"
-      Condition="'$(SkipIISReset)' == 'false' and ('$(IisMajorVersion)' == '5' or '@(IisAppPools)' == '')" />
+    <!-- An iisreset is needed with http & the isolated host, since your binaries will be loaded into IIS proceses. -->
+    <Exec Command="iisreset.exe /noforce /restart /timeout:$(IisResetTime)" Condition="'$(SkipIISReset)' == 'false' and ('@(IisAppPools)' == '' and '@(IisAppPool)' == '')" />
     <Exec Command="&quot;$(AppCmd)&quot; recycle apppool /apppool.name:&quot;@(IisAppPools)&quot;"
-          Condition="'$(SkipIISReset)' == 'false' and ('$(IisMajorVersion)' != '5' and '@(IisAppPools)' != '') and '%(Identity)' == '%(Identity)'" />
+          Condition="'$(SkipIISReset)' == 'false' and '@(IisAppPools)' != '' and '%(Identity)' == '%(Identity)'" />
+    <RecycleAppPool Items="@(IISAppPool)" Condition="'$(SkipIISReset)' == 'false' and '@(IISAppPool)' != ''" />
 
     <CallTarget Targets="StopAllBizTalkHosts" Condition="'@(BizTalkHosts)' == ''" />
     <CallTarget Targets="StopSelectedBizTalkHosts" Condition="'@(BizTalkHosts)' != ''" />
@@ -1539,11 +1572,10 @@
     <!-- Undeploy Pipeline Component assemblies. -->
 
     <!-- To deal with pipeline components loaded in isolated host. -->
-    <Exec
-      Command="iisreset.exe /noforce /restart /timeout:$(IisResetTime)"
-      Condition="'$(SkipIISReset)' == 'false' and ('$(IisMajorVersion)' == '5' or '@(IisAppPools)' == '')" />
+    <Exec Command="iisreset.exe /noforce /restart /timeout:$(IisResetTime)" Condition="'$(SkipIISReset)' == 'false' and ('@(IisAppPools)' == '' and '@(IisAppPool)' == '')" />
     <Exec Command="&quot;$(AppCmd)&quot; recycle apppool /apppool.name:&quot;@(IisAppPools)&quot;"
-          Condition="'$(SkipIISReset)' == 'false' and ('$(IisMajorVersion)' != '5' and '@(IisAppPools)' != '') and '%(Identity)' == '%(Identity)'" />
+          Condition="'$(SkipIISReset)' == 'false' and '@(IisAppPools)' != '' and '%(Identity)' == '%(Identity)'" />
+    <RecycleAppPool Items="@(IISAppPool)" Condition="'$(SkipIISReset)' == 'false' and '@(IISAppPool)' != ''" />
 
     <!-- Delete pipeline component assemblies from BizTalk's Pipeline Components folder. -->
     <Delete Files="@(PipelineComponents->'$(BtsDir)Pipeline Components\%(Identity)')" ContinueOnError="true" />
@@ -1738,26 +1770,50 @@
     <Exec Command="&quot;$(DeployTools)\SSOSettingsFileImport.exe&quot; &quot;$(BizTalkAppName)&quot; /deleteApp" />
   </Target>
 
+  <ItemDefinitionGroup>
+    <IISAppPool>
+      <DotNetFrameworkVersion>v4.0</DotNetFrameworkVersion>
+      <PipelineMode>Integrated</PipelineMode>
+      <Enable32Bit>False</Enable32Bit>
+      <IdentityType>ApplicationPoolIdentity</IdentityType>
+      <DeployAction>$(IISAppPoolDefaultDeployAction)</DeployAction>
+      <UndeployAction>$(IISAppPoolDefaultUndeployAction)</UndeployAction>
+    </IISAppPool>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup>
+    <IISApp>
+      <SiteName>Default Web Site</SiteName>
+      <DeployAction>CreateOrUpdate</DeployAction>
+      <UndeployAction>Delete</UndeployAction>
+    </IISApp>
+  </ItemDefinitionGroup>
+
   <PropertyGroup>
     <DeployVDirsDependsOn>
       SetWinVer;
       GetSoftwarePaths;
       DeployNTFSPermissionsOnVDirPaths;
       DeployVirtualDirectory;
-      DeployPackageIdentityIIS5;
       DeployVDirsIIS6Plus
     </DeployVDirsDependsOn>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DeployIISDependsOn>
+      VDirListItemGroupGuard;
+      DeployIISAppPools;
+      DeployIISApplications;
+      DeployIISExtensions;
+      DeployNTFSPermissionsOnVDirPaths;
+    </DeployIISDependsOn>
+  </PropertyGroup>
+
   <Target Name="DeployNTFSPermissionsOnVDirPaths" Condition="'$(ModifyNTFSPermissionsOnVDirPaths)' == 'true'">
-    <CreateProperty Value="$(AppPoolAccount)" Condition="'$(VDIR_UserName)' == '' and '$(IisMajorVersion)' != '5' and '$(Configuration)' != 'Server'">
+    <CreateProperty Value="$(AppPoolAccount)" Condition="'$(VDIR_UserName)' == '' and '$(Configuration)' != 'Server'">
       <Output TaskParameter="Value" PropertyName="VDIR_UserName" />
     </CreateProperty>
 
-    <CreateProperty Value="aspnet" Condition="'$(IisMajorVersion)' == '5'">
-      <Output TaskParameter="Value" PropertyName="VDIR_UserName" />
-    </CreateProperty>
-	
 	<Error
       Text="Cannot configure NTFS permissions on virtual directory folders because the property VDIR_UserName is empty. Provide a value or set ModifyNTFSPermissionsOnVDirPaths to false."
       Condition="'$(VDIR_UserName)' == ''" />
@@ -1773,25 +1829,20 @@
     <CreateVirtualDirectory MetabasePath="$(IISMetabasePath)" Name="%(VDirList.Vdir)" Path="$(MSBuildProjectDirectory)\%(VDirList.Physdir)" />
   </Target>
 
-  <Target Name="DeployPackageIdentityIIS5" Condition="'$(IisMajorVersion)' == '5' and '$(Configuration)' == 'Server'">
-    <!-- Set package identity for winxp or win2000 -->
-    <Exec Command="&quot;$(Cscript)&quot; /nologo &quot;$(DeployTools)\SetPackageIdentity.vbs&quot; &quot;IIS-{Default Web Site//Root/%(VDirList.Vdir)}&quot;" />
-  </Target>
-
-  <Target Name="DeployVDirsIIS6Plus" Condition="'$(IisMajorVersion)' != '5'">
+  <Target Name="DeployVDirsIIS6Plus">
     <!-- Create app pool and place vdir in app pool for win2003+ -->
     <AssignVirtualDirectoryToAppPool
       MetabasePath="$(IISMetabasePath)" VDirName="%(VDirList.Vdir)" AppPoolName="%(VDirList.AppPool)" />
     <ConfigureAppPool
       MetabasePath="$(IISMetabasePath)" AppPoolName="%(VDirList.AppPool)" UserName="$(VDIR_UserName)" Password="$(VDIR_UserPass)"
       Condition="'$(VDIR_UserPass)' != ''" />
-	<Message Text="SKIPPING APP POOL IDENTITY CONFIGURATION because the property VDIR_UserPass is empty." Condition="'$(VDIR_UserPass)' == ''" />
+	  <Message Text="SKIPPING APP POOL IDENTITY CONFIGURATION because the property VDIR_UserPass is empty." Condition="'$(VDIR_UserPass)' == ''" />
 
     <!-- Set the .NET runtime version on the AppPool if AppPoolNetVersion was specified; IIS 7.0+ only -->
     <Exec Command="&quot;$(AppCmd)&quot; set apppool /apppool.name:&quot;%(VDirList.AppPool)&quot; /managedRuntimeVersion:%(VDirList.AppPoolNetVersion)"
-          Condition="'$(IisMajorVersion)' != '6' and '$(Configuration)' == 'Server' and '%(VDirList.AppPoolNetVersion)' != ''" />
+          Condition="'$(Configuration)' == 'Server' and '%(VDirList.AppPoolNetVersion)' != ''" />
 
-    <!-- We are setting up our biztalk isapi extension as web svc extension for 2003+ -->
+    <!-- We are setting up our biztalk isapi extension as web svc extension -->
     <!-- We remove in case it is already there.  We could have DeployVDirs depend on UndeployVDirs instead,
            but that seems excessive since the vdir portion itself doesn't require that. -->
     <CreateItem Include="$(MSBuildProjectDirectory)\$(WseExtensionPath)\$(Btshttpreceive)">
@@ -1811,13 +1862,16 @@
   </Target>
 
   <!-- Create our virtual directories, and handle service account assignment. -->
-  <Target Name="DeployVDirs" DependsOnTargets="$(DeployVDirsDependsOn)" Condition="'$(IncludeVirtualDirectories)' == 'true'" />
+  <Target Name="DeployVDirs" Condition="'$(IncludeVirtualDirectories)' == 'true'">
+    <CallTarget Targets="$(DeployVDirsDependsOn)" Condition="'@(IISApp)' == ''" />
+    <CallTarget Targets="$(DeployIISDependsOn)" Condition="'@(IISApp)' != ''" />
+  </Target>
 
-  <Target Name="UndeployVDirs" DependsOnTargets="SetWinVer;GetSoftwarePaths" Condition="'$(IncludeVirtualDirectories)' == 'true' and '$(SkipUndeploy)' == 'false' and '$(UndeployIISArtifacts)' == 'true'">
+  <Target Name="UndeployVDirsIIS6Plus">
     <!-- Delete virtual directories and relevant IIS configuration. -->
     <DeleteVirtualDirectory MetabasePath="$(IISMetabasePath)" Name="%(VDirList.Vdir)" ContinueOnError="true" />
 
-    <!-- We are removing our biztalk isapi extension as web svc extension for 2003/8 -->
+    <!-- We are removing our biztalk isapi extension as web svc extension -->
     <CreateItem Include="$(MSBuildProjectDirectory)\$(WseExtensionPath)\$(Btshttpreceive)">
       <Output TaskParameter="Include" ItemName="BtsHttpReceivePath" />
     </CreateItem>
@@ -1826,7 +1880,60 @@
       MetabasePath="$(IISMetabasePath)"
       ExtensionFile="@(BtsHttpReceivePath->'%(FullPath)')" ExtensionName="$(WseExtensionName)" Remove="True"
       ContinueOnError="true"
-      Condition="'$(IisMajorVersion)' != '5' and '$(WseExtensionPath)' != ''" />
+      Condition="'$(WseExtensionPath)' != ''" />
+  </Target>
+
+  <PropertyGroup>
+    <UndeployVDirsDependsOn>
+      SetWinVer;
+      GetSoftwarePaths;
+      UndeployVDirsIIS6Plus
+    </UndeployVDirsDependsOn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <UndeployIISDependsOn>
+      UndeployIISExtensions;
+      UndeployIISApplications;
+      UndeployIISAppPools
+    </UndeployIISDependsOn>
+  </PropertyGroup>
+
+  <Target Name="UndeployVDirs" Condition="'$(IncludeVirtualDirectories)' == 'true' and '$(SkipUndeploy)' == 'false'">
+    <CallTarget Targets="$(UndeployVDirsDependsOn)" Condition="'@(IISApp)' == '' and '$(UndeployIISArtifacts)' == 'true'" />
+    <CallTarget Targets="$(UndeployIISDependsOn)" Condition="'@(IISApp)' != ''" />
+  </Target>
+
+  <Target Name="VDirListItemGroupGuard" Condition="'@(VDirList)' != ''">
+    <Error Text="Please comment out or remove the deprecated VDirList ItemGroup." />
+  </Target>
+
+  <Target Name="DeployNTFSPermissionsOnVDirPaths" Condition="'$(ModifyNTFSPermissionsOnVDirPaths)' == 'true'">
+    <ConfigureIISVirtualDirectoryNtfsPermissions Items="@(IISApp)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Deploy" />
+  </Target>
+
+  <Target Name="DeployIISAppPools" Condition="'@(IISAppPool)' != ''">
+    <ConfigureIISAppPool Items="@(IISAppPool)"  MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Deploy" />
+  </Target>
+
+  <Target Name="UndeployIISAppPools" Condition="'@(IISAppPool)' != ''">
+    <ConfigureIISAppPool Items="@(IISAppPool)"  MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Undeploy" />
+  </Target>
+
+  <Target Name="DeployIISApplications" Condition="'@(IISApp)' != ''">
+    <ConfigureIISVirtualDirectory Items="@(IISApp)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Deploy" />
+  </Target>
+
+  <Target Name="UndeployIISApplications" Condition="'@(IISApp)' != ''">
+    <ConfigureIISVirtualDirectory Items="@(IISApp)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Undeploy" />
+  </Target>
+
+  <Target Name="DeployIISExtensions" Condition="'@(IISApp)' != ''">
+    <ConfigureIISWebServiceExtension Items="@(IISApp)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Deploy" />
+  </Target>
+
+  <Target Name="UndeployIISExtensions" Condition="'@(IISApp)' != ''">
+    <ConfigureIISWebServiceExtension Items="@(IISApp)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Undeploy" />
   </Target>
 
   <!-- This target imports the binding file into BizTalk -->
@@ -1874,11 +1981,10 @@
   <Target Name="StartApplication" Condition="'$(StartApplicationOnDeploy)' == 'true'">
     <!-- Start BizTalk application. -->
 
-    <Time.GetTime Format="MM-dd-yy hh:mm:ss">
-      <Output TaskParameter="Time" PropertyName="StartApplicationTime" />
-    </Time.GetTime>
+    <PropertyGroup>
+      <StartApplicationTime>$([System.DateTime]::Now.ToString('MM-dd-yy hh:mm:ss'))</StartApplicationTime>
+    </PropertyGroup>
     <Message Text="Starting $(BizTalkAppName) application at $(StartApplicationTime)."/>
-    <Message Text="Note: Starting the app may take 5-10 secs PER ORCHESTRATION. Please wait..."/>
 
     <ControlBizTalkApp ApplicationName="$(BizTalkAppName)" StartOption="$(ControlBizTalkAppStartOption)" />
   </Target>
@@ -1996,9 +2102,6 @@
 
   <Target Name="SetToolsVersionParam">
     <CreateProperty Value="/tv:4.0" Condition="'$(MSBuildToolsVersion)' == '4.0'">
-      <Output TaskParameter="Value" PropertyName="ToolsVersionParam" />
-    </CreateProperty>
-    <CreateProperty Value="/tv:3.5" Condition="'$(MSBuildToolsVersion)' == '3.5'">
       <Output TaskParameter="Value" PropertyName="ToolsVersionParam" />
     </CreateProperty>
   </Target>

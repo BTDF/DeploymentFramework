@@ -14,7 +14,6 @@ using System.Text;
 using System.Xml;
 using Microsoft.BizTalk.Component.Interop;
 using Microsoft.BizTalk.Message.Interop;
-using Microsoft.Practices.ESB.Exception.Management;
 using Microsoft.Practices.ESB.Resolver;
 using Microsoft.XLANGs.BaseTypes;
 
@@ -56,7 +55,7 @@ namespace DeploymentFrameworkForBizTalk.ESB.Resolver.Sso
             }
             catch (Exception exception)
             {
-                EventLogger.Write(MethodBase.GetCurrentMethod(), exception);
+                EventLog.WriteEntry("BizTalk Server", exception.ToString(), EventLogEntryType.Error);
                 throw;
             }
 
@@ -96,7 +95,7 @@ namespace DeploymentFrameworkForBizTalk.ESB.Resolver.Sso
             }
             catch (Exception exception)
             {
-                EventLogger.Write(MethodBase.GetCurrentMethod(), exception);
+                EventLog.WriteEntry("BizTalk Server", exception.ToString(), EventLogEntryType.Error);
                 throw;
             }
 
@@ -143,7 +142,7 @@ namespace DeploymentFrameworkForBizTalk.ESB.Resolver.Sso
             }
             catch (Exception exception)
             {
-                EventLogger.Write(MethodBase.GetCurrentMethod(), exception);
+                EventLog.WriteEntry("BizTalk Server", exception.ToString(), EventLogEntryType.Error);
                 throw;
             }
 
@@ -244,7 +243,7 @@ namespace DeploymentFrameworkForBizTalk.ESB.Resolver.Sso
             }
             catch (Exception exception)
             {
-                EventLogger.Write(MethodBase.GetCurrentMethod(), exception);
+                EventLog.WriteEntry("BizTalk Server", exception.ToString(), EventLogEntryType.Error);
                 throw;
             }
 
@@ -260,7 +259,7 @@ namespace DeploymentFrameworkForBizTalk.ESB.Resolver.Sso
         private static string ReadValueFromSso(string affiliateAppName, string settingName)
         {
             string rowValue = SSOSettingsFileReader.ReadString(affiliateAppName, settingName);
-            EventLogger.Write(
+            Debug.WriteLine(
                 "Using SettingsFileGenerator value loaded into SSO affiliate app {0}: [{1}, {2}]", affiliateAppName, settingName, rowValue);
             return rowValue;
         }

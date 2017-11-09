@@ -18,6 +18,7 @@ namespace DeploymentFramework.BuildTasks
         private string[] _value;
         private string _settingsFilePath;
         private string _xpath;
+        private string _propertyName;
         private string _identity;
 
         [Output]
@@ -41,16 +42,22 @@ namespace DeploymentFramework.BuildTasks
             set { _xpath = value; }
         }
 
+        [Required]
+        public string PropertyName
+        {
+            get { return _propertyName; }
+            set { _propertyName = value; }
+        }
+
         public string Identity
         {
             get { return _identity; }
             set { _identity = value; }
         }
 
-	
         public override bool Execute()
         {
-            this.Log.LogMessage(MessageImportance.Low, "Attempting to read a property value from environment settings XML file {0}...", _settingsFilePath);
+            this.Log.LogMessage(MessageImportance.Low, "Attempting to read property {0} from settings XML file {1}...", _propertyName, _settingsFilePath);
 
             XPathDocument xpd = new XPathDocument(_settingsFilePath);
             XPathNavigator xpn = xpd.CreateNavigator();
@@ -61,12 +68,12 @@ namespace DeploymentFramework.BuildTasks
             {
                 _value = new string[1];
                 _value[0] = string.Empty;
-                this.Log.LogWarning("Could not find a property value in the environment settings XML file '{0}' using the XPath '{1}'.", _settingsFilePath, _xpath);
+                this.Log.LogWarning("Could not find '{0}' in the settings XML file '{1}'.", _propertyName, _settingsFilePath);
             }
             else
             {
                 _value = setting.Value.Split(';');
-                this.Log.LogMessage(MessageImportance.Normal, "Setting property to value '{0}'.", setting.Value);
+                this.Log.LogMessage(MessageImportance.Normal, "Setting property '{0}' to value '{1}'.", _propertyName, setting.Value);
             }
 
             return true;

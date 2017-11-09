@@ -15,13 +15,10 @@ namespace DeploymentFramework.BuildTasks
 {
     public class TerminateServiceInstances : Task
     {
-        private BizTalkOperations _operations;
         private string _applicationName;
 
         public TerminateServiceInstances()
         {
-            // connect to the BizTalk configuration database that corresponds to our group membership.
-            _operations = new BizTalkOperations(BizTalkGroupInfo.GroupDBServerName, BizTalkGroupInfo.GroupMgmtDBName);
         }
 
         /// <summary>

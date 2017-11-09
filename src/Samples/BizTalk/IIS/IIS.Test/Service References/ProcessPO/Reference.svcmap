@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="4ddb5eba-ef8d-4bca-b258-4c6657a59ed3" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>true</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.Generic.List`1" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>false</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost/DeploymentFramework.Samples.IIS/ProcessPOService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="ProcessPOService.xsd" MetadataType="Schema" ID="fd70324f-c7b8-444f-8c50-be6a8df619cd" SourceId="1" SourceUrl="http://localhost/DeploymentFramework.Samples.IIS/ProcessPOService.svc?xsd=xsd2" />
+    <MetadataFile FileName="ProcessPOService.disco" MetadataType="Disco" ID="63f3565b-27f0-4c6e-b2cf-0024bd1e2792" SourceId="1" SourceUrl="http://localhost/DeploymentFramework.Samples.IIS/ProcessPOService.svc?disco" />
+    <MetadataFile FileName="ProcessPOService1.xsd" MetadataType="Schema" ID="632f8f6c-26d5-47f8-9ffb-d293bf7579b9" SourceId="1" SourceUrl="http://localhost/DeploymentFramework.Samples.IIS/ProcessPOService.svc?xsd=xsd3" />
+    <MetadataFile FileName="BizTalkServiceInstance.wsdl" MetadataType="Wsdl" ID="b2c221d5-7e3a-4f28-a76b-5f270608fdf7" SourceId="1" SourceUrl="http://localhost/DeploymentFramework.Samples.IIS/ProcessPOService.svc?wsdl" />
+    <MetadataFile FileName="ProcessPOService2.xsd" MetadataType="Schema" ID="794d50d2-0115-4ff5-b82d-d85cd2a4f308" SourceId="1" SourceUrl="http://localhost/DeploymentFramework.Samples.IIS/ProcessPOService.svc?xsd=xsd4" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

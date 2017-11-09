@@ -1,4 +1,10 @@
-﻿using System.Reflection;
+﻿// Deployment Framework for BizTalk
+// Copyright (C) 2005-2014 Thomas F. Abraham and Scott Colestock
+// This source file is subject to the Microsoft Public License (Ms-PL).
+// See http://www.opensource.org/licenses/ms-pl.html.
+// All other rights reserved.
+
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -9,8 +15,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Abraham")]
-[assembly: AssemblyProduct("ESB.Resolver.Sso.TestItineraries")]
-[assembly: AssemblyCopyright("Copyright © 2014 Thomas F. Abraham")]
+[assembly: AssemblyProduct("Deployment Framework for BizTalk")]
+[assembly: AssemblyCopyright("Copyright (C) 2008-17 Thomas F. Abraham")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -18,9 +24,6 @@ using System.Runtime.InteropServices;
 // to COM components.  If you need to access a type in this assembly from 
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
-
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("126ca284-1e06-4f4a-b20d-cfd1f9032220")]
 
 // Version information for an assembly consists of the following four values:
 //

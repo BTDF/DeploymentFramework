@@ -1,9 +1,4 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.dll" TaskName="CreateVirtualDirectory" />
-  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.dll" TaskName="DeleteVirtualDirectory" />
-  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.dll" TaskName="AssignVirtualDirectoryToAppPool" />
-  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.dll" TaskName="ConfigureAppPool" />
-  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.dll" TaskName="ConfigureWebServiceExtension" />
   <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.dll" TaskName="StripFileSpecFromPath" />
   <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.dll" TaskName="SetUpFileAdapterPaths" />
   <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.dll" TaskName="PopulateRulePoliciesMetadata" />
@@ -15,6 +10,8 @@
   <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.dll" TaskName="Pause" />
   <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.dll" TaskName="ControlBizTalkHostInstance" />
   <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.dll" TaskName="CheckXmlSyntax" />
+  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.dll" TaskName="SetPropFromEnvSetting" />
+  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.dll" TaskName="GetPropsFromEnvSettingsDelimited" />
   <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.dll" TaskName="WriteXmlValue" />
 
   <ItemGroup>
@@ -28,28 +25,6 @@
   <ItemGroup Condition="'@(RulePolicies)' != ''">
     <RulePoliciesQualified Include="@(RulePolicies->'%(LocationPath)\%(Identity)')" />
   </ItemGroup>
-
-  <Target Name="TestCreateVirtualDirectory">
-    <CreateVirtualDirectory MetabasePath="IIS://localhost/w3svc/1/Root" Name="BizTalkSampleVdirX" Path="C:\Inetpub" />
-  </Target>
-
-  <Target Name="TestDeleteVirtualDirectory">
-    <DeleteVirtualDirectory MetabasePath="IIS://localhost/w3svc/1/Root" Name="BizTalkSampleVdirX" />
-  </Target>
-
-  <Target Name="TestAssignVirtualDirectoryToAppPool">
-    <AssignVirtualDirectoryToAppPool MetabasePath="IIS://localhost/w3svc/1/Root" VDirName="BizTalkSampleVdirX" AppPoolName="TestAppPool" />
-  </Target>
-
-  <Target Name="TestConfigureAppPool">
-    <ConfigureAppPool MetabasePath="IIS://localhost/w3svc/1/Root" AppPoolName="TestAppPool" UserName="DOMAIN\tabraham" Password="abc" />
-  </Target>
-
-  <Target Name="TestConfigureWebServiceExtension">
-    <ConfigureWebServiceExtension
-      MetabasePath="IIS://localhost/w3svc/1/Root"
-      ExtensionFile="C:\Program Files (x86)\Microsoft BizTalk Server 2009\HttpReceive64\BTSHTTPReceive.dll" ExtensionName=".\bin" Remove="True" />
-  </Target>
 
   <Target Name="TestStripFileSpecFromPath">
     <StripFileSpecFromPath Path="C:\This\Path\a\2\42\aav\FileSpec*.*">
@@ -148,6 +123,37 @@
 
   <Target Name="TestCheckXmlSyntax">
     <CheckXmlSyntax XmlFilenames="@(XmlToTest)" />
+  </Target>
+
+  <Target Name="TestSetPropFromEnvSetting">
+    <ItemGroup>
+      <PropsFromEnvSettingsTest Include="SsoAppUserGroup;BadSetting;SsoAppAdminGroup" />
+    </ItemGroup>
+
+    <SetPropFromEnvSetting
+      SettingsFilePath="TestSettings.xml"
+      XPath="/settings/property[@name='@(PropsFromEnvSettingsTest)']"
+      PropertyName="@(PropsFromEnvSettingsTest)"
+      Identity="%(Identity)">
+      <Output TaskParameter="Value" PropertyName="@(PropsFromEnvSettingsTest)" />
+    </SetPropFromEnvSetting>
+
+    <Message Text="SsoAppUserGroup = $(SsoAppUserGroup)" />
+  </Target>
+
+  <Target Name="TestSetPropFromEnvSettingDelimited">
+    <ItemGroup>
+      <PropsFromEnvSettingsDelimTest Include="SsoAppUserGroup;BadSetting;SsoAppAdminGroup" />
+    </ItemGroup>
+
+    <GetPropsFromEnvSettingsDelimited
+      SettingsFilePath="TestSettings.xml"
+      XPathTemplate="/settings/property[@name='@@NAME@@']"
+      PropertyNames="@(PropsFromEnvSettingsDelimTest)">
+      <Output TaskParameter="Value" PropertyName="PropsFromEnvSettingsDelimited" />
+    </GetPropsFromEnvSettingsDelimited>
+
+    <Message Text="Prop = $(PropsFromEnvSettingsDelimited)" />
   </Target>
 
   <Target Name="TestWriteXmlValue">

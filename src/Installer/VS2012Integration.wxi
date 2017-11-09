@@ -5,102 +5,50 @@
     
     This source file is subject to the Microsoft Public License (Ms-PL).
 -->
-<Include xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+<Include xmlns:util="http://schemas.microsoft.com/wix/UtilExtension" xmlns:vs="http://schemas.microsoft.com/wix/VSExtension">
   <Fragment>
     <Feature Id="VS2012IntegrationFeature" Title="Visual Studio 2012 Integration" Level="1" InstallDefault="local" Display="55"
-             AllowAdvertise="no" TypicalDefault="install" Description="Integrates commands with the Visual Studio 2012 IDE">
-        <ComponentRef Id="DFBTVisualStudioAddIn.AddIn_VS2012"/>
-        <ComponentRef Id="DFBTVisualStudioAddIn.dll_VS2012"/>
+             AllowAdvertise="no" TypicalDefault="install" Description="IntelliSense for Visual Studio">
         <ComponentRef Id="DeploymentFrameworkForBizTalk5.0.xml_VS2012"/>
         <ComponentRef Id="DeploymentFrameworkForBizTalk5.0.xsd_VS2012"/>
-        <ComponentRef Id="DeploymentFrameworkForBizTalkProjectTemplate5_0.zip_VS2012"/>
         <Condition Level="0">
           <![CDATA[(NOT VS2012_IDE_VCSHARP_PROJECTSYSTEM_INSTALLED) OR (BTS_PRODUCTNAME <> "Microsoft BizTalk Server 2013")]]>
         </Condition>
       </Feature>
-  </Fragment>
 
-  <Fragment>
     <PropertyRef Id="VS2012DEVENV" />
     <PropertyRef Id="VS2012_IDE_VCSHARP_PROJECTSYSTEM_INSTALLED" />
     <PropertyRef Id="VS2012_SCHEMAS_DIR" />
-    <PropertyRef Id="VS2012_PROJECTTEMPLATES_DIR" />
 
     <InstallExecuteSequence>
       <Custom Action="VS2012InstallVSTemplates" Before="InstallFinalize">
         VS2012_IDE_VCSHARP_PROJECTSYSTEM_INSTALLED AND (BTS_PRODUCTNAME = "Microsoft BizTalk Server 2013") AND (NOT Installed)
       </Custom>
-      <Custom Action="VS2012ResetVSAddin" Before="InstallFinalize">
-        VS2012_IDE_VCSHARP_PROJECTSYSTEM_INSTALLED AND (BTS_PRODUCTNAME = "Microsoft BizTalk Server 2013") AND Installed
-      </Custom>
     </InstallExecuteSequence>
 
     <UI Id="VS2012UI">
-      <ProgressText Action="VS2012InstallVSTemplates">Installing Visual Studio 2012 integration...</ProgressText>
-      <ProgressText Action="VS2012ResetVSAddin">Removing Visual Studio 2012 integration...</ProgressText>
+      <ProgressText Action="VS2012InstallVSTemplates">Reconfiguring Visual Studio templates...</ProgressText>
     </UI>
   </Fragment>
 
-  <Fragment>
-    <DirectoryRef Id="VisualStudio">
-      <Directory Id="D2012" Name="11.0" />
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="D2012">
-      <Directory Id="Addins2012" Name="Addins" />
-    </DirectoryRef>
-  </Fragment>
   <Fragment>
     <DirectoryRef Id="ProgramFilesFolder">
       <Directory Id="VS2012_SCHEMAS_DIR" Name="VS11.0Schemas" />
     </DirectoryRef>
   </Fragment>
-  <Fragment>
-    <DirectoryRef Id="ProgramFilesFolder">
-      <Directory Id="VS2012_PROJECTTEMPLATES_DIR" Name="VS11.0SProjectTemplates" />
-    </DirectoryRef>
-  </Fragment>
 
   <Fragment>
-    <DirectoryRef Id="Addins2012" FileSource="..\VisualStudioAddIn\VisualStudioAddIn">
-      <Component Id="DFBTVisualStudioAddIn.AddIn_VS2012" Guid="*">
-        <File Id="DFBTVisualStudioAddIn.AddIn_VS2012" Name="DFBTVisualStudioAddIn.AddIn" KeyPath="yes" Source="..\VisualStudioAddIn\VisualStudioAddIn\DFBTVisualStudioAddIn.AddIn" />
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="Addins2012" FileSource="..\VisualStudioAddIn\VisualStudioAddIn\bin">
-      <Component Id="DFBTVisualStudioAddIn.dll_VS2012" Guid="*">
-        <File Id="DFBTVisualStudioAddIn.dll_VS2012" Name="DFBTVisualStudioAddIn.dll" KeyPath="yes" Source="..\VisualStudioAddIn\VisualStudioAddIn\bin\DFBTVisualStudioAddIn.dll" />
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="VS2012_SCHEMAS_DIR" FileSource="..\VisualStudioAddIn">
+    <DirectoryRef Id="VS2012_SCHEMAS_DIR" FileSource="..\IntelliSense">
       <Component Id="DeploymentFrameworkForBizTalk5.0.xml_VS2012" Guid="641F5976-1A3E-43A1-AE72-14439D44CEED">
-        <File Id="DeploymentFrameworkForBizTalk5.0.xml_VS2012" Name="DeploymentFrameworkForBizTalk5.0.xml" KeyPath="yes" Source="..\VisualStudioAddIn\DeploymentFrameworkForBizTalk5.0.xml" />
+        <File Id="DeploymentFrameworkForBizTalk5.0.xml_VS2012" Name="DeploymentFrameworkForBizTalk5.0.xml" KeyPath="yes" Source="..\IntelliSense\DeploymentFrameworkForBizTalk5.0.xml" />
       </Component>
     </DirectoryRef>
   </Fragment>
   <Fragment>
-    <DirectoryRef Id="VS2012_SCHEMAS_DIR" FileSource="..\VisualStudioAddIn">
+    <DirectoryRef Id="VS2012_SCHEMAS_DIR" FileSource="..\IntelliSense">
       <Component Id="DeploymentFrameworkForBizTalk5.0.xsd_VS2012" Guid="96BB1419-68D2-4CD5-B077-98359001CB2E">
-        <File Id="DeploymentFrameworkForBizTalk5.0.xsd_VS2012" Name="DeploymentFrameworkForBizTalk5.0.xsd" KeyPath="yes" Source="..\VisualStudioAddIn\DeploymentFrameworkForBizTalk5.0.xsd" />
+        <File Id="DeploymentFrameworkForBizTalk5.0.xsd_VS2012" Name="DeploymentFrameworkForBizTalk5.0.xsd" KeyPath="yes" Source="..\IntelliSense\DeploymentFrameworkForBizTalk5.0.xsd" />
       </Component>
     </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="VS2012_PROJECTTEMPLATES_DIR" FileSource="..\VisualStudioAddIn">
-      <Component Id="DeploymentFrameworkForBizTalkProjectTemplate5_0.zip_VS2012" Guid="17B4A33E-7EE4-4DD2-8257-C707B529CD08">
-        <File Id="DeploymentFrameworkForBizTalkProjectTemplate5_0.zip_VS2012" Name="DeploymentFrameworkForBizTalkProjectTemplate5_0.zip" KeyPath="yes" Source="..\VisualStudioAddIn\DeploymentFrameworkForBizTalkProjectTemplate5_0.zip" />
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-
-  <Fragment>
-    <CustomAction Id="VS2012ResetVSAddin"
-      Property="VS2012DEVENV" ExeCommand="/ResetAddin DeploymentFramework.VisualStudioAddIn.Connect /Command File.Exit"
-      Execute="deferred" Return="ignore" Impersonate="yes" />
   </Fragment>
 </Include>

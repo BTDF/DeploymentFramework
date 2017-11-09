@@ -11,7 +11,6 @@
              AllowAdvertise="no" TypicalDefault="install" Description="Developer tools, including tools for building deployment MSI, etc.">
       <ComponentRef Id="RedistComponentGroup.xslt" />
       <ComponentRef Id="GenericBizTalkMSI.wxs" />
-      <ComponentRef Id="MigrateToProjectFolderStructure.cmd"/>
       <ComponentRef Id="candle.exe" />
       <ComponentRef Id="candle.exe.config" />
       <ComponentRef Id="CPL.TXT" />
@@ -28,7 +27,6 @@
       <ComponentRef Id="WixVsExtension.dll" />
       <ComponentRef Id="WixNetFxExtension.dll" />
       <ComponentRef Id="darice.cub"/>
-      <ComponentRef Id="DFBTVisualStudioAddIn.ProjectWizard.dll"/>
       <ComponentRef Id="InstallWizard.xml"/>
       <ComponentRef Id="License.rtf"/>
       <ComponentRef Id="Deployment.btdfproj"/>
@@ -49,13 +47,6 @@
     <DirectoryRef Id="Developer" FileSource="..\Developer">
       <Component Id="GenericBizTalkMSI.wxs" Guid="*">
         <File Id="GenericBizTalkMSI.wxs" Name="GenericBizTalkMSI.wxs" KeyPath="yes" Source="..\Developer\GenericBizTalkMSI.wxs" />
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="Developer" FileSource="..\Developer">
-      <Component Id="MigrateToProjectFolderStructure.cmd" Guid="*">
-        <File Id="MigrateToProjectFolderStructure.cmd" Name="MigrateToProjectFolderStructure.cmd" KeyPath="yes" Source="..\Developer\MigrateToProjectFolderStructure.cmd" />
       </Component>
     </DirectoryRef>
   </Fragment>
@@ -168,14 +159,6 @@
     <DirectoryRef Id="WiX" FileSource="..\Developer\WiX">
       <Component Id="darice.cub" Guid="*">
         <File Id="darice.cub" Name="darice.cub" KeyPath="yes" Source="..\Developer\WiX\darice.cub" />
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-
-  <Fragment>
-    <DirectoryRef Id="Developer" FileSource="..\VisualStudioAddIn\VisualStudioAddIn.ProjectWizard\bin\release">
-      <Component Id="DFBTVisualStudioAddIn.ProjectWizard.dll" Guid="*">
-        <File Id="DFBTVisualStudioAddIn.ProjectWizard.dll" Name="DFBTVisualStudioAddIn.ProjectWizard.dll" Assembly=".net" KeyPath="yes" Source="..\VisualStudioAddIn\VisualStudioAddIn.ProjectWizard\bin\release\DFBTVisualStudioAddIn.ProjectWizard.dll" />
       </Component>
     </DirectoryRef>
   </Fragment>

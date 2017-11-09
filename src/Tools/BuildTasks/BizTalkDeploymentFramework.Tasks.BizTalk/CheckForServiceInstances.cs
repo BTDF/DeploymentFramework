@@ -15,13 +15,10 @@ namespace DeploymentFramework.BuildTasks
 {
     public class CheckForServiceInstances : Task
     {
-        private BizTalkOperations _operations;
         private string _applicationName;
 
         public CheckForServiceInstances()
         {
-            // connect to the BizTalk configuration database that corresponds to our group membership.
-            _operations = new BizTalkOperations(BizTalkGroupInfo.GroupDBServerName, BizTalkGroupInfo.GroupMgmtDBName);
         }
 
         /// <summary>
@@ -42,21 +39,24 @@ namespace DeploymentFramework.BuildTasks
         {
             this.Log.LogMessage("Checking for existing service instances associated with application '{0}'...", _applicationName);
 
-            // Get all service instances in the message box.
-            foreach (Instance instance in _operations.GetServiceInstances())
+            using (BizTalkOperations _operations = new BizTalkOperations())
             {
-                // We will only deal with instances that we can determine 
-                // which application it belongs to.
-                MessageBoxServiceInstance mbsi = instance as MessageBoxServiceInstance;
-                if (mbsi != null)
+                // Get all service instances in the message box.
+                foreach (Instance instance in _operations.GetServiceInstances())
                 {
-                    if (mbsi.Application == Application)
+                    // We will only deal with instances that we can determine 
+                    // which application it belongs to.
+                    MessageBoxServiceInstance mbsi = instance as MessageBoxServiceInstance;
+                    if (mbsi != null)
                     {
-                        this.Log.LogError(
-                            "There is at least one service instance associated with the '{0}' application [Instance Status = {1}]. An application be removed only when there are no associated service instances.",
-                            _applicationName,
-                            Enum.GetName(typeof(InstanceStatus), mbsi.InstanceStatus));
-                        return false;
+                        if (mbsi.Application == Application)
+                        {
+                            this.Log.LogError(
+                                "There is at least one service instance associated with the '{0}' application [Instance Status = {1}]. An application be removed only when there are no associated service instances.",
+                                _applicationName,
+                                Enum.GetName(typeof(InstanceStatus), mbsi.InstanceStatus));
+                            return false;
+                        }
                     }
                 }
             }

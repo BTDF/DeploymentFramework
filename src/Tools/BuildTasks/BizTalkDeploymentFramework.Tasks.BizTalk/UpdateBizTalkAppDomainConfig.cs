@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.XLANGs.BizTalk.CrossProcess;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -94,30 +95,22 @@ namespace DeploymentFramework.BuildTasks
             bool remove = bool.Parse(_remove);
 
             // If no AppDomainName AND no AppDomains, there is nothing to do
-            if (string.IsNullOrEmpty(_appDomainName) && (_appDomains == null || _appDomains.Length == 0))
+            if (string.IsNullOrWhiteSpace(_appDomainName) && (_appDomains == null || _appDomains.Length == 0))
             {
                 return true;
             }
 
             // If there is an AppDomainName but no AppDomains, then convert it into the AppDomains list
-            if (!string.IsNullOrEmpty(_appDomainName) && (_appDomains == null || _appDomains.Length == 0))
+            if (!string.IsNullOrWhiteSpace(_appDomainName) && (_appDomains == null || _appDomains.Length == 0))
             {
                 ConvertPropertiesToAppDomainsList();
             }
 
-            List<AppDomainSpec> adss = new List<AppDomainSpec>(config.AppDomains.AppDomainSpecs);
+            List<AppDomainSpec> adss = config.AppDomains.AppDomainSpecs.ToList();
 
             foreach (ITaskItem appDomain in _appDomains)
             {
-                AppDomainSpec ads = null;
-
-                foreach (AppDomainSpec adsx in adss)
-                {
-                    if (string.Compare(adsx.Name, appDomain.ItemSpec, true) == 0)
-                    {
-                        ads = adsx;
-                    }
-                }
+                AppDomainSpec ads = adss.FirstOrDefault(adsx => (string.Compare(adsx.Name, appDomain.ItemSpec, true) == 0));
 
                 if (remove)
                 {
@@ -141,18 +134,18 @@ namespace DeploymentFramework.BuildTasks
                         adss.Add(ads);
                     }
 
-                    if (!string.IsNullOrEmpty(appDomain.GetMetadata("SecondsIdleBeforeShutdown")))
+                    if (!string.IsNullOrWhiteSpace(appDomain.GetMetadata("SecondsIdleBeforeShutdown")))
                     {
                         ads.SecondsIdleBeforeShutdown = int.Parse(appDomain.GetMetadata("SecondsIdleBeforeShutdown"));
                     }
 
-                    if (!string.IsNullOrEmpty(appDomain.GetMetadata("SecondsEmptyBeforeShutdown")))
+                    if (!string.IsNullOrWhiteSpace(appDomain.GetMetadata("SecondsEmptyBeforeShutdown")))
                     {
                         ads.SecondsEmptyBeforeShutdown = int.Parse(appDomain.GetMetadata("SecondsEmptyBeforeShutdown"));
                     }
 
                     string configFilePath = appDomain.GetMetadata("ConfigurationFilePath");
-                    if (!string.IsNullOrEmpty(configFilePath))
+                    if (!string.IsNullOrWhiteSpace(configFilePath))
                     {
                         configFilePath = System.IO.Path.GetFullPath(configFilePath);
 
@@ -170,7 +163,7 @@ namespace DeploymentFramework.BuildTasks
                     }
 
                     string applicationBase = appDomain.GetMetadata("ApplicationBase");
-                    if (!string.IsNullOrEmpty(applicationBase))
+                    if (!string.IsNullOrWhiteSpace(applicationBase))
                     {
                         if (!applicationBase.EndsWith("\\"))
                         {
@@ -187,7 +180,7 @@ namespace DeploymentFramework.BuildTasks
                     }
 
                     string privateBinPath = appDomain.GetMetadata("PrivateBinPath");
-                    if (!string.IsNullOrEmpty(privateBinPath))
+                    if (!string.IsNullOrWhiteSpace(privateBinPath))
                     {
                         string[] privateBinPaths = privateBinPath.Split(';');
 
@@ -228,7 +221,7 @@ namespace DeploymentFramework.BuildTasks
                 {
                     string rule = patternAssignmentRule.GetMetadata("AssemblyNamePattern");
 
-                    if (!string.IsNullOrEmpty(rule))
+                    if (!string.IsNullOrWhiteSpace(rule))
                     {
                         patternAssignmentRules.Add(rule);
                     }
@@ -236,8 +229,7 @@ namespace DeploymentFramework.BuildTasks
 
                 if (patternAssignmentRules.Count > 0)
                 {
-                    string[] patternAssignmentRulesArray = patternAssignmentRules.ToArray();
-                    newAppDomain.SetMetadata("AssemblyNameRegexes", string.Join(";", patternAssignmentRulesArray));
+                    newAppDomain.SetMetadata("AssemblyNameRegexes", string.Join(";", patternAssignmentRules));
                 }
             }
 
@@ -259,7 +251,7 @@ namespace DeploymentFramework.BuildTasks
         /// </summary>
         private void UpdateAssignmentRules(AppDomains adConfig, string appDomainName, string assemblyNameRegexes, string assemblyNames)
         {
-            if (string.IsNullOrEmpty(assemblyNameRegexes) && string.IsNullOrEmpty(assemblyNames))
+            if (string.IsNullOrWhiteSpace(assemblyNameRegexes) && string.IsNullOrWhiteSpace(assemblyNames))
             {
                 assemblyNameRegexes = _defaultAssemblyNameRegexes;
             }
@@ -281,12 +273,12 @@ namespace DeploymentFramework.BuildTasks
         /// <param name="adConfig"></param>
         private void UpdateExactAssignmentRules(AppDomains adConfig, string appDomainName, string assemblyNames)
         {
-            if (string.IsNullOrEmpty(assemblyNames))
+            if (string.IsNullOrWhiteSpace(assemblyNames))
             {
                 return;
             }
 
-            List<ExactAssignmentRule> ears = new List<ExactAssignmentRule>(adConfig.ExactAssignmentRules);
+            List<ExactAssignmentRule> ears = adConfig.ExactAssignmentRules.ToList();
 
             string[] assemblyNamesSplit = assemblyNames.Split(';');
 
@@ -308,7 +300,7 @@ namespace DeploymentFramework.BuildTasks
 
         private void RemoveExactAssignmentRules(AppDomains adConfig, string appDomainName)
         {
-            List<ExactAssignmentRule> ears = new List<ExactAssignmentRule>(adConfig.ExactAssignmentRules);
+            List<ExactAssignmentRule> ears = adConfig.ExactAssignmentRules.ToList();
 
             ears.RemoveAll(ear => (string.Compare(ear.AppDomainName, appDomainName, true) == 0));
 
@@ -321,12 +313,12 @@ namespace DeploymentFramework.BuildTasks
         /// <param name="adConfig"></param>
         private void UpdatePatternAssignmentRules(AppDomains adConfig, string appDomainName, string assemblyNameRegexes)
         {
-            if (string.IsNullOrEmpty(assemblyNameRegexes))
+            if (string.IsNullOrWhiteSpace(assemblyNameRegexes))
             {
                 return;
             }
 
-            List<PatternAssignmentRule> pars = new List<PatternAssignmentRule>(adConfig.PatternAssignmentRules);
+            List<PatternAssignmentRule> pars = adConfig.PatternAssignmentRules.ToList();
 
             string[] assemblyNameRegexesSplit = assemblyNameRegexes.Split(';');
 
@@ -348,7 +340,7 @@ namespace DeploymentFramework.BuildTasks
 
         private void RemovePatternAssignmentRules(AppDomains adConfig, string appDomainName)
         {
-            List<PatternAssignmentRule> pars = new List<PatternAssignmentRule>(adConfig.PatternAssignmentRules);
+            List<PatternAssignmentRule> pars = adConfig.PatternAssignmentRules.ToList();
 
             pars.RemoveAll(par => (string.Compare(par.AppDomainName, appDomainName, true) == 0));
 

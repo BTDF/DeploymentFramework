@@ -6,6 +6,8 @@
 -->
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Installer">
+  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="CopyVirtualDirectoryFiles" />
+
   <PropertyGroup>
     <ObjDir>obj\$(Configuration)</ObjDir>
     <IntermediateOutputPath Condition="'$(IntermediateOutputPath)' == ''">$(ObjDir)</IntermediateOutputPath>
@@ -71,12 +73,13 @@
     <MakeDir Directories="$(RedistDir)\DeployResults" />
 
     <!-- Force MSBuild to expand the item spec into physical file specs -->
-    <CreateItem Include="@(VDirList->'%(Physdir)\**\*.*')" AdditionalMetadata="Path=%(Physdir)" Condition="'$(IncludeVirtualDirectories)' == 'true'">
+    <CreateItem Include="@(VDirList->'%(Physdir)\**\*.*')" AdditionalMetadata="Path=%(Physdir)" Condition="'$(IncludeVirtualDirectories)' == 'true' and '@(VDirList)' != ''">
       <Output TaskParameter="Include" ItemName="IncludeVirtualDirectoriesSourceGroup" />
     </CreateItem>
 
-    <MakeDir Directories="$(RedistDir)\Vdirs\%(VDirList.Physdir)" Condition="'$(IncludeVirtualDirectories)' == 'true'" />
-    <Copy SourceFiles="@(IncludeVirtualDirectoriesSourceGroup)" DestinationFolder="$(RedistDir)\Vdirs\%(Physdir)\%(RecursiveDir)" Condition="'$(IncludeVirtualDirectories)' == 'true'" />
+    <MakeDir Directories="$(RedistDir)\Vdirs\%(VDirList.Physdir)" Condition="'@(IncludeVirtualDirectoriesSourceGroup)' != ''" />
+    <Copy SourceFiles="@(IncludeVirtualDirectoriesSourceGroup)" DestinationFolder="$(RedistDir)\Vdirs\%(Physdir)\%(RecursiveDir)" Condition="'@(IncludeVirtualDirectoriesSourceGroup)' != ''" />
+    <CopyVirtualDirectoryFiles Items="@(IISApp)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" RedistPath="$(RedistDir)" Condition="'@(IISApp)' != ''" />
 
     <!-- Grab miscellaneous files -->
     <Copy DestinationFolder="$(RedistDir)\Deployment" SourceFiles="InstallWizard.xml"/>
