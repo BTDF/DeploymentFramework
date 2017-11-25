@@ -8,7 +8,6 @@ using System;
 using System.ComponentModel;
 using System.Drawing.Design;
 using Microsoft.Practices.EnterpriseLibrary.Validation.Validators;
-using Microsoft.Practices.Modeling.Common.Design;
 using Microsoft.Practices.Modeling.ExtensionProvider.Extension;
 using Microsoft.Practices.Modeling.ExtensionProvider.Metadata;
 using Microsoft.Practices.Services.ItineraryDsl;
