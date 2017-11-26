@@ -16,11 +16,11 @@
 
     <?if $(var.PackageComments) = ""?>
     <Package Description="$(var.PackageDescription)"
-             InstallerVersion="300" Compressed="yes" InstallScope="perMachine"/>
+             InstallerVersion="200" Compressed="yes" InstallScope="perMachine"/>
     <?else?>
     <Package Description="$(var.PackageDescription)"
              Comments="$(var.PackageComments)"
-             InstallerVersion="300" Compressed="yes" InstallScope="perMachine"/>
+             InstallerVersion="200" Compressed="yes" InstallScope="perMachine"/>
     <?endif?>
 
     <Media Id="1" EmbedCab="yes" Cabinet="BizTalkSolution.cab" />
@@ -64,7 +64,7 @@
     <?if $(var.ExplicitInstallDir) != ""?>
     <SetProperty Id="INSTALLDIR" Value="$(var.ExplicitInstallDir)" Sequence="both" Before="AppSearch" />
     <?endif?>
-    
+
     <Property Id="LicenseAccepted" Value="1" />
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
     <Property Id='DISABLEADVTSHORTCUTS' Value='1' />
@@ -77,12 +77,8 @@
 
     <SetProperty Id="DEPLOYMENTDIR" Value="[INSTALLDIR]\Deployment" Sequence="both" After="CostFinalize"/>
 
-    <SetProperty Id="MSBUILDPATH" Action="SetMSBUILDPATH2010" Value="[NETFRAMEWORK40FULLINSTALLROOTDIR]\MSBuild.exe" Sequence="both" After="CostFinalize">
-      <![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2010" OR BTS_PRODUCTNAME = "Microsoft BizTalk Server 2013" OR BTS_PRODUCTNAME = "Microsoft BizTalk Server 2013 R2"]]>
-    </SetProperty>
-    <SetProperty Id="MSBUILDTOOLSVER" Action="SetMSBUILDTOOLSVER2010" Value="/tv:4.0" Sequence="both" After="SetMSBUILDPATH2010">
-      <![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2010" OR BTS_PRODUCTNAME = "Microsoft BizTalk Server 2013" OR BTS_PRODUCTNAME = "Microsoft BizTalk Server 2013 R2"]]>
-    </SetProperty>
+    <SetProperty Id="MSBUILDPATH" Action="SetMSBUILDPATH2010" Value="[NETFRAMEWORK40FULLINSTALLROOTDIR]\MSBuild.exe" Sequence="both" After="CostFinalize" />
+    <SetProperty Id="MSBUILDTOOLSVER" Action="SetMSBUILDTOOLSVER2010" Value="/tv:4.0" Sequence="both" After="SetMSBUILDPATH2010" />
 
     <!-- Set up for checkbox to auto-start deploy script at end of install wizard -->
     <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Start deploying to BizTalk when I click Finish" />

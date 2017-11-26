@@ -25,11 +25,11 @@
   <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="ItemGroupFromSeparatedList" />
   <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="GeneratePdbCopyItemGroups" />
   <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="GenerateAssemblyNamesItemGroup" />
-  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="ConfigureVirtualDirectory" />
-  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="ConfigureVirtualDirectoryNtfsPermissions" />
-  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="ConfigureAppPool" />
-  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="ConfigureWebServiceExtension" />
-  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="RecycleAppPool" />
+  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="ConfigureIISVirtualDirectory" />
+  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="ConfigureIISVirtualDirectoryNtfsPermissions" />
+  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="ConfigureIISAppPool" />
+  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="ConfigureIISWebServiceExtension" />
+  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="RecycleAppPool" />
   <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="StripFileSpecFromPath" />
   <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="SetUpFileAdapterPaths" />
   <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="PopulateRulePoliciesMetadata" />
@@ -199,7 +199,7 @@
 
     <IISAppPoolDefaultDeployAction Condition="'$(IISAppPoolDefaultDeployAction)' == ''">CreateOrUpdate</IISAppPoolDefaultDeployAction>
     <IISAppPoolDefaultUndeployAction Condition="'$(IISAppPoolDefaultUndeployAction)' == ''">Delete</IISAppPoolDefaultUndeployAction>
-    
+
     <!-- Specifies whether to edit the NTFS permissions of an IIS virtual directory path to grant rights to the
         aspnet/AppPool identity account. -->
     <ModifyNTFSPermissionsOnVDirPaths Condition="'$(ModifyNTFSPermissionsOnVDirPaths)' == ''">true</ModifyNTFSPermissionsOnVDirPaths>
@@ -623,7 +623,7 @@
     <BtsDir Condition="'$(BtsDir)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\BizTalk Server\3.0', 'InstallPath', null, RegistryView.Registry64, RegistryView.Registry32))</BtsDir>
 
     <BizTalkProductName Condition="'$(BizTalkProductName)' == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\BizTalk Server\3.0', 'ProductName', null, RegistryView.Registry64, RegistryView.Registry32))</BizTalkProductName>
-    
+
     <BizTalkVersion Condition="'$(BizTalkProductName)' == 'Microsoft BizTalk Server 2010'">BTS2010</BizTalkVersion>
     <BizTalkVersion Condition="'$(BizTalkProductName)' == 'Microsoft BizTalk Server 2013'">BTS2013</BizTalkVersion>
     <BizTalkVersion Condition="'$(BizTalkProductName)' == 'Microsoft BizTalk Server 2013 R2'">BTS2013R2</BizTalkVersion>
@@ -632,7 +632,7 @@
     <DotNetFrameworkVersion Condition="'$(DotNetFrameworkVersion)' == '' and '$(BizTalkVersion)' == 'BTS2013'">Version45</DotNetFrameworkVersion>
     <DotNetFrameworkVersion Condition="'$(DotNetFrameworkVersion)' == '' and '$(BizTalkVersion)' == 'BTS2013R2'">Version45</DotNetFrameworkVersion>
 
-    <FrameworkDir Condition="'$(FrameworkDir)' == ''">$([Microsoft.Build.Utilities.ToolLocationHelper]::GetPathToDotNetFramework(Microsoft.Build.Utilities.TargetDotNetFrameworkVersion.$(DotNetFrameworkVersion)))</FrameworkDir>
+    <DotNetFrameworkDir Condition="'$(DotNetFrameworkDir)' == ''">$([Microsoft.Build.Utilities.ToolLocationHelper]::GetPathToDotNetFramework(Microsoft.Build.Utilities.TargetDotNetFrameworkVersion.$(DotNetFrameworkVersion)))</DotNetFrameworkDir>
 
     <!-- Set up DeploymentFrameworkRootDir -->
     <!--   We need to convert a user-specified value of DeploymentFrameworkRootDir to a fully-qualified path. -->
@@ -691,7 +691,7 @@
   <Target Name="PrintHeader">
     <Message Text="Using Deployment Framework Install Path '$(DeploymentFrameworkRootDir)'." />
     <Message Text="Using Deployment Framework Tools Path '$(DeployTools)'." />
-    <Message Text="Using .NET Framework Install Path '$(FrameworkDir)'." />
+    <Message Text="Using .NET Framework Install Path '$(DotNetFrameworkDir)'." />
     <Message Text="Using BizTalk Install Path '$(BtsDir)'." />
     <Message Text="Using BizTalk ESB Toolkit Install Path '$(EsbDir)'." Condition="'$(EsbDir)' != ''" />
     <Message Text="Detected IIS $(IisMajorVersion)" Condition="'$(IisMajorVersion)' != ''" />
@@ -767,7 +767,7 @@
       <TargetsAfterLoadPropsFromEnvSettings>DeployBizTalkMgmtDB_$(DeployBizTalkMgmtDB)</TargetsAfterLoadPropsFromEnvSettings>
     </PropertyGroup>
   </Target>
-  
+
   <!-- Note this target is consulting the deployBizTalkMgmtDB property, which is generally passed in on the command line,
         to determine whether we will be deploying to the biztalk management database. -->
   <Target Name="ServerUndeploy" DependsOnTargets="SetServerUndeployProperties;LoadPropsFromEnvSettingsThenExecute" />
@@ -778,8 +778,8 @@
     </PropertyGroup>
   </Target>
 
-  <!-- Supports server deployments that include the BizTalk management database. -->
-  <!-- In this case, do a full deployment. -->
+    <!-- Supports server deployments that include the BizTalk management database. -->
+    <!-- In this case, do a full deployment. -->
   <Target Name="DeployBizTalkMgmtDB_true" DependsOnTargets="DevDeploy" />
 
   <PropertyGroup>
@@ -792,10 +792,14 @@
       PreprocessAndConfigureLog4net;
       CustomDeployTarget;
       ConditionalHostStop;
+      DeploySchemasToGac;
       DeploySharedAssemblies;
       DeployExternalAssemblies;
       DeployComponents;
       DeployPipelineComponents;
+      DeployPipelinesToGac;
+      DeployTransformsToGac;
+      DeployOrchestrationsToGac;
       DeployCustomFunctoids;
       DeployVDirs;
       DeployBtsNtSvcExeConfig;
@@ -804,23 +808,28 @@
     </DeployBizTalkMgmtDBfalseDependsOn>
   </PropertyGroup>
 
-  <!-- Used for a deployment that will NOT deploy assemblies to the BizTalk management database. 
-        Only one server in a BizTalk group should actually deploy assemblies to the management database. -->
-  <Target Name="DeployBizTalkMgmtDB_false" DependsOnTargets="$(DeployBizTalkMgmtDBfalseDependsOn)">
-    <!-- Support server deployments that do not include BizTalk management database. -->
-    <!-- Need to handle these differently than standard targets - just putting in gac... -->
-
+  <Target Name="DeploySchemasToGac">
     <Exec Command="&quot;$(Gacutil)&quot; /f /i &quot;@(SchemasQualified)&quot;" Condition="'$(IncludeSchemas)' == 'true' and '%(Identity)' == '%(Identity)'" />
+  </Target>
 
+  <Target Name="DeployPipelinesToGac">
     <Exec Command="&quot;$(Gacutil)&quot; /f /i &quot;@(PipelinesQualified)&quot;" Condition="'$(IncludePipelines)' == 'true' and '%(Identity)' == '%(Identity)'" />
+  </Target>
 
+  <Target Name="DeployTransformsToGac">
     <Exec Command="&quot;$(Gacutil)&quot; /f /i &quot;@(TransformsQualified)&quot;" Condition="'$(IncludeTransforms)' == 'true' and '%(Identity)' == '%(Identity)'" />
+  </Target>
 
+  <Target Name="DeployOrchestrationsToGac">
     <Exec Command="&quot;$(Gacutil)&quot; /f /i &quot;@(OrchestrationsQualified)&quot;" Condition="'$(IncludeOrchestrations)' == 'true' and '%(Identity)' == '%(Identity)'" />
   </Target>
 
+  <!-- Used for a deployment that will NOT deploy assemblies to the BizTalk management database. 
+        Only one server in a BizTalk group should actually deploy assemblies to the management database. -->
+  <Target Name="DeployBizTalkMgmtDB_false" DependsOnTargets="$(DeployBizTalkMgmtDBfalseDependsOn)" />
+
   <!-- Supports server undeployments that include undeploying from the BizTalk management database. -->
-  <!-- In this case, do a standard deployment. -->
+    <!-- In this case, do a standard deployment. -->
   <Target Name="UndeployBizTalkMgmtDB_true" DependsOnTargets="DevUndeploy" />
 
   <PropertyGroup>
@@ -917,7 +926,7 @@
   <Target Name="UpdateOrchestration" DependsOnTargets="SetUpdateOrchestrationProperties;LoadPropsFromEnvSettingsThenExecute" />
 
   <Target Name="SetUpdateOrchestrationProperties">
-    <PropertyGroup>
+  <PropertyGroup>
       <TargetsAfterLoadPropsFromEnvSettings>_UpdateOrchestration</TargetsAfterLoadPropsFromEnvSettings>
     </PropertyGroup>
   </Target>
@@ -997,9 +1006,9 @@
   <Target Name="Deploy" DependsOnTargets="SetDeployProperties;LoadPropsFromEnvSettingsThenExecute" />
 
   <Target Name="SetDeployProperties">
-    <PropertyGroup>
+  <PropertyGroup>
       <DeploymentMode>Deploy</DeploymentMode>
-    </PropertyGroup>
+  </PropertyGroup>
 
     <Message Text="DEPLOYING APPLICATION TO BIZTALK..." />
 
@@ -1010,7 +1019,7 @@
   </Target>
 
   <Target Name="Undeploy" DependsOnTargets="SetUndeployProperties;LoadPropsFromEnvSettingsThenExecute" />
-  
+
   <Target Name="SetUndeployProperties">
     <PropertyGroup>
       <DeploymentMode>Undeploy</DeploymentMode>
@@ -1076,10 +1085,10 @@
     </GetPropsFromEnvSettingsDelimited>
   </Target>
 
-  <!-- Since host instance processes will be hanging on to DLLs... -->
+    <!-- Since host instance processes will be hanging on to DLLs... -->
   <Target Name="ConditionalHostStop" Condition="'$(DeployPDBsToGac)' == 'true' and '$(SkipUndeploy)' == 'false'" DependsOnTargets="StopBizTalk" />
 
-  <!-- Reset BizTalk hosts and IIS -->
+    <!-- Reset BizTalk hosts and IIS -->
   <!-- An iisreset is needed with http & the isolated host since your binaries will be loaded into IIS processes -->
   <Target Name="_BounceBizTalk">
     <CallTarget Targets="ResetIIS" />
@@ -1090,7 +1099,7 @@
 
     <OnError ExecuteTargets="PauseForError" />
   </Target>
-  
+
   <Target Name="BounceBizTalk" DependsOnTargets="SetBounceBizTalkProperties;LoadPropsFromEnvSettingsThenExecute" />
 
   <Target Name="SetBounceBizTalkProperties">
@@ -1125,7 +1134,7 @@
   <Target Name="BounceSelectedBizTalkHosts" Condition="'@(BizTalkHosts)' != '' and '$(SkipHostInstancesRestart)' != 'true'">
     <ControlBizTalkHostInstance Mode="Restart" HostNames="@(BizTalkHosts)" />
   </Target>
-  
+
   <Target Name="ResetIIS" Condition="'$(SkipIISReset)' == 'false'">
     <Exec Command="iisreset.exe /noforce /restart /timeout:$(IisResetTime)" Condition="'@(IISAppPool)' == ''" />
     <RecycleAppPool Items="@(IISAppPool)" Condition="'@(IISAppPool)' != ''" />
@@ -1166,7 +1175,7 @@
 
     <CheckXmlSyntax XmlFilenames="$(MSBuildProjectDirectory)\$(PortBindings)" />
   </Target>
-  
+
   <Target Name="PreprocessBindings" Condition="'$(IncludeMessagingBindings)' == 'true'" DependsOnTargets="SetPreprocessBindingsProperties;LoadPropsFromEnvSettingsThenExecute" />
 
   <Target Name="SetPreprocessBindingsProperties">
@@ -1361,7 +1370,7 @@
 
     <Message Text="Running installutil.exe on components..." Condition="'$(IncludeInstallUtilForComponents)' == 'true'" />
     <Exec
-      Command="$(FrameworkDir)\installutil.exe /ShowCallStack &quot;@(ComponentsQualified)&quot;"
+      Command="$(DotNetFrameworkDir)\installutil.exe /ShowCallStack &quot;@(ComponentsQualified)&quot;"
       Condition="'$(IncludeInstallUtilForComponents)' == 'true' and %(Identity) == %(Identity)" />
     <Message Text="Finished running installutil.exe on components." Condition="'$(IncludeInstallUtilForComponents)' == 'true'" />
   </Target>
@@ -1380,7 +1389,7 @@
     <Exec Command="&quot;$(Gacutil)&quot; /u &quot;@(ComponentAssemblyNamesGroup)&quot;" Condition="%(Identity) == %(Identity)" />
 
     <Exec
-      Command="$(FrameworkDir)\installutil.exe /u /ShowCallStack &quot;@(ComponentsQualified)&quot;"
+      Command="$(DotNetFrameworkDir)\installutil.exe /u /ShowCallStack &quot;@(ComponentsQualified)&quot;"
       Condition="'$(IncludeInstallUtilForComponents)' == 'true' and %(Identity) == %(Identity)" />
   </Target>
 
@@ -1547,7 +1556,7 @@
 
     <OnError ExecuteTargets="PauseForError" />
   </Target>
-  
+
   <Target Name="DeployVocabAndRules" Condition="'$(IncludeVocabAndRules)' == 'true'" DependsOnTargets="SetDeployVocabAndRulesProperties;LoadPropsFromEnvSettingsThenExecute" />
 
   <Target Name="SetDeployVocabAndRulesProperties">
@@ -1586,7 +1595,7 @@
       Command="&quot;$(DeployTools)\DeployBTRules.exe&quot; /vocabularyName &quot;@(RuleVocabulariesQualifiedPlus->'%(PolicyName)')&quot; /ruleSetVersion &quot;%(PolicyVersion)&quot; /unpublish /undeploy"
       Condition="'%(Identity)' == '%(Identity)' and '@(RuleVocabulariesQualifiedPlus)' != ''" />
   </Target>
-  
+
   <Target Name="UndeployVocabAndRules" Condition="'$(IncludeVocabAndRules)' == 'true'" DependsOnTargets="SetUndeployVocabAndRulesProperties;LoadPropsFromEnvSettingsThenExecute" />
 
   <Target Name="SetUndeployVocabAndRulesProperties">
@@ -1620,7 +1629,7 @@
 
     <OnError ExecuteTargets="PauseForError" />
   </Target>
-  
+
   <Target Name="DeploySSO" Condition="'$(IncludeSSO)' == 'true'" DependsOnTargets="SetDeploySSOProperties;LoadPropsFromEnvSettingsThenExecute" />
 
   <Target Name="SetDeploySSOProperties">
@@ -1653,7 +1662,7 @@
       <UndeployAction>Delete</UndeployAction>
     </IISApp>
   </ItemDefinitionGroup>
-  
+
   <PropertyGroup>
     <DeployVDirsDependsOn>
       VDirListItemGroupGuard;
@@ -1663,7 +1672,7 @@
       DeployNTFSPermissionsOnVDirPaths;
     </DeployVDirsDependsOn>
   </PropertyGroup>
-  
+
   <Target Name="DeployVDirs" DependsOnTargets="$(DeployVDirsDependsOn)" Condition="'$(IncludeVirtualDirectories)' == 'true'" />
 
   <PropertyGroup>
@@ -1673,7 +1682,7 @@
       UndeployIISAppPools
     </UndeployVDirsDependsOn>
   </PropertyGroup>
-
+	
   <Target Name="UndeployVDirs" DependsOnTargets="$(UndeployVDirsDependsOn)" Condition="'$(IncludeVirtualDirectories)' == 'true' and '$(SkipUndeploy)' == 'false'" />
 
   <Target Name="VDirListItemGroupGuard" Condition="'@(VDirList)' != ''">
@@ -1681,31 +1690,31 @@
   </Target>
 
   <Target Name="DeployNTFSPermissionsOnVDirPaths" Condition="'$(ModifyNTFSPermissionsOnVDirPaths)' == 'true'">
-    <ConfigureVirtualDirectoryNtfsPermissions Items="@(IISApp)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Deploy" />
+    <ConfigureIISVirtualDirectoryNtfsPermissions Items="@(IISApp)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Deploy" />
   </Target>
-  
+
   <Target Name="DeployIISAppPools" Condition="'@(IISAppPool)' != ''">
-    <ConfigureAppPool Items="@(IISAppPool)"  MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Deploy" />
+    <ConfigureIISAppPool Items="@(IISAppPool)"  MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Deploy" />
   </Target>
 
   <Target Name="UndeployIISAppPools" Condition="'@(IISAppPool)' != ''">
-    <ConfigureAppPool Items="@(IISAppPool)"  MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Undeploy" />
+    <ConfigureIISAppPool Items="@(IISAppPool)"  MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Undeploy" />
   </Target>
 
   <Target Name="DeployIISApplications" Condition="'@(IISApp)' != ''">
-    <ConfigureVirtualDirectory Items="@(IISApp)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Deploy" />
+    <ConfigureIISVirtualDirectory Items="@(IISApp)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Deploy" />
   </Target>
 
   <Target Name="UndeployIISApplications" Condition="'@(IISApp)' != ''">
-    <ConfigureVirtualDirectory Items="@(IISApp)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Undeploy" />
+    <ConfigureIISVirtualDirectory Items="@(IISApp)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Undeploy" />
   </Target>
 
   <Target Name="DeployIISExtensions" Condition="'@(IISApp)' != ''">
-    <ConfigureWebServiceExtension Items="@(IISApp)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Deploy" />
+    <ConfigureIISWebServiceExtension Items="@(IISApp)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Deploy" />
   </Target>
 
   <Target Name="UndeployIISExtensions" Condition="'@(IISApp)' != ''">
-    <ConfigureWebServiceExtension Items="@(IISApp)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Undeploy" />
+    <ConfigureIISWebServiceExtension Items="@(IISApp)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Undeploy" />
   </Target>
 
   <!-- This target imports the binding file into BizTalk -->
@@ -1765,7 +1774,7 @@
     <ControlBizTalkAppStartOption
       Condition="'$(EnableAllReceiveLocationsOnDeploy)' == 'false' and '$(StartReferencedApplicationsOnDeploy)' == 'false'">StartAllOrchestrations,StartAllSendPortGroups,StartAllSendPorts,DeployAllPolicies</ControlBizTalkAppStartOption>
   </PropertyGroup>
-  
+
   <Target Name="StartApplication" Condition="'$(StartApplicationOnDeploy)' == 'true'" DependsOnTargets="StartApplicationViaBizTalk;StartTheApplication" />
 
   <Target Name="StartApplicationViaBizTalk" Condition="'$(UseLegacyApplicationControl)' == 'true'">
@@ -1918,7 +1927,7 @@
 
     <OnError ExecuteTargets="PauseForError" />
   </Target>
-  
+
   <Target Name="TerminateServiceInstances" DependsOnTargets="SetTerminateServiceInstancesProperties;LoadPropsFromEnvSettingsThenExecute" />
 
   <Target Name="SetTerminateServiceInstancesProperties">

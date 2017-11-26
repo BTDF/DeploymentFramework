@@ -11,7 +11,6 @@
              AllowAdvertise="no" TypicalDefault="install" Description="Developer tools, including tools for building deployment MSI, etc.">
       <ComponentRef Id="RedistComponentGroup.xslt" />
       <ComponentRef Id="GenericBizTalkMSI.wxs" />
-      <ComponentRef Id="MigrateToProjectFolderStructure.cmd"/>
       <ComponentRef Id="candle.exe" />
       <ComponentRef Id="candle.exe.config" />
       <ComponentRef Id="CPL.TXT" />
@@ -28,7 +27,6 @@
       <ComponentRef Id="WixVsExtension.dll" />
       <ComponentRef Id="WixNetFxExtension.dll" />
       <ComponentRef Id="darice.cub"/>
-      <ComponentRef Id="DFBTVisualStudioAddIn.ProjectWizard.dll"/>
       <ComponentRef Id="InstallWizard.xml"/>
       <ComponentRef Id="License.rtf"/>
       <ComponentRef Id="Deployment.btdfproj"/>
@@ -49,13 +47,6 @@
     <DirectoryRef Id="Developer" FileSource="..\Developer">
       <Component Id="GenericBizTalkMSI.wxs" Guid="*">
         <File Id="GenericBizTalkMSI.wxs" Name="GenericBizTalkMSI.wxs" KeyPath="yes" Source="..\Developer\GenericBizTalkMSI.wxs" />
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="Developer" FileSource="..\Developer">
-      <Component Id="MigrateToProjectFolderStructure.cmd" Guid="*">
-        <File Id="MigrateToProjectFolderStructure.cmd" Name="MigrateToProjectFolderStructure.cmd" KeyPath="yes" Source="..\Developer\MigrateToProjectFolderStructure.cmd" />
       </Component>
     </DirectoryRef>
   </Fragment>
@@ -173,14 +164,6 @@
   </Fragment>
 
   <Fragment>
-    <DirectoryRef Id="Developer" FileSource="..\VisualStudioAddIn\VisualStudioAddIn.ProjectWizard\bin\release">
-      <Component Id="DFBTVisualStudioAddIn.ProjectWizard.dll" Guid="*">
-        <File Id="DFBTVisualStudioAddIn.ProjectWizard.dll" Name="DFBTVisualStudioAddIn.ProjectWizard.dll" Assembly=".net" KeyPath="yes" Source="..\VisualStudioAddIn\VisualStudioAddIn.ProjectWizard\bin\release\DFBTVisualStudioAddIn.ProjectWizard.dll" />
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-
-  <Fragment>
     <DirectoryRef Id="ProjectTemplate" FileSource="..\Developer\ProjectTemplate">
       <Component Id="InstallWizard.xml" Guid="*">
         <File Id="InstallWizard.xml" Name="InstallWizard.xml" KeyPath="yes" Source="..\Developer\ProjectTemplate\InstallWizard.xml" />
@@ -216,7 +199,7 @@
     </DirectoryRef>
   </Fragment>
   <Fragment>
-    <DirectoryRef Id="EnvironmentSettings" FileSource="..\Developer\ProjectTemplate">
+    <DirectoryRef Id="ProjectTemplate" FileSource="..\Developer\ProjectTemplate">
       <Component Id="SettingsFileGenerator.xml" Guid="*">
         <File Id="SettingsFileGenerator.xml" Name="SettingsFileGenerator.xml" KeyPath="yes" Source="..\Developer\ProjectTemplate\SettingsFileGenerator.xml" />
       </Component>
@@ -236,11 +219,6 @@
   <Fragment>
     <DirectoryRef Id="Developer">
       <Directory Id="ProjectTemplate" Name="ProjectTemplate" />
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="ProjectTemplate">
-      <Directory Id="EnvironmentSettings" Name="EnvironmentSettings" />
     </DirectoryRef>
   </Fragment>
 </Include>

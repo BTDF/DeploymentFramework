@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- 
   Deployment Framework for BizTalk
-  Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
+  Copyright (C) Thomas F. Abraham, Scott Colestock. All Rights Reserved.
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Installer">
-
   <PropertyGroup>
     <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
     <Platform Condition="'$(Platform)' == ''">x86</Platform>
@@ -91,13 +90,33 @@
 
   <!-- Define IIS virtual directory and AppPool -->
   <!--
-      IMPORTANT! When testing on a dev machine, you need to set the DeploymentFramework.Samples.IIS AppPool identity to
-      the Isolated Host user account. If you don't set this, you'll probably see 500 server errors.
-      We would need the password to auto configure the app pool, so for local deployments either manually
-      create it or configure an IISAppPool item with explicit values for UserName and Password.
-      If you manually create the app pool, the default UndeployAction of None will just leave it in place.
-      On a server deploy, the properties AppPoolUserName and AppPoolPassword are collected in
-      the wizard UI (InstallWizard.xml) and come into MSBuild via environment variables.
+      IMPORTANT!
+      The DeploymentFramework.Samples.IIS AppPool must use the identity of the BizTalk Isolated Host user account.
+      Otherwise, you'll probably see 500 internal server errors at runtime.
+
+      For LOCAL deployments:
+      1) Manually create an AppPool named DeploymentFramework.Samples.IIS, configured with the Isolated Host user identity,
+         and use the following XML in the ItemGroup below:
+        <IISAppPool Include="DeploymentFramework.Samples.IIS">
+          <DeployAction>None</DeployAction>
+          <UndeployAction>None</UndeployAction>
+        </IISAppPool>
+      Or 2) Let the Framework configure the AppPool using the following XML in the ItemGroup below:
+        <IISAppPool Include="DeploymentFramework.Samples.IIS">
+          <IdentityType>SpecificUser</IdentityType>
+          <UserName>[TYPE THE ISOLATED HOST ACCOUNT USERNAME HERE]</UserName>
+          <Password>[TYPE THE ISOLATED HOST ACCOUNT PASSWORD HERE]</Password>
+        </IISAppPool>
+  -->
+  <ItemGroup Condition="'$(Configuration)' != 'Server'">
+    <IISAppPool Include="DeploymentFramework.Samples.IIS">
+      <DeployAction>None</DeployAction>
+      <UndeployAction>None</UndeployAction>
+    </IISAppPool>
+  </ItemGroup>
+  <!--
+      On a server deploy (below), the properties AppPoolUserName and AppPoolPassword are collected in
+      the wizard UI (see InstallWizard.xml) and become MSBuild properties via environment variables.
   -->
   <ItemGroup Condition="'$(Configuration)' == 'Server'">
     <IISAppPool Include="DeploymentFramework.Samples.IIS">
@@ -106,13 +125,11 @@
       <Password>$(AppPoolPassword)</Password>
     </IISAppPool>
   </ItemGroup>
-  <ItemGroup Condition="'$(Configuration)' != 'Server'">
-    <IISAppPool Include="DeploymentFramework.Samples.IIS">
-      <DeployAction>None</DeployAction>
-      <UndeployAction>None</UndeployAction>
-    </IISAppPool>
-  </ItemGroup>
 
+  <!--
+      The web service .csproj file, IIS.Service.csproj, has been modified to execute the DeploymentFramework.BuildTasks.PublishWcfServiceArtifacts
+      MSBuild task. This task automates the WCF Service Publishing Wizard.
+  -->
   <ItemGroup>
     <IISApp Include="DeploymentFramework.Samples.IIS">
       <AppPoolName>DeploymentFramework.Samples.IIS</AppPoolName>

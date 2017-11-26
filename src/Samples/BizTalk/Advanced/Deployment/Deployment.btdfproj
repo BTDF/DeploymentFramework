@@ -38,12 +38,10 @@
     <PackageDescription>Deployment Framework for BizTalk Sample - Advanced</PackageDescription>
     <!-- NEVER change the ProductUpgradeCode. -->
     <ProductUpgradeCode>7D9B3AF0-2292-44dd-BDC5-D6258BB08BEA</ProductUpgradeCode>
-
     <!-- OPTIONAL property DefaultInstallDir can be used to override the default install path. -->
     <!-- [ProgramFilesFolder] is a Windows Installer variable that holds the default Program Files path. -->
     <!--<DefaultInstallDir>[ProgramFilesFolder]\BizTalkDeploymentSample</DefaultInstallDir>-->
   </PropertyGroup>
-
   <!-- Under TFS Team Build, set CustomizableOutDir property to true in TFS 2005/2008/2010 UpgradeTemplate. -->
   <!-- With a workflow build, copy the default template then modify the MSBuild task for the solution build. Set OutDir to blank and -->
   <!-- CommandLineArguments to String.Format("/p:SkipInvalidConfigurations=true;TeamBuildOutDir=""{0}"" {1}", BinariesDirectory, MSBuildArguments). -->
@@ -64,7 +62,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Create MSBuild properties from the values in our environment settings file named here. -->
+    <!-- We are asking the Deployment Framework to create MSBuild properties from the values
+        in our environment settings file that are named here. ssoAppUserGroup and ssoAppAdminGroup
+        should be supplied if they need to be different for SSO app creation than the defaults
+        specified in BizTalkDeploymentFramework.targets -->
     <PropsFromEnvSettings Include="SsoAppUserGroup;SsoAppAdminGroup" />
   </ItemGroup>
 
@@ -124,13 +125,33 @@
 
   <!-- Define IIS virtual directory and AppPool -->
   <!--
-      IMPORTANT! When testing on a dev machine, you need to set the BTDFAdvancedSample AppPool identity to
-      the Isolated Host user account. If you don't set this, you'll probably see 500 server errors.
-      We would need the password to auto configure the app pool, so for local deployments either manually
-      create it or configure an IISAppPool item with explicit values for UserName and Password.
-      If you manually create the app pool, the default UndeployAction of None will just leave it in place.
-      On a server deploy, the properties AppPoolUserName and AppPoolPassword are collected in
-      the wizard UI (InstallWizard.xml) and come into MSBuild via environment variables.
+      IMPORTANT!
+      The BTDFAdvancedSample AppPool must use the identity of the BizTalk Isolated Host user account.
+      Otherwise, you'll probably see 500 internal server errors at runtime.
+
+      For LOCAL deployments:
+      1) Manually create an AppPool named BTDFAdvancedSample, configured with the Isolated Host user identity,
+         and use the following XML in the ItemGroup below:
+        <IISAppPool Include="BTDFAdvancedSample">
+          <DeployAction>None</DeployAction>
+          <UndeployAction>None</UndeployAction>
+        </IISAppPool>
+      Or 2) Let the Framework configure the AppPool using the following XML in the ItemGroup below:
+        <IISAppPool Include="BTDFAdvancedSample">
+          <IdentityType>SpecificUser</IdentityType>
+          <UserName>[TYPE THE ISOLATED HOST ACCOUNT USERNAME HERE]</UserName>
+          <Password>[TYPE THE ISOLATED HOST ACCOUNT PASSWORD HERE]</Password>
+        </IISAppPool>
+  -->
+  <ItemGroup Condition="'$(Configuration)' != 'Server'">
+    <IISAppPool Include="BTDFAdvancedSample">
+      <DeployAction>None</DeployAction>
+      <UndeployAction>None</UndeployAction>
+    </IISAppPool>
+  </ItemGroup>
+  <!--
+      On a server deploy (below), the properties AppPoolUserName and AppPoolPassword are collected in
+      the wizard UI (see InstallWizard.xml) and become MSBuild properties via environment variables.
   -->
   <ItemGroup Condition="'$(Configuration)' == 'Server'">
     <IISAppPool Include="BTDFAdvancedSample">
@@ -139,19 +160,12 @@
       <Password>$(AppPoolPassword)</Password>
     </IISAppPool>
   </ItemGroup>
-  <ItemGroup Condition="'$(Configuration)' != 'Server'">
-    <IISAppPool Include="BTDFAdvancedSample">
-      <DeployAction>None</DeployAction>
-      <UndeployAction>None</UndeployAction>
-    </IISAppPool>
-  </ItemGroup>
 
   <ItemGroup>
     <IISApp Include="BTDFAdvancedSample">
       <AppPoolName>BTDFAdvancedSample</AppPoolName>
-      <SiteName>Default Web Site</SiteName>
-      <VirtualPath>/BTDFAdvancedSample</VirtualPath>
       <PhysicalPath>..\VDir_Advanced</PhysicalPath>
+      <VirtualPath>/BTDFAdvancedSample</VirtualPath>
       <IsapiFileName>BtsHttpReceive.dll</IsapiFileName>
     </IISApp>
   </ItemGroup>

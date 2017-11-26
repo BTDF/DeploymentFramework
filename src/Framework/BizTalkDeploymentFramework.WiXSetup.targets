@@ -6,7 +6,7 @@
 -->
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Installer">
-  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="CopyVirtualDirectoryFiles" />
+  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="CopyVirtualDirectoryFiles" />
 
   <PropertyGroup>
     <ObjDir>obj\$(Configuration)</ObjDir>
@@ -45,7 +45,7 @@
     <RemoveDir Directories="$(RedistDir)" />
     <MakeDir Directories="$(RedistDir)" />
   </Target>
-  
+
   <Target Name="CopyFrameworkToRedist">
     <ItemGroup>
       <FrameworkSourceGroup Include="$(DeploymentFrameworkDir)\**\*.*" Exclude="$(DeploymentFrameworkDir)\DeployTools\NUnitSubset\**\*.*" Condition="'$(IncludeDeploymentTest)' == 'false'" />
@@ -247,16 +247,16 @@
    -->
   <Target Name="Installer" DependsOnTargets="Clean;Redist">
     <Error Text="Please remove the backslash from the end of the DefaultInstallDir property's value." Condition="HasTrailingSlash('$(DefaultInstallDir)')" />
-  
+
     <PropertyGroup>
       <WixProjectFile Condition="'$(WixProjectFile)' == ''">$(DeploymentFrameworkDeveloperDir)\GenericBizTalkMSI.wxs</WixProjectFile>
       <WixHeatTransformFile Condition="'$(WixHeatTransformFile)' == ''">$(DeploymentFrameworkDeveloperDir)\RedistComponentGroup.xslt</WixHeatTransformFile>
     </PropertyGroup>
-    
+
     <ItemGroup>
       <WixProjectFileItem Include="$(WixProjectFile)" />
     </ItemGroup>
-    
+
     <PropertyGroup>
       <DeploymentTestProperty Condition="'@(DeploymentTest)' != ''">@(DeploymentTest)</DeploymentTestProperty>
       <WiXHeatArguments Condition="'$(WiXHeatArguments)' == ''">dir &quot;$(RedistDir)&quot; -scom -srd -sreg -cg RedistComponentGroup -ke -gg -dr INSTALLDIR -var var.redist_folder -o &quot;$(IntermediateOutputPath)\RedistComponentGroup.wxs&quot; -t &quot;$(WixHeatTransformFile)&quot;</WiXHeatArguments>

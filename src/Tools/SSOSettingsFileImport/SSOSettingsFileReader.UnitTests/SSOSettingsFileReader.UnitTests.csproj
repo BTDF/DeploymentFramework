@@ -65,15 +65,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SSOSettingsFileReaderBTS2013\SSOSettingsFileReaderBTS2013.csproj">
-      <Project>{1f46ccea-cc97-42ab-a152-1c0da5e6e191}</Project>
-      <Name>SSOSettingsFileReaderBTS2013</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\SSOSettingsFileReader\sn.snk">
       <Link>sn.snk</Link>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SSOSettingsFileReader\SSOSettingsFileReader.csproj">
+      <Project>{1F46CCEA-CC97-42AB-A152-1C0DA5E6E191}</Project>
+      <Name>SSOSettingsFileReader</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

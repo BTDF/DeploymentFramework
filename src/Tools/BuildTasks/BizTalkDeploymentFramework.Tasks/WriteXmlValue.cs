@@ -6,13 +6,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.XPath;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using System.IO;
 
 namespace DeploymentFramework.BuildTasks
 {
@@ -24,6 +23,7 @@ namespace DeploymentFramework.BuildTasks
         private ITaskItem[] _xmlFilenames;
         private string _xpath;
         private string _value;
+        private string _namespace;
 
         [Required]
         public ITaskItem[] XmlFilenames
@@ -46,6 +46,12 @@ namespace DeploymentFramework.BuildTasks
             set { _value = value; }
         }
 
+        public string Namespace
+        {
+            get { return _namespace; }
+            set { _namespace = value; }
+        }
+
         public override bool Execute()
         {
             bool success = true;
@@ -56,20 +62,33 @@ namespace DeploymentFramework.BuildTasks
 
                 try
                 {
-                    XDocument doc = XDocument.Load(ti.ItemSpec, LoadOptions.PreserveWhitespace);
+                    XmlDocument doc = new XmlDocument();
+                    doc.PreserveWhitespace = true;
+                    doc.Load(ti.ItemSpec);
 
-                    var elements = doc.XPathSelectElements(_xpath);
+                    XmlNodeList elements = null;
 
-                    int count = elements.Count();
+                    if (!string.IsNullOrEmpty(_namespace))
+                    {
+                        XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
+                        nsmgr.AddNamespace("ns", _namespace);
+                        elements = doc.SelectNodes(_xpath, nsmgr);
+                    }
+                    else
+                    {
+                        elements = doc.SelectNodes(_xpath);
+                    }
+
+                    int count = elements.Count;
 
                     if (count > 0)
                     {
-                        foreach (XElement elem in elements)
+                        foreach (XmlElement elem in elements)
                         {
-                            elem.Value = _value;
+                            elem.InnerText = _value;
                         }
 
-                        doc.Save(ti.ItemSpec, SaveOptions.DisableFormatting);
+                        doc.Save(ti.ItemSpec);
                         base.Log.LogMessage(MessageImportance.Normal, "Updated " + count.ToString() + " values in '" + ti.ItemSpec + "'.");
                     }
                     else
