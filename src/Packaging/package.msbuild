@@ -8,7 +8,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="4.0">
   <PropertyGroup>
     <Version>6_0_0</Version>
-    <InstallerVersion>6.0.91.0</InstallerVersion>
+    <InstallerVersion>6.0.111.0</InstallerVersion>
     <ProductID>018C4B8A-B453-49DD-91AD-3B20D0D1D428</ProductID>
   </PropertyGroup>
   
