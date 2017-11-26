@@ -2,7 +2,7 @@
 <SetEnvUIConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <DialogCaption>Deployment Framework for BizTalk Sample - IIS</DialogCaption>
   <SetEnvUIConfigItem>
-    <PromptText>Enter a domain-qualified account name for the IIS AppPool identity.  Ensure that this user is in the IIS_IUSRS security group.</PromptText>
+    <PromptText>Enter a domain-qualified account name for the IIS AppPool identity.  Ensure that this user is in the IIS_WPG security group.</PromptText>
     <PromptValue />
     <ValueType>Text</ValueType>
     <EnvironmentVarName>AppPoolUserName</EnvironmentVarName>

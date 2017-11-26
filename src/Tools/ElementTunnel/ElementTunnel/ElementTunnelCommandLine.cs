@@ -13,7 +13,6 @@ using clp = Genghis.CommandLineParser;
 
 namespace ElementTunnel
 {
-    [clp.ParserUsage("\nXML encodes/decodes content of element(s) by XPath. Applies escaping rules such\nas &gt; for '<'. Namespace decls, PIs, etc. of nested XML are not preserved.")]
     class ElementTunnelCommandLine : CommandLineParser
     {
         [clp.ValueUsage("Location of input file.", MatchPosition = false, ValueName = "inputFile", Name = "i", Optional = false)]

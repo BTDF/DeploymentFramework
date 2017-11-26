@@ -6,7 +6,7 @@
 -->
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Installer">
-  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="CopyVirtualDirectoryFiles" />
+  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="CopyVirtualDirectoryFiles" />
 
   <PropertyGroup>
     <ObjDir>obj\$(Configuration)</ObjDir>
@@ -24,146 +24,73 @@
   </PropertyGroup>
 
   <Target Name="InitWixDir">
-    <GetRegistryValue KeyName="$(WiXRegistryKey)" ValueName="InstallRoot" Condition="'$(WixDir)' == ''">
-      <Output TaskParameter="Value" PropertyName="WixDir"/>
-    </GetRegistryValue>
-
-    <CreateProperty Value="$(DeploymentFrameworkDeveloperDir)\WiX" Condition="'$(WixDir)' == ''">
-      <Output TaskParameter="Value" PropertyName="WixDir" />
-    </CreateProperty>
+    <PropertyGroup>
+      <WixDir Condition="'$(WixDir)' == ''">$([MSBuild]::GetRegistryValueFromView($(WiXRegistryKey), 'InstallRoot', null, RegistryView.Registry64, RegistryView.Registry32))</WixDir>
+      <WixDir Condition="'$(WixDir)' == ''">$(DeploymentFrameworkDeveloperDir)\WiX</WixDir>
+    </PropertyGroup>
 
     <Message Text="Using WiX Install Path '$(WixDir)'." />
-  </Target>
 
-  <Target Name="InitTargetDir">
     <!-- 
-        These CreateProperty calls are required because TargetDir and TargetPath are defined 
-        to contain an item list. We want that item list to be expanded so that it can be used
-        as a regular property value and not as an item-list-with-transform.
+        Required because TargetDir and TargetPath are defined to contain an item list.
+        We want that item list to be expanded so that it can be used as a
+        regular property value and not as an item-list-with-transform.
         -->
-    <CreateProperty Value="$(TargetDir)">
-      <Output TaskParameter="Value" PropertyName="TargetDir" />
-    </CreateProperty>
+    <PropertyGroup>
+      <TargetDir>$(TargetDir)</TargetDir>
+    </PropertyGroup>
   </Target>
 
-  <!--
-    Assemble an image of the redistributable directory structure by pulling files from various locations.
-   -->
-  <Target Name="Redist" DependsOnTargets="Bootstrap;SetWinVer;InitLog4netFile;GetSoftwarePaths;InitWixDir;InitializeAppName;CustomPreRedist;InitTargetDir">
-
-    <!-- Cleanup redist dir -->
+  <Target Name="InitRedistDir">
     <RemoveDir Directories="$(RedistDir)" />
     <MakeDir Directories="$(RedistDir)" />
+  </Target>
+  
+  <Target Name="CopyFrameworkToRedist">
+    <ItemGroup>
+      <FrameworkSourceGroup Include="$(DeploymentFrameworkDir)\**\*.*" Exclude="$(DeploymentFrameworkDir)\DeployTools\NUnitSubset\**\*.*" Condition="'$(IncludeDeploymentTest)' == 'false'" />
+      <FrameworkSourceGroup Include="$(DeploymentFrameworkDir)\**\*.*" Condition="'$(IncludeDeploymentTest)' == 'true'" />
+      <FrameworkTargetsSourceGroup Include="$(DeploymentFrameworkTargetsPath)*.*" />
+    </ItemGroup>
 
-    <!-- Force MSBuild to expand the item spec into physical file specs -->
-    <CreateItem Include="$(DeploymentFrameworkDir)\**\*.*" Exclude="$(DeploymentFrameworkDir)\DeployTools\NUnitSubset\**\*.*" Condition="'$(IncludeDeploymentTest)' == 'false'">
-      <Output TaskParameter="Include" ItemName="FrameworkSourceGroup" />
-    </CreateItem>
-    <CreateItem Include="$(DeploymentFrameworkDir)\**\*.*" Condition="'$(IncludeDeploymentTest)' == 'true'">
-      <Output TaskParameter="Include" ItemName="FrameworkSourceGroup" />
-    </CreateItem>
     <Copy DestinationFolder="$(RedistDir)\Deployment\Framework\%(RecursiveDir)" SourceFiles="@(FrameworkSourceGroup)"/>
 
-    <CreateItem Include="$(DeploymentFrameworkTargetsPath)*.*">
-      <Output TaskParameter="Include" ItemName="FrameworkTargetsSourceGroup" />
-    </CreateItem>
     <Copy DestinationFolder="$(RedistDir)\Deployment\Framework\%(RecursiveDir)" SourceFiles="@(FrameworkTargetsSourceGroup->'%(FullPath)')"/>
+  </Target>
 
-    <!-- Make sure we have directories we need -->
+  <Target Name="CreateDeployResultsInRedist">
     <MakeDir Directories="$(RedistDir)\DeployResults" />
+  </Target>
 
-    <!-- Force MSBuild to expand the item spec into physical file specs -->
-    <CreateItem Include="@(VDirList->'%(Physdir)\**\*.*')" AdditionalMetadata="Path=%(Physdir)" Condition="'$(IncludeVirtualDirectories)' == 'true' and '@(VDirList)' != ''">
-      <Output TaskParameter="Include" ItemName="IncludeVirtualDirectoriesSourceGroup" />
-    </CreateItem>
-
-    <MakeDir Directories="$(RedistDir)\Vdirs\%(VDirList.Physdir)" Condition="'@(IncludeVirtualDirectoriesSourceGroup)' != ''" />
-    <Copy SourceFiles="@(IncludeVirtualDirectoriesSourceGroup)" DestinationFolder="$(RedistDir)\Vdirs\%(Physdir)\%(RecursiveDir)" Condition="'@(IncludeVirtualDirectoriesSourceGroup)' != ''" />
+  <Target Name="CopyVirtualDirectoriesToRedist" Condition="'$(IncludeVirtualDirectories)' == 'true'">
     <CopyVirtualDirectoryFiles Items="@(IISApp)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" RedistPath="$(RedistDir)" Condition="'@(IISApp)' != ''" />
+  </Target>
 
-    <!-- Grab miscellaneous files -->
-    <Copy DestinationFolder="$(RedistDir)\Deployment" SourceFiles="InstallWizard.xml"/>
-    <Copy DestinationFolder="$(RedistDir)\Deployment" SourceFiles="UninstallWizard.xml"/>
-
-    <!-- Force MSBuild to expand the item spec into physical file specs -->
-    <CreateItem Include="$(MSBuildProjectDirectoryParent)\*.chm">
-      <Output TaskParameter="Include" ItemName="ChmSourceGroup" />
-    </CreateItem>
+  <Target Name="CopyChmToRedist">
+    <ItemGroup>
+      <ChmSourceGroup Include="$(MSBuildProjectDirectoryParent)\*.chm" />
+    </ItemGroup>
 
     <Copy DestinationFolder="$(RedistDir)\%(RecursiveDir)" SourceFiles="@(ChmSourceGroup)"/>
+  </Target>
 
+  <Target Name="CopyPortBindingsToRedist" Condition="'$(IncludeMessagingBindings)' == 'true'">
     <ItemGroupFromSeparatedList SeparatedList="$(PortBindings)" FormatString="$(MSBuildProjectDirectory)\{0}" ReverseList="false" Condition="'$(UsingMasterBindings)' == 'false'">
       <Output TaskParameter="ItemGroup" ItemName="RedistPortBindingsGroup" />
     </ItemGroupFromSeparatedList>
 
-    <Copy DestinationFolder="$(RedistDir)\Deployment" SourceFiles="@(RedistPortBindingsGroup)" Condition="'$(UsingMasterBindings)' == 'false' and '$(IncludeMessagingBindings)' == 'true'" />
+    <Copy DestinationFolder="$(RedistDir)\Deployment" SourceFiles="@(RedistPortBindingsGroup)" Condition="'$(UsingMasterBindings)' == 'false'" />
 
     <ItemGroupFromSeparatedList SeparatedList="$(PortBindingsMaster)" FormatString="$(MSBuildProjectDirectory)\{0}" ReverseList="false" Condition="'$(UsingMasterBindings)' == 'true'">
       <Output TaskParameter="ItemGroup" ItemName="RedistPortBindingsGroup" />
     </ItemGroupFromSeparatedList>
 
-    <Copy DestinationFolder="$(RedistDir)\Deployment" SourceFiles="@(RedistPortBindingsGroup)" Condition="'$(UsingMasterBindings)' == 'true' and '$(IncludeMessagingBindings)' == 'true'" />
+    <Copy DestinationFolder="$(RedistDir)\Deployment" SourceFiles="@(RedistPortBindingsGroup)" Condition="'$(UsingMasterBindings)' == 'true'" />
 
-    <CheckXmlSyntax XmlFilenames="@(RedistPortBindingsGroup)" Condition="'$(IncludeMessagingBindings)' == 'true'" />
+    <CheckXmlSyntax XmlFilenames="@(RedistPortBindingsGroup)" />
+  </Target>
 
-    <Copy DestinationFolder="$(RedistDir)\Deployment" SourceFiles="$(MSBuildProjectFile)"/>
-
-    <Copy DestinationFolder="$(RedistDir)\Deployment" SourceFiles="$(ProjectName).sln.deploy.include" Condition="Exists('$(ProjectName).sln.deploy.include')" />
-
-    <!-- Grab all our assemblies of various flavors. -->
-
-    <!-- Schemas -->
-    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(SchemasQualified)" Condition="'$(IncludeSchemas)' == 'true'"/>
-    <Copy SourceFiles="@(Schemas->'%(LocationPath)\%(Filename).pdb')" DestinationFiles="@(Schemas->'$(RedistDir)\%(Filename).pdb')" Condition="'$(IncludeSchemas)' == 'true' and Exists('%(LocationPath)\%(Filename).pdb')" ContinueOnError="true" />
-
-    <!-- Orchestrations -->
-    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(OrchestrationsQualified)" Condition="'$(IncludeOrchestrations)' == 'true'"/>
-    <Copy SourceFiles="@(Orchestrations->'%(LocationPath)\%(Filename).pdb')" DestinationFiles="@(Orchestrations->'$(RedistDir)\%(Filename).pdb')" Condition="'$(IncludeOrchestrations)' == 'true' and Exists('%(LocationPath)\%(Filename).pdb')" ContinueOnError="true" />
-
-    <!-- Transforms -->
-    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(TransformsQualified)" Condition="'$(IncludeTransforms)' == 'true'"/>
-    <Copy SourceFiles="@(Transforms->'%(LocationPath)\%(Filename).pdb')" DestinationFiles="@(Transforms->'$(RedistDir)\%(Filename).pdb')" Condition="'$(IncludeTransforms)' == 'true' and Exists('%(LocationPath)\%(Filename).pdb')" ContinueOnError="true" />
-
-    <!-- Pipelines -->
-    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(PipelinesQualified)" Condition="'$(IncludePipelines)' == 'true'"/>
-    <Copy SourceFiles="@(Pipelines->'%(LocationPath)\%(Filename).pdb')" DestinationFiles="@(Pipelines->'$(RedistDir)\%(Filename).pdb')" Condition="'$(IncludePipelines)' == 'true' and Exists('%(LocationPath)\%(Filename).pdb')" ContinueOnError="true" />
-
-    <!-- Components -->
-    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(ComponentsQualified)" Condition="'$(IncludeComponents)' == 'true'"/>
-    <Copy SourceFiles="@(Components->'%(LocationPath)\%(Filename).pdb')" DestinationFiles="@(Components->'$(RedistDir)\%(Filename).pdb')" Condition="'$(IncludeComponents)' == 'true' and Exists('%(LocationPath)\%(Filename).pdb')" ContinueOnError="true" />
-
-    <!-- PipelineComponents -->
-    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(PipelineComponentsQualified)" Condition="'$(IncludePipelineComponents)' == 'true'"/>
-    <Copy SourceFiles="@(PipelineComponents->'%(LocationPath)\%(Filename).pdb')" DestinationFiles="@(PipelineComponents->'$(RedistDir)\%(Filename).pdb')" Condition="'$(IncludePipelineComponents)' == 'true' and Exists('%(LocationPath)\%(Filename).pdb')" ContinueOnError="true" />
-
-    <!-- CustomFunctoids -->
-    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(CustomFunctoidsQualified)" Condition="'$(IncludeCustomFunctoids)' == 'true'"/>
-    <Copy SourceFiles="@(CustomFunctoids->'%(LocationPath)\%(Filename).pdb')" DestinationFiles="@(CustomFunctoids->'$(RedistDir)\%(Filename).pdb')" Condition="'$(IncludeCustomFunctoids)' == 'true' and Exists('%(LocationPath)\%(Filename).pdb')" ContinueOnError="true" />
-
-    <!-- DeploymentTest -->
-    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(DeploymentTestQualified)" Condition="'$(IncludeDeploymentTest)' == 'true'"/>
-    <Copy SourceFiles="@(DeploymentTest->'%(LocationPath)\%(Filename).pdb')" DestinationFiles="@(DeploymentTest->'$(RedistDir)\%(Filename).pdb')" Condition="'$(IncludeDeploymentTest)' == 'true' and Exists('%(LocationPath)\%(Filename).pdb')" ContinueOnError="true" />
-
-    <!-- DeploymentTest config file -->
-    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(DeploymentTest->'%(LocationPath)\%(Identity).config')" Condition="'$(IncludeDeploymentTest)' == 'true'" />
-
-    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(Log4netFile)" Condition="'$(Includelog4net)' == 'true'" />
-
-    <!-- External Dependencies -->
-    <Copy DestinationFolder="$(RedistDir)\ExternalAssemblies" SourceFiles="@(ExternalAssembliesQualified)" Condition="'@(ExternalAssemblies)' != ''"/>
-
-    <!-- Additional files -->
-    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(AdditionalFilesQualified)" Condition="'@(AdditionalFilesQualified)' != ''" />
-
-    <!-- Rule policies -->
-    <Copy DestinationFolder="$(RedistDir)\BRE\Policies" SourceFiles="@(RulePoliciesQualified)" Condition="'@(RulePoliciesQualified)' != '' and Exists('%(FullPath)')" />
-
-    <!-- Rule vocabularies -->
-    <Copy DestinationFolder="$(RedistDir)\BRE\Vocabularies" SourceFiles="@(RuleVocabulariesQualified)" Condition="'@(RuleVocabulariesQualified)' != '' and Exists('%(FullPath)')" />
-
-    <!-- ESB itineraries -->
-    <Copy DestinationFolder="$(RedistDir)\ESB" SourceFiles="@(EsbItinerariesQualified)" Condition="'@(EsbItinerariesQualified)' != ''" />
-
+  <Target Name="CopySettingsSpreadsheetToRedist" Condition="'$(IncludeSettingsSpreadsheetInMsi)' == 'true'">
     <!--
       Copy the settings spreadsheet file so that it will be included in the MSI.
       In the real world, you may want your operations group to manage it and keep it on a secure file share.
@@ -172,11 +99,92 @@
     <Copy
       SourceFiles="$(SettingsSpreadsheetPath)"
       DestinationFiles="$(RedistDir)\Deployment\EnvironmentSettings\SettingsFileGenerator.xml"
-      Condition="'$(IncludeSettingsSpreadsheetInMsi)' == 'true' and Exists('$(SettingsSpreadsheetPath)')" />
+      Condition="Exists('$(SettingsSpreadsheetPath)')" />
+  </Target>
 
-    <CallTarget Targets="CopyBAM" />
-    <CallTarget Targets="CustomRedist"/>
+  <Target Name="CopySchemasToRedist" Condition="'$(IncludeSchemas)' == 'true'">
+    <!-- Schemas -->
+    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(SchemasQualified)" />
+    <Copy SourceFiles="@(Schemas->'%(LocationPath)\%(Filename).pdb')" DestinationFiles="@(Schemas->'$(RedistDir)\%(Filename).pdb')" Condition="Exists('%(LocationPath)\%(Filename).pdb')" ContinueOnError="true" />
+  </Target>
 
+  <Target Name="CopyOrchestrationsToRedist" Condition="'$(IncludeOrchestrations)' == 'true'">
+    <!-- Orchestrations -->
+    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(OrchestrationsQualified)" />
+    <Copy SourceFiles="@(Orchestrations->'%(LocationPath)\%(Filename).pdb')" DestinationFiles="@(Orchestrations->'$(RedistDir)\%(Filename).pdb')" Condition="Exists('%(LocationPath)\%(Filename).pdb')" ContinueOnError="true" />
+  </Target>
+
+  <Target Name="CopyTransformsToRedist" Condition="'$(IncludeTransforms)' == 'true'">
+    <!-- Transforms -->
+    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(TransformsQualified)" />
+    <Copy SourceFiles="@(Transforms->'%(LocationPath)\%(Filename).pdb')" DestinationFiles="@(Transforms->'$(RedistDir)\%(Filename).pdb')" Condition="Exists('%(LocationPath)\%(Filename).pdb')" ContinueOnError="true" />
+  </Target>
+
+  <Target Name="CopyPipelinesToRedist" Condition="'$(IncludePipelines)' == 'true'">
+    <!-- Pipelines -->
+    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(PipelinesQualified)" />
+    <Copy SourceFiles="@(Pipelines->'%(LocationPath)\%(Filename).pdb')" DestinationFiles="@(Pipelines->'$(RedistDir)\%(Filename).pdb')" Condition="Exists('%(LocationPath)\%(Filename).pdb')" ContinueOnError="true" />
+  </Target>
+
+  <Target Name="CopyComponentsToRedist" Condition="'$(IncludeComponents)' == 'true'">
+    <!-- Components -->
+    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(ComponentsQualified)" />
+    <Copy SourceFiles="@(Components->'%(LocationPath)\%(Filename).pdb')" DestinationFiles="@(Components->'$(RedistDir)\%(Filename).pdb')" Condition="Exists('%(LocationPath)\%(Filename).pdb')" ContinueOnError="true" />
+  </Target>
+
+  <Target Name="CopyPipelineComponentsToRedist" Condition="'$(IncludePipelineComponents)' == 'true'">
+    <!-- PipelineComponents -->
+    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(PipelineComponentsQualified)" />
+    <Copy SourceFiles="@(PipelineComponents->'%(LocationPath)\%(Filename).pdb')" DestinationFiles="@(PipelineComponents->'$(RedistDir)\%(Filename).pdb')" Condition="Exists('%(LocationPath)\%(Filename).pdb')" ContinueOnError="true" />
+  </Target>
+
+  <Target Name="CopyCustomFunctoidsToRedist" Condition="'$(IncludeCustomFunctoids)' == 'true'">
+    <!-- CustomFunctoids -->
+    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(CustomFunctoidsQualified)" />
+    <Copy SourceFiles="@(CustomFunctoids->'%(LocationPath)\%(Filename).pdb')" DestinationFiles="@(CustomFunctoids->'$(RedistDir)\%(Filename).pdb')" Condition="Exists('%(LocationPath)\%(Filename).pdb')" ContinueOnError="true" />
+  </Target>
+
+  <Target Name="CopyDeploymentTestToRedist" Condition="'$(IncludeDeploymentTest)' == 'true'">
+    <!-- DeploymentTest -->
+    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(DeploymentTestQualified)" />
+    <Copy SourceFiles="@(DeploymentTest->'%(LocationPath)\%(Filename).pdb')" DestinationFiles="@(DeploymentTest->'$(RedistDir)\%(Filename).pdb')" Condition="Exists('%(LocationPath)\%(Filename).pdb')" ContinueOnError="true" />
+    <!-- DeploymentTest config file -->
+    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(DeploymentTest->'%(LocationPath)\%(Identity).config')" />
+  </Target>
+
+  <Target Name="CopyExternalAssembliesToRedist">
+    <!-- External Dependencies -->
+    <Copy DestinationFolder="$(RedistDir)\ExternalAssemblies" SourceFiles="@(ExternalAssembliesQualified)" Condition="'@(ExternalAssemblies)' != ''"/>
+  </Target>
+
+  <Target Name="CopyAdditionalFilesToRedist">
+    <!-- Additional files -->
+    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(AdditionalFilesQualified)" Condition="'@(AdditionalFilesQualified)' != ''" />
+  </Target>
+
+  <Target Name="CopyRulePoliciesToRedist">
+    <!-- Rule policies -->
+    <Copy DestinationFolder="$(RedistDir)\BRE\Policies" SourceFiles="@(RulePoliciesQualified)" Condition="'@(RulePoliciesQualified)' != '' and Exists('%(FullPath)')" />
+  </Target>
+
+  <Target Name="CopyRuleVocabulariesToRedist">
+    <!-- Rule vocabularies -->
+    <Copy DestinationFolder="$(RedistDir)\BRE\Vocabularies" SourceFiles="@(RuleVocabulariesQualified)" Condition="'@(RuleVocabulariesQualified)' != '' and Exists('%(FullPath)')" />
+  </Target>
+
+  <Target Name="CopyEsbItinerariesToRedist">
+    <!-- ESB itineraries -->
+    <Copy DestinationFolder="$(RedistDir)\ESB" SourceFiles="@(EsbItinerariesQualified)" Condition="'@(EsbItinerariesQualified)' != ''" />
+  </Target>
+
+  <Target Name="CopyLog4netFileToRedist">
+    <Copy DestinationFolder="$(RedistDir)" SourceFiles="@(Log4netFile)" Condition="'$(Includelog4net)' == 'true'" />
+  </Target>
+
+  <Target Name="CopyDeploymentProjectFilesToRedist">
+    <Copy DestinationFolder="$(RedistDir)\Deployment" SourceFiles="InstallWizard.xml"/>
+    <Copy DestinationFolder="$(RedistDir)\Deployment" SourceFiles="UninstallWizard.xml"/>
+    <Copy DestinationFolder="$(RedistDir)\Deployment" SourceFiles="$(MSBuildProjectFile)"/>
   </Target>
 
   <Target Name="CopyBAM" DependsOnTargets="ExportBAMXMLFromXLS" Condition="'$(IncludeBAM)' == 'true'">
@@ -186,56 +194,75 @@
     <Copy DestinationFolder="$(RedistDir)\BAM" SourceFiles="@(BamTrackingProfilesQualified)" Condition="'@(BamTrackingProfilesQualified)' != ''" />
   </Target>
 
-  <Target Name="Clean" DependsOnTargets="InitTargetDir">
+  <Target Name="Clean" DependsOnTargets="InitWixDir">
     <Error Text="Cannot continue. The OutputPath property is undefined. By default, this property is defined in the .btdfproj in PropertyGroups conditional to Debug and Release configurations." Condition="'$(OutputPath)' == ''"></Error>
 
-    <CreateItem Include="$(TargetDir)$(MsiName).msi">
-      <Output TaskParameter="Include" ItemName="InstallMsiFile" />
-    </CreateItem>
+    <ItemGroup>
+      <InstallMsiFile Include="$(TargetDir)$(MsiName).msi" />
+      <OutputsToClean Include="@(InstallMsiFile)" />
+    </ItemGroup>
 
     <!-- Delete any existing output files -->
     <Message Text="Cleaning output files..." Importance="normal" />
-    <CreateItem Include="@(InstallMsiFile)">
-      <Output TaskParameter="Include" ItemName="OutputsToClean" />
-    </CreateItem>
-
     <Delete Files="@(OutputsToClean)" ContinueOnError="false" Condition="'@(OutputsToClean)' != ''" />
     <Message Text="Finished cleaning output files." Importance="normal" />
   </Target>
 
+  <PropertyGroup>
+    <RedistDependsOn>
+      InitWixDir;
+      InitRedistDir;
+      CustomPreRedist;
+      CopyFrameworkToRedist;
+      CopyDeploymentProjectFilesToRedist;
+      CreateDeployResultsInRedist;
+      CopyVirtualDirectoriesToRedist;
+      CopyChmToRedist;
+      CopyPortBindingsToRedist;
+      CopySettingsSpreadsheetToRedist;
+      CopySchemasToRedist;
+      CopyOrchestrationsToRedist;
+      CopyTransformsToRedist;
+      CopyPipelinesToRedist;
+      CopyComponentsToRedist;
+      CopyPipelineComponentsToRedist;
+      CopyCustomFunctoidsToRedist;
+      CopyDeploymentTestToRedist;
+      CopyExternalAssembliesToRedist;
+      CopyAdditionalFilesToRedist;
+      CopyRulePoliciesToRedist;
+      CopyRuleVocabulariesToRedist;
+      CopyEsbItinerariesToRedist;
+      CopyLog4netFileToRedist;
+      CopyBAM;
+      CustomRedist
+    </RedistDependsOn>
+  </PropertyGroup>
+  
+  <!-- Assemble an image of the redistributable directory structure by pulling files from various locations. -->
+  <Target Name="Redist" DependsOnTargets="$(RedistDependsOn)" />
+  
   <!--
     Create the installer package
    -->
   <Target Name="Installer" DependsOnTargets="Clean;Redist">
     <Error Text="Please remove the backslash from the end of the DefaultInstallDir property's value." Condition="HasTrailingSlash('$(DefaultInstallDir)')" />
-
-    <CreateProperty Value="$(DeploymentFrameworkDeveloperDir)\GenericBizTalkMSI.wxs" Condition="'$(WixProjectFile)' == ''">
-      <Output TaskParameter="Value" PropertyName="WixProjectFile" />
-    </CreateProperty>
-
-    <CreateProperty Value="$(DeploymentFrameworkDeveloperDir)\RedistComponentGroup.xslt" Condition="'$(WixHeatTransformFile)' == ''">
-      <Output TaskParameter="Value" PropertyName="WixHeatTransformFile" />
-    </CreateProperty>
-
-    <CreateItem Include="$(WixProjectFile)">
-      <Output TaskParameter="Include" ItemName="WixProjectFileItem" />
-    </CreateItem>
-
-    <CreateProperty Value="@(DeploymentTest)" Condition="'@(DeploymentTest)' != ''">
-      <Output TaskParameter="Value" PropertyName="DeploymentTestProperty" />
-    </CreateProperty>
-
-    <CreateProperty Value="dir &quot;$(RedistDir)&quot; -scom -srd -sreg -cg RedistComponentGroup -ke -gg -dr INSTALLDIR -var var.redist_folder -o &quot;$(IntermediateOutputPath)\RedistComponentGroup.wxs&quot; -t &quot;$(WixHeatTransformFile)&quot;" Condition="'$(WiXHeatArguments)' == ''">
-      <Output TaskParameter="Value" PropertyName="WiXHeatArguments" />
-    </CreateProperty>
-
-    <CreateProperty Value="&quot;-dredist_folder=$(RedistDir)&quot; &quot;-dProductUpgradeCode=$(ProductUpgradeCode)&quot; &quot;-dProductName=$(ProductName)&quot; &quot;-dProductId=$(ProductId)&quot; &quot;-dProductVersion=$(ProductVersion)&quot; &quot;-dProjectVersion=$(ProjectVersion)&quot; &quot;-dManufacturer=$(Manufacturer)&quot; &quot;-dPackageDescription=$(PackageDescription)&quot; &quot;-dPackageComments=$(PackageComments)&quot; &quot;-dDeploymentTest=$(DeploymentTestProperty)&quot; &quot;-dBizTalkAppName=$(BizTalkAppName)&quot; &quot;-dProjectFilename=$(MSBuildProjectFile)&quot; -dIncludeDeployRulesShortcut=$(IncludeVocabAndRules) -dIncludeSSOEditorShortcut=$(IncludeSSO) -dCreateStartMenuShortcuts=$(CreateStartMenuShortcuts) -dExplicitInstallDir=&quot;$(DefaultInstallDir)&quot; -out &quot;$(IntermediateOutputPath)\\&quot; &quot;$(WixProjectFile)&quot; &quot;$(IntermediateOutputPath)\RedistComponentGroup.wxs&quot;" Condition="'$(WiXCandleArguments)' == ''">
-      <Output TaskParameter="Value" PropertyName="WiXCandleArguments" />
-    </CreateProperty>
-
-    <CreateProperty Value="&quot;$(IntermediateOutputPath)\%(WixProjectFileItem.Filename).wixobj&quot; &quot;$(IntermediateOutputPath)\RedistComponentGroup.wixobj&quot; -out &quot;$(TargetDir)\$(MsiName).msi&quot; -ext &quot;$(WixDir)\WixUIExtension.dll&quot; -ext &quot;$(WixDir)\WixNetFxExtension.dll&quot; -spdb $(MSIValidationParam)" Condition="'$(WiXLightArguments)' == ''">
-      <Output TaskParameter="Value" PropertyName="WiXLightArguments" />
-    </CreateProperty>
+  
+    <PropertyGroup>
+      <WixProjectFile Condition="'$(WixProjectFile)' == ''">$(DeploymentFrameworkDeveloperDir)\GenericBizTalkMSI.wxs</WixProjectFile>
+      <WixHeatTransformFile Condition="'$(WixHeatTransformFile)' == ''">$(DeploymentFrameworkDeveloperDir)\RedistComponentGroup.xslt</WixHeatTransformFile>
+    </PropertyGroup>
+    
+    <ItemGroup>
+      <WixProjectFileItem Include="$(WixProjectFile)" />
+    </ItemGroup>
+    
+    <PropertyGroup>
+      <DeploymentTestProperty Condition="'@(DeploymentTest)' != ''">@(DeploymentTest)</DeploymentTestProperty>
+      <WiXHeatArguments Condition="'$(WiXHeatArguments)' == ''">dir &quot;$(RedistDir)&quot; -scom -srd -sreg -cg RedistComponentGroup -ke -gg -dr INSTALLDIR -var var.redist_folder -o &quot;$(IntermediateOutputPath)\RedistComponentGroup.wxs&quot; -t &quot;$(WixHeatTransformFile)&quot;</WiXHeatArguments>
+      <WiXCandleArguments Condition="'$(WiXCandleArguments)' == ''">&quot;-dredist_folder=$(RedistDir)&quot; &quot;-dProductUpgradeCode=$(ProductUpgradeCode)&quot; &quot;-dProductName=$(ProductName)&quot; &quot;-dProductId=$(ProductId)&quot; &quot;-dProductVersion=$(ProductVersion)&quot; &quot;-dProjectVersion=$(ProjectVersion)&quot; &quot;-dManufacturer=$(Manufacturer)&quot; &quot;-dPackageDescription=$(PackageDescription)&quot; &quot;-dPackageComments=$(PackageComments)&quot; &quot;-dDeploymentTest=$(DeploymentTestProperty)&quot; &quot;-dBizTalkAppName=$(BizTalkAppName)&quot; &quot;-dProjectFilename=$(MSBuildProjectFile)&quot; -dIncludeDeployRulesShortcut=$(IncludeVocabAndRules) -dIncludeSSOEditorShortcut=$(IncludeSSO) -dCreateStartMenuShortcuts=$(CreateStartMenuShortcuts) -dExplicitInstallDir=&quot;$(DefaultInstallDir)&quot; -out &quot;$(IntermediateOutputPath)\\&quot; &quot;$(WixProjectFile)&quot; &quot;$(IntermediateOutputPath)\RedistComponentGroup.wxs&quot;</WiXCandleArguments>
+      <WiXLightArguments Condition="'$(WiXLightArguments)' == ''">&quot;$(IntermediateOutputPath)\%(WixProjectFileItem.Filename).wixobj&quot; &quot;$(IntermediateOutputPath)\RedistComponentGroup.wixobj&quot; -out &quot;$(TargetDir)\$(MsiName).msi&quot; -ext &quot;$(WixDir)\WixUIExtension.dll&quot; -ext &quot;$(WixDir)\WixNetFxExtension.dll&quot; -spdb $(MSIValidationParam)</WiXLightArguments>
+    </PropertyGroup>
 
     <Message Text="Generating MSI..." Importance="normal" />
     <Exec Command="&quot;$(WixDir)\heat.exe&quot; $(WixHeatArguments)" />

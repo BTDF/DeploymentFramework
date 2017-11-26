@@ -7,8 +7,8 @@
 -->
 <Include xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   <Fragment>
-    <Feature Id="EsbToolkit22IntegrationFeature" Title="ESB Toolkit 2.2 Integration" Level="1" InstallDefault="local" Display="51"
-             AllowAdvertise="no" TypicalDefault="install" Description="Extends the BizTalk ESB Toolkit 2.2 with a custom SSO resolver">
+    <Feature Id="EsbToolkit22IntegrationFeature" Title="ESB Toolkit Integration" Level="1" InstallDefault="local" Display="51"
+             AllowAdvertise="no" TypicalDefault="install" Description="Extends the BizTalk ESB Toolkit with a custom SSO resolver">
       <ComponentRef Id="DeploymentFrameworkForBizTalk.Services.Extenders.Resolvers.Sso.2.2.dll"/>
       <ComponentRef Id="DeploymentFrameworkForBizTalk.ESB.Resolver.Sso.2.2.dll"/>
       <Condition Level="0">

@@ -4,7 +4,7 @@
    <SetEnvUIConfigItem>
       <PromptText>Enter a domain-qualified account name for the IIS AppPool identity.
 
-Ensure that this user is in the IIS_IUSRS security group.</PromptText>
+Ensure that this user is in the IIS_WPG security group.</PromptText>
       <PromptValue />
       <ValueType>Text</ValueType>
       <EnvironmentVarName>AppPoolUserName</EnvironmentVarName>

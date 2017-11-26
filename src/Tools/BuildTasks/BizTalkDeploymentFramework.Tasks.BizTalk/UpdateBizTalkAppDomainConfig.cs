@@ -83,7 +83,7 @@ namespace DeploymentFramework.BuildTasks
             get { return _remove; }
             set { _remove = value; }
         }
-
+	
         /// <summary>
         /// Override the BizTalk xlangs configuration data loaded from the BTSNTSvc.exe.config file.
         /// </summary>

@@ -104,7 +104,7 @@
           <xsl:attribute name="Id">DeployShortcut</xsl:attribute>
           <xsl:attribute name="Directory">BizShortCuts</xsl:attribute>
           <xsl:attribute name="Name">Deploy $(var.PackageDescription)</xsl:attribute>
-          <xsl:attribute name="Arguments">&quot;[MSBUILDPATH]&quot; &quot;/p:Configuration=Server /t:LaunchServerDeployWizard $(var.ProjectFilename) [MSBUILDTOOLSVER]&quot;</xsl:attribute>
+          <xsl:attribute name="Arguments">&quot;[MSBUILDPATH]&quot; &quot;/p:Configuration=Server /t:LaunchServerDeployWizard /clp:NoSummary;DisableMPLogging $(var.ProjectFilename) [MSBUILDTOOLSVER]&quot;</xsl:attribute>
           <xsl:attribute name="WorkingDirectory">DEPLOYMENTDIR</xsl:attribute>
           <xsl:attribute name="Advertise">yes</xsl:attribute>
         </xsl:element>
@@ -112,7 +112,7 @@
           <xsl:attribute name="Id">ReDeployShortcut</xsl:attribute>
           <xsl:attribute name="Directory">BizShortCuts</xsl:attribute>
           <xsl:attribute name="Name">Redeploy $(var.PackageDescription)</xsl:attribute>
-          <xsl:attribute name="Arguments">&quot;[MSBUILDPATH]&quot; &quot;/p:Configuration=Server /t:LaunchServerRedeployWizard $(var.ProjectFilename) [MSBUILDTOOLSVER]&quot;</xsl:attribute>
+          <xsl:attribute name="Arguments">&quot;[MSBUILDPATH]&quot; &quot;/p:Configuration=Server /t:LaunchServerRedeployWizard /clp:NoSummary;DisableMPLogging $(var.ProjectFilename) [MSBUILDTOOLSVER]&quot;</xsl:attribute>
           <xsl:attribute name="WorkingDirectory">DEPLOYMENTDIR</xsl:attribute>
           <xsl:attribute name="Advertise">yes</xsl:attribute>
         </xsl:element>
@@ -120,7 +120,7 @@
           <xsl:attribute name="Id">UnDeployShortcut</xsl:attribute>
           <xsl:attribute name="Directory">BizShortCuts</xsl:attribute>
           <xsl:attribute name="Name">Undeploy $(var.PackageDescription)</xsl:attribute>
-          <xsl:attribute name="Arguments">&quot;[MSBUILDPATH]&quot; &quot;/p:Configuration=Server /t:LaunchServerUndeployWizard $(var.ProjectFilename) [MSBUILDTOOLSVER]&quot;</xsl:attribute>
+          <xsl:attribute name="Arguments">&quot;[MSBUILDPATH]&quot; &quot;/p:Configuration=Server /t:LaunchServerUndeployWizard /clp:NoSummary;DisableMPLogging $(var.ProjectFilename) [MSBUILDTOOLSVER]&quot;</xsl:attribute>
           <xsl:attribute name="WorkingDirectory">DEPLOYMENTDIR</xsl:attribute>
           <xsl:attribute name="Advertise">yes</xsl:attribute>
         </xsl:element>
@@ -128,7 +128,7 @@
           <xsl:attribute name="Id">QuickDeployShortcut</xsl:attribute>
           <xsl:attribute name="Directory">BizShortCutsTools</xsl:attribute>
           <xsl:attribute name="Name">Quick Deploy</xsl:attribute>
-          <xsl:attribute name="Arguments">&quot;[MSBUILDPATH]&quot; &quot;/p:Configuration=Server /t:LaunchServerQuickDeploy $(var.ProjectFilename) [MSBUILDTOOLSVER]&quot;</xsl:attribute>
+          <xsl:attribute name="Arguments">&quot;[MSBUILDPATH]&quot; &quot;/p:Configuration=Server /t:LaunchServerQuickDeploy /clp:NoSummary;DisableMPLogging $(var.ProjectFilename) [MSBUILDTOOLSVER]&quot;</xsl:attribute>
           <xsl:attribute name="WorkingDirectory">DEPLOYMENTDIR</xsl:attribute>
           <xsl:attribute name="Advertise">yes</xsl:attribute>
         </xsl:element>
@@ -136,7 +136,7 @@
           <xsl:attribute name="Id">BounceShortcut</xsl:attribute>
           <xsl:attribute name="Directory">BizShortCutsTools</xsl:attribute>
           <xsl:attribute name="Name">Bounce BizTalk</xsl:attribute>
-          <xsl:attribute name="Arguments">&quot;[MSBUILDPATH]&quot; &quot;/p:Configuration=Server;Interactive=true /t:BounceBizTalk $(var.ProjectFilename) [MSBUILDTOOLSVER]&quot;</xsl:attribute>
+          <xsl:attribute name="Arguments">&quot;[MSBUILDPATH]&quot; &quot;/p:Configuration=Server;Interactive=true /t:BounceBizTalk /clp:NoSummary;DisableMPLogging $(var.ProjectFilename) [MSBUILDTOOLSVER]&quot;</xsl:attribute>
           <xsl:attribute name="WorkingDirectory">DEPLOYMENTDIR</xsl:attribute>
           <xsl:attribute name="Advertise">yes</xsl:attribute>
         </xsl:element>
@@ -144,7 +144,7 @@
           <xsl:attribute name="Id">TerminateInstancesShortcut</xsl:attribute>
           <xsl:attribute name="Directory">BizShortCutsTools</xsl:attribute>
           <xsl:attribute name="Name">Terminate Service Instances</xsl:attribute>
-          <xsl:attribute name="Arguments">&quot;[MSBUILDPATH]&quot; &quot;/p:Configuration=Server;Interactive=true /t:TerminateServiceInstances $(var.ProjectFilename) [MSBUILDTOOLSVER]&quot;</xsl:attribute>
+          <xsl:attribute name="Arguments">&quot;[MSBUILDPATH]&quot; &quot;/p:Configuration=Server;Interactive=true /t:TerminateServiceInstances /clp:NoSummary;DisableMPLogging $(var.ProjectFilename) [MSBUILDTOOLSVER]&quot;</xsl:attribute>
           <xsl:attribute name="WorkingDirectory">DEPLOYMENTDIR</xsl:attribute>
           <xsl:attribute name="Advertise">yes</xsl:attribute>
         </xsl:element>
@@ -152,7 +152,7 @@
           <xsl:attribute name="Id">ImportBindingsShortcut</xsl:attribute>
           <xsl:attribute name="Directory">BizShortCutsTools</xsl:attribute>
           <xsl:attribute name="Name">Import Bindings</xsl:attribute>
-          <xsl:attribute name="Arguments">&quot;[MSBUILDPATH]&quot; &quot;/p:Configuration=Server;Interactive=true /t:ImportBindings $(var.ProjectFilename) [MSBUILDTOOLSVER]&quot;</xsl:attribute>
+          <xsl:attribute name="Arguments">&quot;[MSBUILDPATH]&quot; &quot;/p:Configuration=Server;Interactive=true /t:ImportBindings /clp:NoSummary;DisableMPLogging $(var.ProjectFilename) [MSBUILDTOOLSVER]&quot;</xsl:attribute>
           <xsl:attribute name="WorkingDirectory">DEPLOYMENTDIR</xsl:attribute>
           <xsl:attribute name="Advertise">yes</xsl:attribute>
         </xsl:element>
@@ -160,7 +160,7 @@
           <xsl:attribute name="Id">PreprocessAndImportBindingsShortcut</xsl:attribute>
           <xsl:attribute name="Directory">BizShortCutsTools</xsl:attribute>
           <xsl:attribute name="Name">Preprocess and Import Bindings</xsl:attribute>
-          <xsl:attribute name="Arguments">&quot;[MSBUILDPATH]&quot; &quot;/p:Configuration=Server;Interactive=true /t:PreprocessAndImportBindings $(var.ProjectFilename) [MSBUILDTOOLSVER]&quot;</xsl:attribute>
+          <xsl:attribute name="Arguments">&quot;[MSBUILDPATH]&quot; &quot;/p:Configuration=Server;Interactive=true /t:PreprocessAndImportBindings /clp:NoSummary;DisableMPLogging $(var.ProjectFilename) [MSBUILDTOOLSVER]&quot;</xsl:attribute>
           <xsl:attribute name="WorkingDirectory">DEPLOYMENTDIR</xsl:attribute>
           <xsl:attribute name="Advertise">yes</xsl:attribute>
         </xsl:element>
@@ -171,7 +171,7 @@
           <xsl:attribute name="Id">RedeployRulesShortcut</xsl:attribute>
           <xsl:attribute name="Directory">BizShortCutsTools</xsl:attribute>
           <xsl:attribute name="Name">Redeploy Rules Policies and Vocabularies</xsl:attribute>
-          <xsl:attribute name="Arguments">&quot;[MSBUILDPATH]&quot; &quot;/p:Configuration=Server;ExplicitlyDeployRulePoliciesOnDeploy=true;Interactive=true /t:DeployVocabAndRules $(var.ProjectFilename) [MSBUILDTOOLSVER]&quot;</xsl:attribute>
+          <xsl:attribute name="Arguments">&quot;[MSBUILDPATH]&quot; &quot;/p:Configuration=Server;ExplicitlyDeployRulePoliciesOnDeploy=true;Interactive=true /t:DeployVocabAndRules /clp:NoSummary;DisableMPLogging $(var.ProjectFilename) [MSBUILDTOOLSVER]&quot;</xsl:attribute>
           <xsl:attribute name="WorkingDirectory">DEPLOYMENTDIR</xsl:attribute>
           <xsl:attribute name="Advertise">yes</xsl:attribute>
         </xsl:element>
@@ -181,7 +181,7 @@
           <xsl:attribute name="Id">ImportSSOShortcut</xsl:attribute>
           <xsl:attribute name="Directory">BizShortCutsTools</xsl:attribute>
           <xsl:attribute name="Name">Update SSO from Settings Spreadsheet</xsl:attribute>
-          <xsl:attribute name="Arguments">&quot;[MSBUILDPATH]&quot; &quot;/p:Configuration=Server;Interactive=true /t:DeploySSO $(var.ProjectFilename) [MSBUILDTOOLSVER]&quot;</xsl:attribute>
+          <xsl:attribute name="Arguments">&quot;[MSBUILDPATH]&quot; &quot;/p:Configuration=Server;Interactive=true /t:DeploySSO /clp:NoSummary;DisableMPLogging $(var.ProjectFilename) [MSBUILDTOOLSVER]&quot;</xsl:attribute>
           <xsl:attribute name="WorkingDirectory">DEPLOYMENTDIR</xsl:attribute>
           <xsl:attribute name="Advertise">yes</xsl:attribute>
         </xsl:element>

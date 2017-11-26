@@ -7,8 +7,8 @@
 -->
 <Include xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   <Fragment>
-    <Feature Id="EsbToolkit21IntegrationFeature" Title="ESB Toolkit 2.1 Integration" Level="1" InstallDefault="local" Display="51"
-             AllowAdvertise="no" TypicalDefault="install" Description="Extends the BizTalk ESB Toolkit 2.1 with a custom SSO resolver">
+    <Feature Id="EsbToolkit21IntegrationFeature" Title="ESB Toolkit Integration" Level="1" InstallDefault="local" Display="51"
+             AllowAdvertise="no" TypicalDefault="install" Description="Extends the BizTalk ESB Toolkit with a custom SSO resolver">
         <ComponentRef Id="DeploymentFrameworkForBizTalk.Services.Extenders.Resolvers.Sso.2.1.dll"/>
         <ComponentRef Id="DeploymentFrameworkForBizTalk.ESB.Resolver.Sso.2.1.dll"/>
         <ComponentRef Id="InstallESBDesignerExtension.bat"/>

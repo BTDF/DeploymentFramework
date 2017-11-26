@@ -18,9 +18,9 @@
   </SetEnvUIConfigItem>
   
    <SetEnvUIConfigItem>
-      <PromptText>Please enter a domain-qualified user name for virtual directory (HTTP and SOAP) identities.
+      <PromptText>Please enter a domain-qualified user name for the AppPool identity.
 
-For Windows Server 2003 (IIS6), ensure this user is in the IIS_WPG group.</PromptText>
+Ensure this user is in the IIS_WPG group.</PromptText>
       <PromptValue />
       <ValueType>Text</ValueType>
       <EnvironmentVarName>VDIR_UserName</EnvironmentVarName>

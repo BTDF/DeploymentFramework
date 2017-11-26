@@ -9,6 +9,8 @@ using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
 using Microsoft.BizTalk.SSOClient.Interop;
 
 namespace SSOSettingsFileManager

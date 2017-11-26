@@ -12,7 +12,7 @@ using System.Runtime.CompilerServices;
 // associated with an assembly.
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Deployment Framework for BizTalk")]
-[assembly: AssemblyCopyright("Copyright (C) 2005-2017 Scott Colestock, Thomas F. Abraham")]
+[assembly: AssemblyCopyright("Copyright (C) 2005-2014 Scott Colestock, Thomas F. Abraham")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -23,4 +23,4 @@ using System.Runtime.CompilerServices;
 //      Build Number
 //      Revision
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("6.0.110.0")]

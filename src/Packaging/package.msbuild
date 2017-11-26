@@ -1,50 +1,40 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!--
     Deployment Framework for BizTalk
-    Copyright (C) 2008-15 Thomas F. Abraham, 2004-08 Scott Colestock
+    Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
     
     This source file is subject to the Microsoft Public License (Ms-PL).
 -->
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="4.0">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="PackageToolsSource;BuildTools;BuildAddin;BuildDocs;BuildInstaller">
   <PropertyGroup>
-    <Version>5_7_0</Version>
-    <InstallerVersion>5.7.100.0</InstallerVersion>
-    <ProductID>018C4B8A-B453-49DD-91AD-3B20D0D1D428</ProductID>
+    <Version>6_0_110</Version>
+    <InstallerVersion>6.0.110.0</InstallerVersion>
+    <ProductID>ee294f30-d38f-4274-bdcf-f94c0d2a4a32</ProductID>
   </PropertyGroup>
-  
-  <PropertyGroup>
-	  <BuildInstallerDependsOn>
-      BuildDocs;
-      BuildTools
-    </BuildInstallerDependsOn>
 
-    <BuildDependsOn>
-      BuildInstaller
-    </BuildDependsOn>
-  </PropertyGroup>
+  <ItemGroup>
+    <MsiFile Include="..\Installer\bin\release\DeploymentFrameworkForBizTalk.msi" />
+  </ItemGroup>
 
   <Target Name="BuildTools">
-    <MSBuild Projects="..\Tools\BuildTools.msbuild" Properties="Configuration=Release;Platform=Any CPU;ProductVersionFull=$(InstallerVersion)" UseResultsCache="false" UnloadProjectsOnCompletion="true" />
+    <MSBuild Projects="..\Tools\BuildTools.msbuild" Properties="Configuration=Release;Platform=Any CPU" />
+  </Target>
+
+  <Target Name="BuildAddin">
+    <MSBuild Projects="..\VisualStudioAddIn\VisualStudioAddIn.sln" Properties="Configuration=Release;Platform=Any CPU" Targets="Rebuild" />
+  </Target>
+
+  <Target Name="BuildInstaller">
+    <MSBuild Projects="..\Installer\BizTalkDeploymentFrameworkInstaller.sln" Properties="Configuration=Release;Platform=x86;ProductVersionFull=$(InstallerVersion);ProductID=$(ProductID)" Targets="Rebuild" />
+    <Copy SourceFiles="@(MsiFile)" DestinationFiles="@(MsiFile->'Staging\%(filename)V$(Version)%(extension)')" />
   </Target>
 
   <Target Name="BuildDocs">
     <Exec Command="&quot;\Program Files\IBE Software\HelpNDoc\Hnd4.exe&quot; ..\Documentation\Src\DeploymentFrameworkForBizTalkDocs.hnd /g" />
   </Target>
 
-  <Target Name="BuildInstaller" DependsOnTargets="$(BuildInstallerDependsOn)">
-    <ItemGroup>
-      <MsiFile Include="..\Installer\bin\release\DeploymentFrameworkForBizTalk.msi" />
-    </ItemGroup>
-
-    <MSBuild Projects="..\Installer\BizTalkDeploymentFrameworkInstaller.sln" Properties="Configuration=Release;Platform=x86;ProductVersionFull=$(InstallerVersion);ProductID=$(ProductID)" Targets="Rebuild" />
-    <Copy SourceFiles="@(MsiFile)" DestinationFiles="@(MsiFile->'Staging\%(filename)V$(Version)%(extension)')" />
-  </Target>
-
-  <Target Name="Build" DependsOnTargets="$(BuildDependsOn)">
-    <ItemGroup>
-      <PdfFile Include="..\Documentation\DeploymentFrameworkForBizTalkDocs.pdf" />
-    </ItemGroup>
-
-    <Copy SourceFiles="@(PdfFile)" DestinationFiles="@(PdfFile->'Staging\%(filename)V$(Version)%(extension)')" />
+  <Target Name="PackageToolsSource">
+    <Delete Files="Staging\ToolsSource.zip" />
+    <Exec Command="7za a -r -tzip Staging\ToolsSource.zip ..\Tools\* -x!*.suo -x!obj -x!bin -x!*.user -x!*.vssscc -x!*.scc" />
   </Target>
 </Project>

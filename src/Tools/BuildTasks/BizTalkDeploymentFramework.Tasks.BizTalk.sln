@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BizTalkDeploymentFramework.Tasks.BizTalk", "BizTalkDeploymentFramework.Tasks.BizTalk\BizTalkDeploymentFramework.Tasks.BizTalk.csproj", "{07901F46-5B27-4F3C-B55C-8E3CCAF290C1}"
 EndProject
 Global

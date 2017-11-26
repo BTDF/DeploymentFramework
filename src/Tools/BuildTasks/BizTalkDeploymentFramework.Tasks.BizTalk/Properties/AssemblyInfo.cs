@@ -14,4 +14,3 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("BizTalkDeploymentFramework.Tasks.BizTalk")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-

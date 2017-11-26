@@ -1,45 +1,3 @@
-### 5.7.100 [Release] (08/13/2017)
-* Visual Studio Addin (#11160)
-    * New icons; more commands on toolbar; enable/disable commands when appropriate; add icons in VS 2015
-    * **Remove Visual Studio Addin from MSI; move to Visual Studio Marketplace**
-* Remove PDF version of docs from MSI; make available as separate download
-* Remove MigrateToProjectFolderStructure.cmd
-
-### 5.7.96 [Release Candidate 2] (03/20/2017)
-* Rewrite Visual Studio Addin to target VS 2010 and up (#11160)
-* **Known Issue - toolbar buttons display as text in VS 2015**
-* Rewrite IIS deployment functionality, as in v6.0 Beta, maintaining backward compatibility; add IIS sample app (#11164, #10937)
-* Port BTDF v6.0 custom MSBuild tasks to v5.x line (#11161)
-* Remove remaining dependencies on SDC.Tasks (#11163)
-
-### 5.7.95 [Release Candidate 1] (02/05/2017)
-* Add support for BizTalk 2016 **not yet including the Visual Studio addin** (#11152)
-* Fix: On a clean machine, SSO deploys before required DLL is deployed (#11074)
-* Remove support for BizTalk 2006 and 2009; raise minimum .NET version to v4.0 (#11155)
-* Internal: Simplify build process for ESB Toolkit extensions; automate more of the overall build process (#11157)
-
-### 5.6.101 [Release] (3/12/2016)
-* Allow full control of product name in MSI (#11004)
-* Fix the order of operations when DeployBizTalkMgmtDB is false (#11016)
-
-### 5.6.100 [Release Candidate] (08/31/2015)
-* Add support for BizTalk 2013 R2 (#10975)
-* Provide enhanced control over AppDomains within BizTalk (#10986)
-* Change default location of settings spreadsheet to main project folder (#10976)
-* Merge default install path into MSI vs. generated batch file (#10980)
-* Optimize XML in SettingsFileGenerator.xml (#10979)
-* Make host instance restart output less verbose (#10982)
-* Undeploy BRE policy/vocab files in reverse order (#10983)
-* Change DeployPDBsToGac default to False to avoid host instance restart (#10978)
-* Add WCF-WebHttp XPaths to AdapterXPaths.txt (#10984)
-* Fix error during restart of clustered host instances (#10120)
-* Add retry logic to TerminateServiceInstances (#10985)
-* Rename MSBuild property FrameworkDir to avoid conflict with VS Command Prompt env vars (#10991)
-* Reduce dependency on deprecated SDC MSBuild Tasks (#10992)
-* Fix issue with WixProjectFile with non-default filename (#10994)
-* Make PackageComments property optional (#10995)
-* Start app after restarting host instances; deploy SSO much earlier (#10996)
-
 ### 6.0.100 [Beta 1] (09/10/2014)
 * Modernize code for MSBuild 4.0; enable support for 64-bit MSBuild (#10544, #10545)
 * Allow use of properties from settings spreadsheet in any PropertyGroup or ItemGroup, eliminating MSBuild order-of-evaluation problems (#10541)
@@ -47,16 +5,10 @@
 * Add a Visual Studio menu item to decode port bindings file (ElementTunnel decode) (#9331)
 * Break MSI Redist target into multiple targets
 * Install BizTalkDeploymentFramework.ServerExecute.targets to same location as other targets (#10585)
-
-**The following changes are also included in v5.7:**
-
 * Remove support for BizTalk 2006-2009 (#10535)
 * Rewrite IIS deployment functionality (#10546)
 * Add IIS sample application (#10546)
 * Remove dependency on SDC.Tasks DLL (#10559)
-
-**The following changes are also included in v5.6:**
-
 * Add support for BizTalk 2013 R2 (#10635)
 * Fix error during restart of clustered host instances (#10120)
 * Add retry logic to TerminateServiceInstances (#10597)

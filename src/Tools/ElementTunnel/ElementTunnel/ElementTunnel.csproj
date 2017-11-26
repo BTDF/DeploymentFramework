@@ -107,10 +107,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App.ico" />
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Content Include="App.ico" />
     <Compile Include="CommandLineParser.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- 
   Deployment Framework for BizTalk
-  Copyright (C) Thomas F. Abraham, Scott Colestock
+  Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Installer">
   <PropertyGroup>
@@ -22,7 +22,7 @@
     <ProductId>[GUID1]</ProductId>
     <!-- BizTalk App Version Upgrade -->
 
-    <ProductName>[PROJECTNAME] for BizTalk $(ProductVersion)</ProductName>
+    <ProductName>[PROJECTNAME] for BizTalk</ProductName>
     <Manufacturer>Deployment Framework User</Manufacturer>
     <PackageDescription>[PROJECTNAME]</PackageDescription>
     <!-- NEVER change the ProductUpgradeCode. -->
