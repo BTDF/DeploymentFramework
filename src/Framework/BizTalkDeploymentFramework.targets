@@ -2007,7 +2007,7 @@
     </GetBizTalkAppExists>
   </Target>
 
-  <Target Name="DeployBam" DependsOnTargets="ExportBAMXMLFromXLS;UndeployBam" Condition="'$(IncludeBAM)' == 'true'">
+  <Target Name="DeployBam" DependsOnTargets="UndeployBam" Condition="'$(IncludeBAM)' == 'true'">
     <!-- Deploy BAM definitions. -->
 
     <!-- First, deploy the BAM definitions -->
@@ -2052,7 +2052,7 @@
     <Message Text="Finished deploying BAM tracking profiles." Condition="'@(BamTrackingProfilesQualified)' != ''" />
   </Target>
 
-  <Target Name="UndeployBam" DependsOnTargets="ExportBAMXMLFromXLS" Condition="'$(IncludeBAM)' == 'true' and ('$(SkipUndeploy)' == 'false' and '$(SkipBamUndeploy)' == 'false')">
+  <Target Name="UndeployBam" DependsOnTargets="GetSoftwarePaths;InitializeAppName;ExportBAMXMLFromXLS" Condition="'$(IncludeBAM)' == 'true' and ('$(SkipUndeploy)' == 'false' and '$(SkipBamUndeploy)' == 'false')">
     <!-- Undeploy BAM definitions. -->
 
     <Message Text="Undeploying BAM tracking profiles..." Condition="'@(BamTrackingProfilesQualified)' != ''" />
