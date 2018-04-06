@@ -1192,7 +1192,7 @@
     <!-- Since host instance processes will be hanging on to DLLs... -->
   </Target>
 
-  <Target Name="BounceBizTalk" DependsOnTargets="SetWinVer">
+  <Target Name="BounceBizTalk" DependsOnTargets="GetSoftwarePaths">
     <!-- Reset BizTalk hosts and IIS -->
 
     <!-- An iisreset is needed with http & the isolated host, since your binaries will be loaded into IIS proceses. -->
