@@ -1,6 +1,11 @@
 # Deployment Framework for BizTalk
 The Deployment Framework for BizTalk is the single most powerful and customizable, yet easy-to-use toolkit for deploying and configuring your BizTalk solutions.
 
+### Installers
+* Download the current release from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=DeployFxForBizTalkTeam.DeploymentFrameworkforBizTalk)
+* Download older releases from [GitHub](https://github.com/BTDF/DeploymentFramework/releases)
+* Download the Visual Studio extension from Visual Studio's Tools and Extensions or the [Visual Studio Marketplace](https://marketplace.visualstudio.com/publishers/DeployFxForBizTalkTeam)
+
 ### Top Benefits
 * Deploy a complex solution containing orchestrations, schemas, maps, rules, custom components, pipeline components, pipelines -- even ESB itineraries -- in *minutes*, with no human intervention
 * Eliminate ALL manual steps in your BizTalk deployments 
