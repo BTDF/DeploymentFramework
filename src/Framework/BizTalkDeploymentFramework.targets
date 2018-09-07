@@ -209,6 +209,9 @@
     <!-- This only applies to developer deployments due to a hard-coded path in the batch files used on server deployments. -->
     <SettingsFilesExportPath Condition="'$(SettingsFilesExportPath)' == ''">$(MSBuildProjectDirectory)\EnvironmentSettings</SettingsFilesExportPath>
 
+    <!-- If SettingsPath is set to an existing prepared settings file, set SkipExportSettings to avoid overwriting this file as part of the deployment -->
+    <SkipExportSettings Condition="'$(SkipExportSettings)' == ''">false</SkipExportSettings>
+
     <!-- These properties control the groups that will be used when creating an SSO affiliate app, if
         includeSSO property is true.  Override these in your .btdfproj file with the groups
         your targeted host account is a member of, or use SettingsFileGenerator.xls with PropsFromEnvSettings  -->
@@ -682,7 +685,7 @@
       Condition="'$(Is64BitProcess)' == 'true'" />
   </Target>
 
-  <Target Name="ExportSettings" DependsOnTargets="GetSoftwarePaths;CustomPreExportSettings">
+  <Target Name="ExportSettings" DependsOnTargets="GetSoftwarePaths;CustomPreExportSettings" Condition="'$(SkipExportSettings)' != 'true'">
     <CreateProperty Value="$(MSBuildProjectDirectory)\EnvironmentSettings\SettingsFileGenerator.xml" Condition="'$(Configuration)' == 'Server'">
       <Output TaskParameter="Value" PropertyName="EffectiveSettingsSpreadsheetPath" />
     </CreateProperty>
