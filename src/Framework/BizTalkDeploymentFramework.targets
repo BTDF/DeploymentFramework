@@ -1080,10 +1080,6 @@
       <Output TaskParameter="Value" PropertyName="Btshttpreceive" />
     </CreateProperty>
 
-    <!-- Look for the BizTalk ESB Toolkit 2.1 install path -->
-    <GetRegistryValue KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\BizTalk ESB Toolkit\2.1" ValueName="InstallPath" Condition="'$(EsbDir)' == ''">
-      <Output TaskParameter="Value" PropertyName="EsbDir"/>
-    </GetRegistryValue>
     <!-- Look for the BizTalk ESB Toolkit 2.2 install path -->
     <GetRegistryValue KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\BizTalk ESB Toolkit" ValueName="InstallPath" Condition="'$(EsbDir)' == ''">
       <Output TaskParameter="Value" PropertyName="EsbDir"/>
@@ -2101,7 +2097,7 @@
   </Target>
 
   <Target Name="SetToolsVersionParam">
-    <CreateProperty Value="/tv:4.0" Condition="'$(MSBuildToolsVersion)' == '4.0'">
+    <CreateProperty Value="/tv:12.0" Condition="'$(MSBuildToolsVersion)' == '12.0'">
       <Output TaskParameter="Value" PropertyName="ToolsVersionParam" />
     </CreateProperty>
   </Target>

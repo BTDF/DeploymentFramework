@@ -31,12 +31,6 @@
       <ComponentRef Id="Microsoft.Sdc.Tasks.dll" />
       <ComponentRef Id="SetEnvUI.exe" />
       <ComponentRef Id="SetEnvUIConfig.xsd" />
-      <ComponentRef Id="SSOSettingsFileImportBTS2010.exe" />
-      <ComponentRef Id="SSOSettingsFileReaderBTS2010.dll" />
-      <ComponentRef Id="SSOSettingsEditorBTS2010.exe" />
-      <ComponentRef Id="SSOSettingsFileImportBTS2013.exe" />
-      <ComponentRef Id="SSOSettingsFileReaderBTS2013.dll" />
-      <ComponentRef Id="SSOSettingsEditorBTS2013.exe" />
       <ComponentRef Id="SSOSettingsFileImportBTS2013R2.exe" />
       <ComponentRef Id="SSOSettingsFileReaderBTS2013R2.dll" />
       <ComponentRef Id="SSOSettingsEditorBTS2013R2.exe" />
@@ -322,54 +316,6 @@
     <DirectoryRef Id="DeployTools" FileSource="..\Framework\DeployTools">
       <Component Id="SetEnvUIConfig.xsd" Guid="*">
         <File Id="SetEnvUIConfig.xsd" Name="SetEnvUIConfig.xsd" KeyPath="yes" Source="..\Framework\DeployTools\SetEnvUIConfig.xsd" />
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="DeployTools" FileSource="..\Framework\DeployTools">
-      <Component Id="SSOSettingsFileImportBTS2010.exe" Guid="*">
-        <File Id="SSOSettingsFileImportBTS2010.exe" Name="SSOSettingsFileImport.exe" KeyPath="yes" Source="..\Framework\DeployTools\SSOSettingsFileImportBTS2010.exe" />
-        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2010"]]></Condition>
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="DeployTools" FileSource="..\Framework\DeployTools">
-      <Component Id="SSOSettingsFileReaderBTS2010.dll" Guid="C1B004C8-7CFB-4D07-A664-D6DFDC0048E4">
-        <File Id="SSOSettingsFileReaderBTS2010.dll" Name="SSOSettingsFileReader.dll" KeyPath="yes" Source="..\Framework\DeployTools\SSOSettingsFileReaderBTS2010.dll" />
-        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2010"]]></Condition>
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="DeployTools" FileSource="..\Framework\DeployTools">
-      <Component Id="SSOSettingsEditorBTS2010.exe" Guid="9E86BB4A-3698-4930-91B8-1E195959653D">
-        <File Id="SSOSettingsEditorBTS2010.exe" Name="SSOSettingsEditor.exe" KeyPath="yes" Source="..\Framework\DeployTools\SSOSettingsEditorBTS2010.exe" />
-        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2010"]]></Condition>
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="DeployTools" FileSource="..\Framework\DeployTools">
-      <Component Id="SSOSettingsFileImportBTS2013.exe" Guid="DAFCC07C-B376-4AAF-A028-9BD6D263A077">
-        <File Id="SSOSettingsFileImportBTS2013.exe" Name="SSOSettingsFileImport.exe" KeyPath="yes" Source="..\Framework\DeployTools\SSOSettingsFileImportBTS2013.exe" />
-        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2013"]]></Condition>
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="DeployTools" FileSource="..\Framework\DeployTools">
-      <Component Id="SSOSettingsFileReaderBTS2013.dll" Guid="3CA7B5B0-9407-4B0A-97EC-153EA65A2E96">
-        <File Id="SSOSettingsFileReaderBTS2013.dll" Name="SSOSettingsFileReader.dll" KeyPath="yes" Source="..\Framework\DeployTools\SSOSettingsFileReaderBTS2013.dll" />
-        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2013"]]></Condition>
-      </Component>
-    </DirectoryRef>
-  </Fragment>
-  <Fragment>
-    <DirectoryRef Id="DeployTools" FileSource="..\Framework\DeployTools">
-      <Component Id="SSOSettingsEditorBTS2013.exe" Guid="2E420049-7D3A-4AE0-BDD5-C124D178AD86">
-        <File Id="SSOSettingsEditorBTS2013.exe" Name="SSOSettingsEditor.exe" KeyPath="yes" Source="..\Framework\DeployTools\SSOSettingsEditorBTS2013.exe" />
-        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2013"]]></Condition>
       </Component>
     </DirectoryRef>
   </Fragment>

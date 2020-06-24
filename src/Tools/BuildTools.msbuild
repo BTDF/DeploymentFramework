@@ -5,19 +5,19 @@
     
     This source file is subject to the Microsoft Public License (Ms-PL).
 -->
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" DefaultTargets="BuildTools">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0" DefaultTargets="BuildTools">
 
   <PropertyGroup>
     <BuildToolsDependsOn>
       UpdateCommonAssemblyInfo;
       BuildTasksNonBizTalk;
-      BuildTasksBizTalk;
       BuildTasksIIS;
       BuildDeployBTRules;
       BuildElementTunnel;
       BuildSetEnvUI;
       BuildUACElevate;
       BuildSSOSettingsFileImport;
+      BuildTasksBizTalk;
       BuildESBResolvers;
       RevertCommonAssemblyInfo
     </BuildToolsDependsOn>
@@ -128,11 +128,6 @@
     <MSBuild Projects="ESB.Resolvers\ESB.Resolver.Sso.sln" Properties="Configuration=Release;Platform=Any CPU;TargetFrameworkVersion=v4.5;Ver=2.2;BizTalkVersion=2013" Targets="Rebuild" />
     <Copy SourceFiles="@(BuildESBResolversFilesToCopy->'%(Identity)\%(DestFilename)2.2%(DestExt)')" DestinationFiles="@(BuildESBResolversFilesToCopy->'ESB.Resolvers\Bin\%(DestFilename)2.2%(DestExt)')" />
 
-    <ReplaceAssemblyVersionInFile Path="ESB.Resolvers\ESB.Resolver.Sso\Properties\AssemblyInfo.cs" NewVersion="2.1.0.0" />
-    <ReplaceAssemblyVersionInFile Path="ESB.Resolvers\Services.Extenders.Resolvers.Sso\Properties\AssemblyInfo.cs" NewVersion="2.1.0.0" />
-    <MSBuild Projects="ESB.Resolvers\ESB.Resolver.Sso.sln" Properties="Configuration=Release;Platform=Any CPU;TargetFrameworkVersion=v4.0;Ver=2.1" Targets="Rebuild" />
-    <Copy SourceFiles="@(BuildESBResolversFilesToCopy->'%(Identity)\%(DestFilename)2.1%(DestExt)')" DestinationFiles="@(BuildESBResolversFilesToCopy->'ESB.Resolvers\Bin\%(DestFilename)2.1%(DestExt)')" />
-
     <ReplaceAssemblyVersionInFile Path="ESB.Resolvers\ESB.Resolver.Sso\Properties\AssemblyInfo.cs" NewVersion="1.0.0.0" />
     <ReplaceAssemblyVersionInFile Path="ESB.Resolvers\Services.Extenders.Resolvers.Sso\Properties\AssemblyInfo.cs" NewVersion="1.0.0.0" />
   </Target>
@@ -155,14 +150,10 @@
 
     <ReplaceAssemblyFileVersionInFile Path="SSOSettingsFileImport\CommonAssemblyInfo.cs" NewVersion="$(ProductVersionFull)" />
 
-    <MSBuild Projects="SSOSettingsFileImport\SSOSettingsFileImport.sln" Properties="Configuration=Release;Platform=Any CPU;TargetFrameworkVersion=v4.0" Targets="Rebuild" />
-    <Copy SourceFiles="@(BuildSSOSettingsFileImportFilesToCopy)" DestinationFiles="@(BuildSSOSettingsFileImportFilesToCopy->'..\Framework\DeployTools\%(DestFilename)BTS2013%(DestExt)')" />
-    <MSBuild Projects="SSOSettingsFileImport\SSOSettingsFileImport.sln" Properties="Configuration=Release;Platform=Any CPU;TargetFrameworkVersion=v4.0;BizTalkVersion=2013R2" Targets="Rebuild" />
-    <Copy SourceFiles="@(BuildSSOSettingsFileImportFilesToCopy)" DestinationFiles="@(BuildSSOSettingsFileImportFilesToCopy->'..\Framework\DeployTools\%(DestFilename)BTS2013R2%(DestExt)')" />
     <MSBuild Projects="SSOSettingsFileImport\SSOSettingsFileImport.sln" Properties="Configuration=Release;Platform=Any CPU;TargetFrameworkVersion=v4.6;BizTalkVersion=2016" Targets="Rebuild" />
     <Copy SourceFiles="@(BuildSSOSettingsFileImportFilesToCopy)" DestinationFiles="@(BuildSSOSettingsFileImportFilesToCopy->'..\Framework\DeployTools\%(DestFilename)BTS2016%(DestExt)')" />
-    <MSBuild Projects="SSOSettingsFileImport\SSOSettingsFileImport.sln" Properties="Configuration=Release;Platform=Any CPU;TargetFrameworkVersion=v2.0;BizTalkVersion=Pre2013" Targets="Rebuild" />
-    <Copy SourceFiles="@(BuildSSOSettingsFileImportFilesToCopy)" DestinationFiles="@(BuildSSOSettingsFileImportFilesToCopy->'..\Framework\DeployTools\%(DestFilename)BTS2010%(DestExt)')" />
+    <MSBuild Projects="SSOSettingsFileImport\SSOSettingsFileImport.sln" Properties="Configuration=Release;Platform=Any CPU;TargetFrameworkVersion=v4.0;BizTalkVersion=2013R2" Targets="Rebuild" />
+    <Copy SourceFiles="@(BuildSSOSettingsFileImportFilesToCopy)" DestinationFiles="@(BuildSSOSettingsFileImportFilesToCopy->'..\Framework\DeployTools\%(DestFilename)BTS2013R2%(DestExt)')" />
 
     <ReplaceAssemblyFileVersionInFile Path="SSOSettingsFileImport\CommonAssemblyInfo.cs" NewVersion="1.0.0.0" />
   </Target>

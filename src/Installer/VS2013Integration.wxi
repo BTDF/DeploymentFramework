@@ -7,7 +7,7 @@
 -->
 <Include xmlns:util="http://schemas.microsoft.com/wix/UtilExtension" xmlns:vs="http://schemas.microsoft.com/wix/VSExtension">
   <Fragment>
-    <Feature Id="VS2013IntegrationFeature" Title="Visual Studio 2013 Integration" Level="1" InstallDefault="local" Display="55"
+    <Feature Id="VS2013IntegrationFeature" Title="Visual Studio 2013 IntelliSense" Level="1" InstallDefault="local" Display="55"
              AllowAdvertise="no" TypicalDefault="install" Description="IntelliSense for Visual Studio">
         <ComponentRef Id="DeploymentFrameworkForBizTalk5.0.xml_VS2013"/>
         <ComponentRef Id="DeploymentFrameworkForBizTalk5.0.xsd_VS2013"/>
