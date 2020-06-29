@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -11,28 +11,8 @@
     <RootNamespace>DeploymentFrameworkForBizTalk.ESB.Resolver.Sso</RootNamespace>
     <AssemblyName>DeploymentFrameworkForBizTalk.ESB.Resolver.Sso.$(Ver)</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\sn.snk</AssemblyOriginatorKeyFile>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -57,10 +37,10 @@
   <ItemGroup>
     <Reference Include="Microsoft.BizTalk.Pipeline, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Program Files\Microsoft BizTalk Server 2009\Microsoft.BizTalk.Pipeline.dll</HintPath>
+      <HintPath>..\..\..\..\..\Program Files\Microsoft BizTalk Server 2013 R2\Microsoft.BizTalk.Pipeline.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.ESB.Resolver, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\ExternalReferences\ESB2_1\Microsoft.Practices.ESB.Resolver.dll</HintPath>
+      <HintPath>..\ExternalReferences\ESB2_2\Microsoft.Practices.ESB.Resolver.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.XLANGs.BaseTypes, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="SSOSettingsFileReader, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b9585ffc9d454e4a, processorArchitecture=MSIL">
@@ -84,23 +64,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResolveProvider.cs" />
     <Compile Include="Sso.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\sn.snk">

@@ -1,4 +1,0 @@
-# This is a response file for MSBuild
-# Add custom MSBuild command line options in this file
-/property:SolutionName="BizTalkSample"
-/property:BranchToBuild="Dev"

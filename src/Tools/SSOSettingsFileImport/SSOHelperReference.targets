@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Reference Include="Microsoft.BizTalk.Interop.SSOClient" Condition="'$(BizTalkVersion)' == 'Pre2013'">
-      <HintPath>..\ExternalReferences\PreBTS2013\Microsoft.BizTalk.Interop.SSOClient.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Microsoft.BizTalk.Interop.SSOClient" Condition="'$(BizTalkVersion)' == '2013R2'">
       <HintPath>..\ExternalReferences\BTS2013R2\Microsoft.BizTalk.Interop.SSOClient.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.BizTalk.Interop.SSOClient" Condition="'$(BizTalkVersion)' == '2016'">
       <HintPath>..\ExternalReferences\BTS2016\Microsoft.BizTalk.Interop.SSOClient.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.BizTalk.Interop.SSOClient" Condition="'$(BizTalkVersion)' == ''">
-      <HintPath>..\ExternalReferences\BTS2013\Microsoft.BizTalk.Interop.SSOClient.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

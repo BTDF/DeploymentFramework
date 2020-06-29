@@ -1,3 +1,7 @@
+### 5.8.95 [Release Candidate 1] (0?/?/2020)
+
+- Remove support for BizTalk 2010 and 2013 (R1)
+
 ### 5.7.100 [Release] (08/13/2017)
 * Visual Studio Addin (#11160)
     * New icons; more commands on toolbar; enable/disable commands when appropriate; add icons in VS 2015

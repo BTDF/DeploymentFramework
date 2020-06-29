@@ -601,9 +601,6 @@
                     <Component Id="cmpF0069F75434DCD04095FBFC1EC165A9C" Guid="{8867B6E1-BA6C-4F05-9DCB-C7C0395151F1}">
                         <File Id="fil4C07E64EC9346B6703DBE1D845DD875D" KeyPath="yes" Source="..\Samples\TeamBuild\TFSBuild.proj" />
                     </Component>
-                    <Component Id="cmp0252AC176B3C22E01F33ACF361131F21" Guid="{428581FF-E5ED-4631-87DE-A73D97EACC8B}">
-                        <File Id="filF7CE2A36CDFA7CFA5707969CEF0F9D23" KeyPath="yes" Source="..\Samples\TeamBuild\TFSBuild.rsp" />
-                    </Component>
                 </Directory>
             </Directory>
         </DirectoryRef>
@@ -773,7 +770,6 @@
             <ComponentRef Id="cmp8F0490A62428A79BD8C2971205F1B80D" />
             <ComponentRef Id="cmp4C3C1580938B8304AF476B449CCB58B0" />
             <ComponentRef Id="cmpF0069F75434DCD04095FBFC1EC165A9C" />
-            <ComponentRef Id="cmp0252AC176B3C22E01F33ACF361131F21" />
         </ComponentGroup>
     </Fragment>
 </Include>

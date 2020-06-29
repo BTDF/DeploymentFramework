@@ -29,7 +29,7 @@
   <Target Name="TestConfigureWebServiceExtension">
     <ConfigureWebServiceExtension
       MetabasePath="IIS://localhost/w3svc/1/Root"
-      ExtensionFile="C:\Program Files (x86)\Microsoft BizTalk Server 2010\HttpReceive64\BTSHTTPReceive.dll" ExtensionName=".\bin" Remove="True" />
+      ExtensionFile="C:\Program Files (x86)\Microsoft BizTalk Server 2013 R2\HttpReceive64\BTSHTTPReceive.dll" ExtensionName=".\bin" Remove="True" />
   </Target>
 
   <ItemDefinitionGroup>

@@ -13,7 +13,7 @@
   This MSBuild targets file may be used to deploy, undeploy or redeploy your BizTalk app from a command-line/unattended script.
   
   Command line parameters:
-    tv - 4.0 for BizTalk 2010 (example /tv:4.0)
+    tv - 12.0 for BizTalk 2013 R2 (example /tv:12.0)
 	t - Deploy, Undeploy, Redeploy or QuickDeploy (example /t:Deploy)
 	
   Property Parameters or Environment Variables (set these either as an environment variable (as the SetEnvUI wizard does) or with the /p command line parameter
@@ -23,9 +23,9 @@
 	Interactive - True to pause at end of deploy, False otherwise
 	
   Complete example:
-	Assuming 1) BizTalk 2010 (/tv:4.0) and 2) default MSBuild.exe is MSBuild 4.0
+	Assuming 1) BizTalk 2013 R2 (/tv:12.0) and 2) default MSBuild.exe is MSBuild 12.0
     Current dir is C:\Program Files (x86)\Deployment Framework for BizTalk - Advanced\1.0>
-	MSBuild.exe Deployment\Framework\BizTalkDeploymentFramework.ServerExecute.targets /t:Deploy /p:BT_DEPLOY_MGMT_DB=True /p:ENV_SETTINGS="C:\Program Files (x86)\Deployment Framework for BizTalk - Advanced\1.0\Deployment\EnvironmentSettings\local_settings.xml" /tv:4.0 /p:ProjectFile=Deployment.btdfproj
+	MSBuild.exe Deployment\Framework\BizTalkDeploymentFramework.ServerExecute.targets /t:Deploy /p:BT_DEPLOY_MGMT_DB=True /p:ENV_SETTINGS="C:\Program Files (x86)\Deployment Framework for BizTalk - Advanced\1.0\Deployment\EnvironmentSettings\local_settings.xml" /tv:12.0 /p:ProjectFile=Deployment.btdfproj
   -->
 
   <!-- START: These targets represent the public interface. -->

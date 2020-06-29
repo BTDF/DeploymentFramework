@@ -5,10 +5,10 @@
     
     This source file is subject to the Microsoft Public License (Ms-PL).
 -->
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="4.0">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="12.0">
   <PropertyGroup>
-    <Version>5_7_0</Version>
-    <InstallerVersion>5.7.100.0</InstallerVersion>
+    <Version>5_8_0</Version>
+    <InstallerVersion>5.8.10.0</InstallerVersion>
     <ProductID>018C4B8A-B453-49DD-91AD-3B20D0D1D428</ProductID>
   </PropertyGroup>
   
@@ -28,7 +28,7 @@
   </Target>
 
   <Target Name="BuildDocs">
-    <Exec Command="&quot;\Program Files\IBE Software\HelpNDoc\Hnd4.exe&quot; ..\Documentation\Src\DeploymentFrameworkForBizTalkDocs.hnd /g" />
+    <Exec Command="&quot;\Program Files (x86)\IBE Software\HelpNDoc 6\Hnd6.exe&quot; ..\Documentation\Src\DeploymentFrameworkForBizTalkDocs.hnd build -x=&quot;Build PDF documentation&quot; -x=&quot;Build CHM documentation&quot;" />
   </Target>
 
   <Target Name="BuildInstaller" DependsOnTargets="$(BuildInstallerDependsOn)">
@@ -36,7 +36,7 @@
       <MsiFile Include="..\Installer\bin\release\DeploymentFrameworkForBizTalk.msi" />
     </ItemGroup>
 
-    <MSBuild Projects="..\Installer\BizTalkDeploymentFrameworkInstaller.sln" Properties="Configuration=Release;Platform=x86;ProductVersionFull=$(InstallerVersion);ProductID=$(ProductID)" Targets="Rebuild" />
+    <MSBuild Projects="..\Installer\BizTalkDeploymentFrameworkInstaller.sln" Properties="Configuration=Release;Platform=x86;SuppressIces=ICE30;ProductVersionFull=$(InstallerVersion);ProductID=$(ProductID)" Targets="Rebuild" />
     <Copy SourceFiles="@(MsiFile)" DestinationFiles="@(MsiFile->'Staging\%(filename)V$(Version)%(extension)')" />
   </Target>
 

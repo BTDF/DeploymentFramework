@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -45,16 +45,12 @@
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ESBToolkit21Integration.wxi" />
-    <Content Include="ESBToolkit22Integration.wxi" />
     <Content Include="ESBToolkit23Integration.wxi" />
     <Content Include="ESBToolkit24Integration.wxi" />
     <Content Include="RuntimeComponents.wxi" />
     <Content Include="DeveloperTools.wxi" />
     <Content Include="Samples.wxi" />
     <Content Include="SamplesGenerated.wxi" />
-    <Content Include="VS2010Integration.wxi" />
-    <Content Include="VS2012Integration.wxi" />
     <Content Include="VS2013Integration.wxi" />
     <Content Include="VS2015Integration.wxi" />
   </ItemGroup>
