@@ -42,7 +42,7 @@
       <HintPath>..\..\..\..\..\Program Files\Microsoft BizTalk Server 2006\Microsoft.BizTalk.Operations.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
-    <Reference Include="Microsoft.Build.Utilities" />
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="Microsoft.XLANGs.BizTalk.CrossProcess, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Program Files\Microsoft BizTalk Server 2006\Microsoft.XLANGs.BizTalk.CrossProcess.dll</HintPath>
