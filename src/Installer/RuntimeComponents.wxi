@@ -339,7 +339,7 @@
     <DirectoryRef Id="DeployTools" FileSource="..\Framework\DeployTools">
       <Component Id="SSOSettingsEditorBTS2016.exe" Guid="CCF32771-6540-4435-BE1C-712A3FE27178">
         <File Id="SSOSettingsEditorBTS2016.exe" Name="SSOSettingsEditor.exe" KeyPath="yes" Source="..\Framework\DeployTools\SSOSettingsEditorBTS2016.exe" />
-        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2016"]]></Condition>
+        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2016" OR BTS_PRODUCTNAME = "Microsoft BizTalk Server 2020"]]></Condition>
       </Component>
     </DirectoryRef>
   </Fragment>
@@ -347,7 +347,7 @@
     <DirectoryRef Id="DeployTools" FileSource="..\Framework\DeployTools">
       <Component Id="SSOSettingsFileImportBTS2016.exe" Guid="5414504E-6076-40A1-9B21-6951473AEEB6">
         <File Id="SSOSettingsFileImportBTS2016.exe" Name="SSOSettingsFileImport.exe" KeyPath="yes" Source="..\Framework\DeployTools\SSOSettingsFileImportBTS2016.exe" />
-        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2016"]]></Condition>
+        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2016" OR BTS_PRODUCTNAME = "Microsoft BizTalk Server 2020"]]></Condition>
       </Component>
     </DirectoryRef>
   </Fragment>
@@ -355,7 +355,7 @@
     <DirectoryRef Id="DeployTools" FileSource="..\Framework\DeployTools">
       <Component Id="SSOSettingsFileReaderBTS2016.dll" Guid="7B43B888-B0CF-4EA9-8D65-2B2AAEB18E40">
         <File Id="SSOSettingsFileReaderBTS2016.dll" Name="SSOSettingsFileReader.dll" KeyPath="yes" Source="..\Framework\DeployTools\SSOSettingsFileReaderBTS2016.dll" />
-        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2016"]]></Condition>
+        <Condition><![CDATA[BTS_PRODUCTNAME = "Microsoft BizTalk Server 2016" OR BTS_PRODUCTNAME = "Microsoft BizTalk Server 2020"]]></Condition>
       </Component>
     </DirectoryRef>
   </Fragment>

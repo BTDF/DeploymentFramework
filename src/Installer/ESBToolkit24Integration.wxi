@@ -9,8 +9,8 @@
   <Fragment>
     <Feature Id="EsbToolkit24IntegrationFeature" Title="ESB Toolkit Integration" Level="1" InstallDefault="local" Display="51"
              AllowAdvertise="no" TypicalDefault="install" Description="Extends the BizTalk ESB Toolkit with a custom SSO resolver">
-      <ComponentRef Id="DeploymentFrameworkForBizTalk.Services.Extenders.Resolvers.Sso.2.4.dll"/>
-      <ComponentRef Id="DeploymentFrameworkForBizTalk.ESB.Resolver.Sso.2.4.dll"/>
+      <ComponentRef Id="BTDF.Services.Extenders.Resolvers.Sso.2.4.dll_BTS2016"/>
+      <ComponentRef Id="BTDF.ESB.Resolver.Sso.2.4.dll_BTS2016"/>
       <Condition Level="0">
         <![CDATA[(NOT ESBTOOLKIT24_DIR) OR (BTS_PRODUCTNAME <> "Microsoft BizTalk Server 2016")]]>
       </Condition>
@@ -40,15 +40,15 @@
   </Fragment>
   <Fragment>
     <DirectoryRef Id="EsbToolkitDslPackageLibDir24" FileSource="..\Tools\ESB.Resolvers\Bin">
-      <Component Id="DeploymentFrameworkForBizTalk.Services.Extenders.Resolvers.Sso.2.4.dll" Guid="BB6D76CD-F8BF-4570-BEDF-59EEC08E482A">
-        <File Id="DeploymentFrameworkForBizTalk.Services.Extenders.Resolvers.Sso.2.4.dll" KeyPath="yes" Source="..\Tools\ESB.Resolvers\Bin\DeploymentFrameworkForBizTalk.Services.Extenders.Resolvers.Sso.2.2.dll" />
+      <Component Id="BTDF.Services.Extenders.Resolvers.Sso.2.4.dll_BTS2016" Guid="BB6D76CD-F8BF-4570-BEDF-59EEC08E482A">
+        <File Id="BTDF.Services.Extenders.Resolvers.Sso.2.4.dll_BTS2016" KeyPath="yes" Source="..\Tools\ESB.Resolvers\Bin\DeploymentFrameworkForBizTalk.Services.Extenders.Resolvers.Sso.2.2.dll" />
       </Component>
     </DirectoryRef>
   </Fragment>
   <Fragment>
     <DirectoryRef Id="ESBTOOLKIT24_DIR" FileSource="..\Tools\ESB.Resolvers\Bin">
-      <Component Id="DeploymentFrameworkForBizTalk.ESB.Resolver.Sso.2.4.dll" Guid="02DD1F4C-970A-412D-B0F2-769DF87FD85B">
-        <File Id="DeploymentFrameworkForBizTalk.ESB.Resolver.Sso.2.4.dll" KeyPath="yes" Assembly=".net" Source="..\Tools\ESB.Resolvers\Bin\DeploymentFrameworkForBizTalk.ESB.Resolver.Sso.2.2.dll" />
+      <Component Id="BTDF.ESB.Resolver.Sso.2.4.dll_BTS2016" Guid="02DD1F4C-970A-412D-B0F2-769DF87FD85B">
+        <File Id="BTDF.ESB.Resolver.Sso.2.4.dll_BTS2016" KeyPath="yes" Assembly=".net" Source="..\Tools\ESB.Resolvers\Bin\DeploymentFrameworkForBizTalk.ESB.Resolver.Sso.2.2.dll" />
         <util:XmlConfig
           Id="CreateResolverInEsbConfig24"
           File="[ESBTOOLKIT24_DIR]esb.config"

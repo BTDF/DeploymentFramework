@@ -12,12 +12,10 @@
         <ComponentRef Id="DeploymentFrameworkForBizTalk5.0.xml_VS2015"/>
         <ComponentRef Id="DeploymentFrameworkForBizTalk5.0.xsd_VS2015"/>
         <Condition Level="0">
-          <![CDATA[(NOT VS2015_IDE_VCSHARP_PROJECTSYSTEM_INSTALLED) OR (BTS_PRODUCTNAME <> "Microsoft BizTalk Server 2016")]]>
+          <![CDATA[(NOT VS2015_SCHEMAS_DIR) OR (BTS_PRODUCTNAME <> "Microsoft BizTalk Server 2016")]]>
         </Condition>
       </Feature>
 
-    <PropertyRef Id="VS2015DEVENV" />
-    <PropertyRef Id="VS2015_IDE_VCSHARP_PROJECTSYSTEM_INSTALLED" />
     <PropertyRef Id="VS2015_SCHEMAS_DIR" />
   </Fragment>
 

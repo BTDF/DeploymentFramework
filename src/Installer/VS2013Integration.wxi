@@ -12,12 +12,10 @@
         <ComponentRef Id="DeploymentFrameworkForBizTalk5.0.xml_VS2013"/>
         <ComponentRef Id="DeploymentFrameworkForBizTalk5.0.xsd_VS2013"/>
         <Condition Level="0">
-          <![CDATA[(NOT VS2013_IDE_VCSHARP_PROJECTSYSTEM_INSTALLED) OR (BTS_PRODUCTNAME <> "Microsoft BizTalk Server 2013 R2")]]>
+          <![CDATA[(NOT VS2013_SCHEMAS_DIR) OR (BTS_PRODUCTNAME <> "Microsoft BizTalk Server 2013 R2")]]>
         </Condition>
       </Feature>
 
-    <PropertyRef Id="VS2013DEVENV" />
-    <PropertyRef Id="VS2013_IDE_VCSHARP_PROJECTSYSTEM_INSTALLED" />
     <PropertyRef Id="VS2013_SCHEMAS_DIR" />
 
     <InstallExecuteSequence>

@@ -27,7 +27,7 @@
     <MSBuild Projects="..\Tools\BuildTools.msbuild" Properties="Configuration=Release;Platform=Any CPU;ProductVersionFull=$(InstallerVersion)" UseResultsCache="false" UnloadProjectsOnCompletion="true" />
   </Target>
 
-  <Target Name="BuildDocs">
+  <Target Name="BuildDocs" Condition="'$(NoBuildDocs)' == ''">
     <Exec Command="&quot;\Program Files (x86)\IBE Software\HelpNDoc 6\Hnd6.exe&quot; ..\Documentation\Src\DeploymentFrameworkForBizTalkDocs.hnd build -x=&quot;Build PDF documentation&quot; -x=&quot;Build CHM documentation&quot;" />
   </Target>
 

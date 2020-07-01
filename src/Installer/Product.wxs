@@ -22,9 +22,11 @@
     <Property Id="ESBTOOLKIT23_DIR" Secure="yes">
       <RegistrySearch Id="ESBTOOLKIT23_DIR_REG" Root="HKLM" Key="SOFTWARE\Microsoft\BizTalk ESB Toolkit" Name="InstallPath" Type="directory" />
     </Property>
-
     <Property Id="ESBTOOLKIT24_DIR" Secure="yes">
       <RegistrySearch Id="ESBTOOLKIT24_DIR_REG" Root="HKLM" Key="SOFTWARE\Microsoft\BizTalk ESB Toolkit" Name="InstallPath" Type="directory" />
+    </Property>
+    <Property Id="ESBTOOLKIT25_DIR" Secure="yes">
+      <RegistrySearch Id="ESBTOOLKIT25_DIR_REG" Root="HKLM" Key="SOFTWARE\Microsoft\BizTalk ESB Toolkit" Name="InstallPath" Type="directory" />
     </Property>
 
     <Property Id="ARPHELPLINK" Value="http://biztalkdeployment.codeplex.com" />
@@ -46,8 +48,10 @@
     <FeatureRef Id="SamplesFeature" />
     <FeatureRef Id="VS2013IntegrationFeature" />
     <FeatureRef Id="VS2015IntegrationFeature" />
+    <FeatureRef Id="VS2019IntegrationFeature" />
     <FeatureRef Id="EsbToolkit23IntegrationFeature" />
     <FeatureRef Id="EsbToolkit24IntegrationFeature" />
+    <FeatureRef Id="EsbToolkit25IntegrationFeature" />
 
     <PropertyRef Id="BTS_PRODUCTNAME" />
     <PropertyRef Id="WIX_DIR_COMMON_DOCUMENTS"/>
@@ -153,7 +157,9 @@
   <?include Samples.wxi ?>
   <?include VS2013Integration.wxi ?>
   <?include VS2015Integration.wxi ?>
+  <?include VS2019Integration.wxi ?>
   <?include ESBToolkit23Integration.wxi ?>
   <?include ESBToolkit24Integration.wxi ?>
+  <?include ESBToolkit25Integration.wxi ?>
 
 </Wix>
