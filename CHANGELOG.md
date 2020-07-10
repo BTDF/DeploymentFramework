@@ -1,7 +1,11 @@
-### 5.8.95 [Release Candidate 1] (0?/?/2020)
+### 5.8.95 [Release Candidate 1] (07/?/2020)
 
+- Add support for BizTalk 2020
 - Remove support for BizTalk 2010 and 2013 (R1)
-- Upgrade to XmlPreprocess 3.0
+- Upgrade to XmlPreprocess v3.0
+- Upgrade to Environment Settings Manager v1.7 (eliminates .NET 2.x/3.x dependency)
+- Upgrade to BizTalk BAM Definition XML Exporter v2.3 (eliminates .NET 2.x/3.x dependency)
+- Minor updates to documentation
 
 ### 5.7.100 [Release] (08/13/2017)
 * Visual Studio Addin (#11160)
