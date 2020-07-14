@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+  Deployment Framework for BizTalk
+  Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Installer">
+  <PropertyGroup>
+    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+    <Platform Condition="'$(Platform)' == ''">x86</Platform>
+    <SchemaVersion>1.0</SchemaVersion>
+    <ProjectName>DeploymentFramework.Samples.Bam</ProjectName>
+    <ProjectVersion>1.0</ProjectVersion>
+
+    <!--
+      This solution's Services assembly contains schemas, transforms and orchestrations.
+      Schemas should be deployed before anything else, so we treat the entire Services
+      assembly as a Schemas assembly.  We set IncludeOrchestrations and IncludeTransforms
+      to False because we do not have separate assemblies for those artifacts.  Below,
+      we include the Services assembly in a Schemas ItemGroup.
+    -->
+    <!-- IncludeSchemas is True by default, but included here to be explicit. -->
+    <IncludeSchemas>True</IncludeSchemas>
+    <IncludeOrchestrations>False</IncludeOrchestrations>
+    <IncludeTransforms>False</IncludeTransforms>
+
+    <IncludePipelines>True</IncludePipelines>
+    <IncludePipelineComponents>True</IncludePipelineComponents>
+    <IncludeSSO>True</IncludeSSO>
+    <IncludeBam>True</IncludeBam>
+
+    <!-- For this sample, we want to undeploy the BAM model and lose all BAM data during undeploy. -->
+    <SkipBamUndeploy>False</SkipBamUndeploy>
+
+    <!-- Do not restart IIS during deployment since we don't use any IIS artifacts in this sample. -->
+    <SkipIISReset>true</SkipIISReset>
+
+    <!-- Use PortBindingsMaster.xml as a template to generate PortBindings.xml -->
+    <UsingMasterBindings>true</UsingMasterBindings>
+
+    <!-- Do not require #ifdef around macros being substituted in PortBindingsMaster.xml and other XMLPreprocess'd files. -->
+    <RequireXmlPreprocessDirectives>false</RequireXmlPreprocessDirectives>
+</PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Properties related to building an MSI for server deployments -->
+    <!-- Make your MSI unique - your project should change GUIDs.  -->
+    <!-- BizTalk App Version Upgrade -->
+    <!--   For each new product release to be deployed to your BizTalk servers: -->
+    <!--     1) Increment ProductVersion -->
+    <!--     2) Generate a new GUID and update ProductId with the new GUID -->
+    <!--   This allows the new MSI to automatically uninstall (not undeploy!) the old MSI and install the new one. -->
+    <ProductVersion>1.0.0</ProductVersion>
+    <ProductId>e6e3b9b2-e6b4-4f95-bafa-7d0c0540411a</ProductId>
+    <!-- BizTalk App Version Upgrade -->
+
+    <ProductName>Deployment Framework for BizTalk - BAM</ProductName>
+    <Manufacturer>Deployment Framework for BizTalk Team</Manufacturer>
+    <PackageDescription>Deployment Framework for BizTalk Sample - BAM</PackageDescription>
+    <!-- NEVER change the ProductUpgradeCode. -->
+    <ProductUpgradeCode>ee44deae-7d22-4b7f-bf75-c5bab48482d7</ProductUpgradeCode>
+  </PropertyGroup>
+
+  <!-- Under TFS Team Build, set CustomizableOutDir property to true in TFS 2005/2008/2010 UpgradeTemplate. -->
+  <!-- With a workflow build, copy the default template then modify the MSBuild task for the solution build. Set OutDir to blank and -->
+  <!-- CommandLineArguments to String.Format("/p:SkipInvalidConfigurations=true;TeamBuildOutDir=""{0}"" {1}", BinariesDirectory, MSBuildArguments). -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DeploymentFrameworkTargetsPath>$(MSBuildExtensionsPath)\DeploymentFrameworkForBizTalk\5.0\</DeploymentFrameworkTargetsPath>
+    <OutputPath Condition="'$(TeamBuildOutDir)' == ''">bin\Debug\</OutputPath>
+    <OutputPath Condition="'$(TeamBuildOutDir)' != ''">$(TeamBuildOutDir)</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DeploymentFrameworkTargetsPath>$(MSBuildExtensionsPath)\DeploymentFrameworkForBizTalk\5.0\</DeploymentFrameworkTargetsPath>
+    <OutputPath Condition="'$(TeamBuildOutDir)' == ''">bin\Release\</OutputPath>
+    <OutputPath Condition="'$(TeamBuildOutDir)' != ''">$(TeamBuildOutDir)</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Server'">
+    <DeploymentFrameworkTargetsPath>Framework\</DeploymentFrameworkTargetsPath>
+    <!-- Get our PDBs into the GAC so we get file/line number information in stack traces. -->
+    <DeployPDBsToGac>false</DeployPDBsToGac>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- We are asking the Deployment Framework to create MSBuild properties from the values
+        in our environment settings spreadsheet named here. -->
+    <PropsFromEnvSettings Include="SsoAppUserGroup;SsoAppAdminGroup;BAMViewsAndAccounts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Schemas Include="DeploymentFramework.Samples.Bam.Services.dll">
+      <LocationPath>..\Services\bin\$(Configuration)</LocationPath>
+    </Schemas>
+  </ItemGroup>
+  <ItemGroup>
+    <Pipelines Include="DeploymentFramework.Samples.Bam.Pipelines.dll">
+      <LocationPath>..\Pipelines\bin\$(Configuration)</LocationPath>
+    </Pipelines>
+  </ItemGroup>
+  <ItemGroup>
+    <PipelineComponents Include="DeploymentFramework.Samples.Bam.PipelineComponents.dll">
+      <LocationPath>..\PipelineComponents\bin\$(Configuration)</LocationPath>
+    </PipelineComponents>
+  </ItemGroup>
+  <ItemGroup>
+    <BamDefinitions Include="Bam.xls">
+      <LocationPath>..\BAM</LocationPath>
+    </BamDefinitions>
+  </ItemGroup>
+  <ItemGroup>
+    <BamTrackingProfiles Include="Bam.btt">
+      <LocationPath>..\BAM</LocationPath>
+    </BamTrackingProfiles>
+  </ItemGroup>
+
+  <Import Project="$(DeploymentFrameworkTargetsPath)BizTalkDeploymentFramework.targets" />
+
+  <!--
+    The Deployment Framework automatically packages most files into the server install MSI.
+    However, if there are special folders that you need to include in the MSI, you can
+    copy them to the folder $(RedistDir) in the CustomRedist target.
+    To include individual files, add an ItemGroup with AdditionalFiles elements.
+  -->
+  <Target Name="CustomRedist">
+    <MakeDir Directories="$(RedistDir)\TestFiles" />
+
+    <!-- Force MSBuild to expand the item spec into physical file specs -->
+    <CreateItem Include="..\TestFiles\**\*.*">
+      <Output TaskParameter="Include" ItemName="TestFilesSourceGroup" />
+    </CreateItem>
+
+    <!-- Copy all of the files and subfolders from ..\TestFiles to $(RedistDir)\TestFiles -->
+    <Copy DestinationFolder="$(RedistDir)\TestFiles\%(RecursiveDir)" SourceFiles="@(TestFilesSourceGroup)"/>
+  </Target>
+</Project>

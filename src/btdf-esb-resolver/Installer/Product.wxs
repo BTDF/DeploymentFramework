@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Deployment Framework for BizTalk
+    Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
+    
+    This source file is subject to the Microsoft Public License (Ms-PL).
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension" xmlns:vs="http://schemas.microsoft.com/wix/VSExtension">
+  <?define ProductVersion="5.8" ?>
+
+  <Product Id="$(var.ProductID)" Name="Deployment Framework for BizTalk ESB Resolver $(var.ProductVersion) Beta 1"
+           Language="1033" Version="$(var.ProductVersionFull)" Manufacturer="Thomas F Abraham" UpgradeCode="D85F3B92-4E06-4568-BDC8-4A95D7EEB6BA">
+    <Package InstallerVersion="200" Compressed="yes" />
+
+    <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
+
+    <UIRef Id="WixUI_Mondo" />
+    
+    <WixVariable Id="WixUILicenseRtf" Value="..\..\License.rtf" />
+    <WixVariable Id="WixUISupportPerUser" Value="0" />
+    
+    <Property Id="ESBTOOLKIT23_DIR" Secure="yes">
+      <RegistrySearch Id="ESBTOOLKIT23_DIR_REG" Root="HKLM" Key="SOFTWARE\Microsoft\BizTalk ESB Toolkit" Name="InstallPath" Type="directory" />
+    </Property>
+    <Property Id="ESBTOOLKIT24_DIR" Secure="yes">
+      <RegistrySearch Id="ESBTOOLKIT24_DIR_REG" Root="HKLM" Key="SOFTWARE\Microsoft\BizTalk ESB Toolkit" Name="InstallPath" Type="directory" />
+    </Property>
+    <Property Id="ESBTOOLKIT25_DIR" Secure="yes">
+      <RegistrySearch Id="ESBTOOLKIT25_DIR_REG" Root="HKLM" Key="SOFTWARE\Microsoft\BizTalk ESB Toolkit" Name="InstallPath" Type="directory" />
+    </Property>
+
+    <Property Id="ARPHELPLINK" Value="https://github.com/BTDF/DeploymentFramework" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/BTDF/DeploymentFramework" />
+
+    <Property Id='ALLUSERS' Value='1' Secure="yes" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+		<Directory Id="ProgramFilesFolder">
+			<Directory Id="INSTALLLOCATION" Name="Deployment Framework for BizTalk ESB Resolver $(var.ProductVersion)" />
+		</Directory>
+    </Directory>
+
+    <FeatureRef Id="SamplesFeature" />
+    <FeatureRef Id="EsbToolkit23IntegrationFeature" />
+    <FeatureRef Id="EsbToolkit24IntegrationFeature" />
+    <FeatureRef Id="EsbToolkit25IntegrationFeature" />
+
+    <PropertyRef Id="BTS_PRODUCTNAME" />
+
+    <Condition Message="Microsoft BizTalk Server 2013 R2, 2016 or 2020 is required to install this product.">
+      Installed OR BTS_PRODUCTNAME
+    </Condition>
+  </Product>
+
+  <Fragment>
+    <Property Id="BTS_PRODUCTNAME" Secure="yes">
+      <RegistrySearch Id="SearchForBT2010ProductName" Root="HKLM" Key="SOFTWARE\Microsoft\BizTalk Server\3.0" Name="ProductName" Type="raw" />
+    </Property>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="TARGETDIR">
+      <Component Id="RegistryEntries" Guid="*">
+        <RegistryKey Root="HKLM" Key="Software\DeploymentFrameworkForBizTalkESBResolver">
+          <RegistryValue Name="InstalledVersion" Type="string" Value="$(var.ProductVersion)"/>
+          <RegistryValue Name="InstallPath" Type="string" Value="[INSTALLLOCATION]"/>
+        </RegistryKey>
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+
+  <?include Samples.wxi ?>
+  <?include ESBToolkit23Integration.wxi ?>
+  <?include ESBToolkit24Integration.wxi ?>
+  <?include ESBToolkit25Integration.wxi ?>
+
+</Wix>

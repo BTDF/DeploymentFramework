@@ -2,6 +2,7 @@
 
 - Add support for BizTalk 2020
 - Remove support for BizTalk 2010 and 2013 (R1)
+- Move BTDF ESB Resolver into a separate, dedicated MSI
 - Upgrade to XmlPreprocess v3.0
 - Upgrade to Environment Settings Manager v1.7 (eliminates .NET 2.x/3.x dependency)
 - Upgrade to BizTalk BAM Definition XML Exporter v2.3 (eliminates .NET 2.x/3.x dependency)

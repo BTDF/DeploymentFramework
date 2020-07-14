@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://biztalkdeployment.codeplex.com/IISSample" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="BizTalkServiceInstance" targetNamespace="http://biztalkdeployment.codeplex.com/IISSample" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation>
+    <CreationInfo Created="2014-04-22 11:37:06Z" />
+  </wsdl:documentation>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://biztalkdeployment.codeplex.com/IISSample/Imports">
+      <xsd:import schemaLocation="http://localhost:80/DeploymentFramework.Samples.IIS/ProcessPOService.svc?xsd=xsd2" namespace="http://IIS.InvoiceSchema" />
+      <xsd:import schemaLocation="http://localhost:80/DeploymentFramework.Samples.IIS/ProcessPOService.svc?xsd=xsd3" namespace="http://IIS.POSchema" />
+      <xsd:import schemaLocation="http://localhost:80/DeploymentFramework.Samples.IIS/ProcessPOService.svc?xsd=xsd4" namespace="http://IIS.WCFSchema" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ProcessPOService_ProcessPO_InputMessage">
+    <wsdl:part xmlns:q1="http://IIS.WCFSchema" name="part" element="q1:ProcessPORequest" />
+  </wsdl:message>
+  <wsdl:message name="ProcessPOService_ProcessPO_OutputMessage">
+    <wsdl:part xmlns:q2="http://IIS.WCFSchema" name="part" element="q2:ProcessPOResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ProcessPOService">
+    <wsdl:documentation />
+    <wsdl:operation name="ProcessPO">
+      <wsdl:documentation />
+      <wsdl:input message="tns:ProcessPOService_ProcessPO_InputMessage" />
+      <wsdl:output message="tns:ProcessPOService_ProcessPO_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_ITwoWayAsync" type="tns:ProcessPOService">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="ProcessPO">
+      <wsdl:documentation />
+      <soap:operation soapAction="ProcessPO" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="BizTalkServiceInstance">
+    <wsdl:port name="BasicHttpBinding_ITwoWayAsync" binding="tns:BasicHttpBinding_ITwoWayAsync">
+      <soap:address location="http://localhost/DeploymentFramework.Samples.IIS/ProcessPOService.svc" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,124 @@
+﻿#if __DESIGNER_DATA
+#error Do not define __DESIGNER_DATA.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<om:MetaModel MajorVersion="1" MinorVersion="3" Core="2b131234-7959-458d-834f-2dc0769ce683" ScheduleModel="66366196-361d-448d-976f-cab5e87496d2" xmlns:om="http://schemas.microsoft.com/BizTalk/2003/DesignerData">
+    <om:Element Type="Module" OID="f5da1fc7-9d2a-4e13-81e8-d6a3d3fd2e34" LowerBound="1.1" HigherBound="28.1">
+        <om:Property Name="ReportToAnalyst" Value="True" />
+        <om:Property Name="Name" Value="BizTalkSample.Orchestrations" />
+        <om:Property Name="Signal" Value="False" />
+        <om:Element Type="ServiceDeclaration" OID="89c4d33b-1bf7-4f16-a815-a4c2e991a9b2" ParentLink="Module_ServiceDeclaration" LowerBound="4.1" HigherBound="27.1">
+            <om:Property Name="InitializedTransactionType" Value="False" />
+            <om:Property Name="IsInvokable" Value="True" />
+            <om:Property Name="TypeModifier" Value="Internal" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="CalledOrch" />
+            <om:Property Name="Signal" Value="False" />
+            <om:Element Type="VariableDeclaration" OID="a163e1f8-1698-4fdb-aa28-fe67bbe65189" ParentLink="ServiceDeclaration_VariableDeclaration" LowerBound="7.1" HigherBound="8.1">
+                <om:Property Name="InitialValue" Value="true" />
+                <om:Property Name="UseDefaultConstructor" Value="True" />
+                <om:Property Name="Type" Value="log4net.helpers.PropertiesCollectionEx" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="logProps" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+            <om:Element Type="VariableDeclaration" OID="440fabf0-9a99-4806-949b-6216464bdf84" ParentLink="ServiceDeclaration_VariableDeclaration" LowerBound="8.1" HigherBound="9.1">
+                <om:Property Name="UseDefaultConstructor" Value="False" />
+                <om:Property Name="Type" Value="log4net.Ext.Serializable.SLog" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="logger" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+            <om:Element Type="VariableDeclaration" OID="007403a7-bd1c-4796-8e71-de0ca005415d" ParentLink="ServiceDeclaration_VariableDeclaration" LowerBound="9.1" HigherBound="10.1">
+                <om:Property Name="InitialValue" Value="log4net.helpers.CallersTypeName.Name" />
+                <om:Property Name="UseDefaultConstructor" Value="False" />
+                <om:Property Name="Type" Value="System.String" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="orchName" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+            <om:Element Type="ServiceBody" OID="90957db4-84a6-485f-8b63-0244a70004a4" ParentLink="ServiceDeclaration_ServiceBody">
+                <om:Property Name="Signal" Value="False" />
+                <om:Element Type="MessageDeclaration" OID="d88f19b0-1728-48ac-a5b2-8cb6a1e7ead3" ParentLink="ServiceBody_Declaration" LowerBound="10.15" HigherBound="10.74">
+                    <om:Property Name="Type" Value="BizTalkSample.Schemas.BizTalkSampleS1" />
+                    <om:Property Name="ParamDirection" Value="In" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="sampleRequest" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+                <om:Element Type="MessageDeclaration" OID="b18abc8e-b6b9-4ad5-ba39-9a3453eafdbf" ParentLink="ServiceBody_Declaration" LowerBound="10.76" HigherBound="10.140">
+                    <om:Property Name="Type" Value="BizTalkSample.Schemas.BizTalkSampleS2" />
+                    <om:Property Name="ParamDirection" Value="Out" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="sampleResponse" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+                <om:Element Type="VariableAssignment" OID="225f5e1b-7667-4041-b927-231a7029a566" ParentLink="ServiceBody_Statement" LowerBound="14.1" HigherBound="19.1">
+                    <om:Property Name="Expression" Value="logger = log4net.Ext.Serializable.SLogManager.GetLogger(@&quot;DeploymentFramework.Samples.Advanced&quot;,orchName);&#xD;&#xA;logger.RegistryConfigurator();&#xD;&#xA;logProps.Set(&quot;InstanceId&quot;,CalledOrch(Microsoft.XLANGs.BaseTypes.InstanceId));&#xD;&#xA;logger.Debug(logProps,&quot;Now in CalledOrch...&quot;);&#xD;&#xA;" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Trace" />
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+                <om:Element Type="Construct" OID="0f0eb9ec-0511-4fa1-a9e9-8f07b5fe5188" ParentLink="ServiceBody_Statement" LowerBound="19.1" HigherBound="25.1">
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Xform_S1toS2" />
+                    <om:Property Name="Signal" Value="True" />
+                    <om:Element Type="Transform" OID="421b8773-0273-427d-b296-c7bf2d9c5c05" ParentLink="ComplexStatement_Statement" LowerBound="22.1" HigherBound="24.1">
+                        <om:Property Name="ClassName" Value="BizTalkSample.Transforms.SampleMap" />
+                        <om:Property Name="ReportToAnalyst" Value="True" />
+                        <om:Property Name="Name" Value="X_S1ToS2" />
+                        <om:Property Name="Signal" Value="False" />
+                        <om:Element Type="MessagePartRef" OID="01c40027-4034-4318-9cf9-05bbf6ec8e4b" ParentLink="Transform_InputMessagePartRef" LowerBound="23.82" HigherBound="23.95">
+                            <om:Property Name="MessageRef" Value="sampleRequest" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="MessagePartReference_1" />
+                            <om:Property Name="Signal" Value="False" />
+                        </om:Element>
+                        <om:Element Type="MessagePartRef" OID="79f67f13-c1d0-44d4-9d1d-f80515b8f251" ParentLink="Transform_OutputMessagePartRef" LowerBound="23.28" HigherBound="23.42">
+                            <om:Property Name="MessageRef" Value="sampleResponse" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="MessagePartReference_2" />
+                            <om:Property Name="Signal" Value="False" />
+                        </om:Element>
+                    </om:Element>
+                    <om:Element Type="MessageRef" OID="79edd64a-c266-49e6-82ec-e30af8ff7f4b" ParentLink="Construct_MessageRef" LowerBound="20.23" HigherBound="20.37">
+                        <om:Property Name="Ref" Value="sampleResponse" />
+                        <om:Property Name="ReportToAnalyst" Value="True" />
+                        <om:Property Name="Signal" Value="False" />
+                    </om:Element>
+                </om:Element>
+            </om:Element>
+        </om:Element>
+    </om:Element>
+</om:MetaModel>
+#endif // __DESIGNER_DATA
+[Microsoft.XLANGs.BaseTypes.BPELExportable(false)]
+module BizTalkSample.Orchestrations
+{
+    [Microsoft.XLANGs.BaseTypes.BPELExportable(false)]
+    internal service CalledOrch
+    {
+        log4net.helpers.PropertiesCollectionEx logProps;
+        log4net.Ext.Serializable.SLog logger;
+        System.String orchName;
+        body (message BizTalkSample.Schemas.BizTalkSampleS1 sampleRequest, out message BizTalkSample.Schemas.BizTalkSampleS2 sampleResponse)
+        {
+            logProps = new log4net.helpers.PropertiesCollectionEx();
+            orchName = log4net.helpers.CallersTypeName.Name;
+            [Microsoft.XLANGs.BaseTypes.DesignerPosition("225f5e1b-7667-4041-b927-231a7029a566")]
+            logger = log4net.Ext.Serializable.SLogManager.GetLogger(@"DeploymentFramework.Samples.Advanced",orchName);
+            logger.RegistryConfigurator();
+            logProps.Set("InstanceId",CalledOrch(Microsoft.XLANGs.BaseTypes.InstanceId));
+            logger.Debug(logProps,"Now in CalledOrch...");
+            [Microsoft.XLANGs.BaseTypes.DesignerPosition("0f0eb9ec-0511-4fa1-a9e9-8f07b5fe5188")]
+            construct sampleResponse
+            {
+                [Microsoft.XLANGs.BaseTypes.DesignerPosition("421b8773-0273-427d-b296-c7bf2d9c5c05")]
+                transform (sampleResponse) = BizTalkSample.Transforms.SampleMap (sampleRequest);
+            }
+        }
+    }
+}
+

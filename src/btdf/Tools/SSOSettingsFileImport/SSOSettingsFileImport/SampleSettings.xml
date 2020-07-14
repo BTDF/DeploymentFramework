@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--This file was generated on 2/10/2010 3:15 PM by EnvironmentSettingsExporter from SettingsFileGenerator.xml.-->
+<settings>
+  <property name="FileSendLocation">c:\temp\BizTalkSample_OutDir</property>
+  <property name="ssoAppUserGroup">BizTalk Application Users</property>
+  <property name="ssoAppAdminGroup">BizTalk Server Administrators</property>
+  <property name="BAMViewsAndAccounts">SampleView:BUILTIN\Administrators</property>
+  <property name="SomeAppConfigItem">ProductionData</property>
+  <property name="AnotherAppConfigItem">ConfigValue</property>
+  <property name="NestedName.One">Foo</property>
+  <property name="NestedName.Two">Baz</property>
+</settings>

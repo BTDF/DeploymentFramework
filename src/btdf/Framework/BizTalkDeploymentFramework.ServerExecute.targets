@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Deployment Framework for BizTalk
+    Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
+
+    This source file is subject to the Microsoft Public License (Ms-PL).
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="Pause" />
+  <UsingTask AssemblyFile="BizTalkDeploymentFramework.Tasks.dll" TaskName="StartProcess" />
+
+  <!--
+  This MSBuild targets file may be used to deploy, undeploy or redeploy your BizTalk app from a command-line/unattended script.
+  
+  Command line parameters:
+    tv - 12.0 for BizTalk 2013 R2 (example /tv:12.0)
+	t - Deploy, Undeploy, Redeploy or QuickDeploy (example /t:Deploy)
+	
+  Property Parameters or Environment Variables (set these either as an environment variable (as the SetEnvUI wizard does) or with the /p command line parameter
+    BT_DEPLOY_MGMT_DB - True or False to deploy artifacts to the BizTalk management db (only enable for one server in a BizTalk group)  (example /p:BT_DEPLOY_MGMT_DB=True)
+	ENV_SETTINGS - Path to the target environment settings XML file, usually exported from the SettingsFileGenerator.xml Excel workbook
+	ProjectFile - Name of the Deployment Framework for BizTalk project file (.btdfproj)
+	Interactive - True to pause at end of deploy, False otherwise
+	
+  Complete example:
+	Assuming 1) BizTalk 2013 R2 (/tv:12.0) and 2) default MSBuild.exe is MSBuild 12.0
+    Current dir is C:\Program Files (x86)\Deployment Framework for BizTalk - Advanced\1.0>
+	MSBuild.exe Deployment\Framework\BizTalkDeploymentFramework.ServerExecute.targets /t:Deploy /p:BT_DEPLOY_MGMT_DB=True /p:ENV_SETTINGS="C:\Program Files (x86)\Deployment Framework for BizTalk - Advanced\1.0\Deployment\EnvironmentSettings\local_settings.xml" /tv:12.0 /p:ProjectFile=Deployment.btdfproj
+  -->
+
+  <!-- START: These targets represent the public interface. -->
+  <Target Name="Deploy" DependsOnTargets="ExecDeploy;Copy">
+    <Message Text="*************************************" />
+    <Message Text="************ SUCCEEDED! *************" />
+    <Message Text="*************************************" />
+    <Pause Message="Press a key to continue..." Condition="'$(Interactive)' == 'true'" />
+    <OnError ExecuteTargets="PauseForError" />
+  </Target>
+
+  <Target Name="Redeploy" DependsOnTargets="ExecRedeploy;Copy">
+    <Message Text="*************************************" />
+    <Message Text="*********** SUCCEEDED!  *************" />
+    <Message Text="*************************************" />
+    <Pause Message="Press a key to continue..." Condition="'$(Interactive)' == 'true'" />
+    <OnError ExecuteTargets="PauseForError" />
+  </Target>
+
+  <Target Name="Undeploy" DependsOnTargets="ExecUndeploy;Copy">
+    <Message Text="*************************************" />
+    <Message Text="*********** SUCCEEDED!  *************" />
+    <Message Text="*************************************" />
+    <Pause Message="Press a key to continue..." Condition="'$(Interactive)' == 'true'" />
+    <OnError ExecuteTargets="PauseForError" />
+  </Target>
+
+  <Target Name="QuickDeploy" DependsOnTargets="ExecQuickDeploy;Copy">
+    <Message Text="*************************************" />
+    <Message Text="*********** SUCCEEDED!  *************" />
+    <Message Text="*************************************" />
+    <Pause Message="Press a key to continue..." Condition="'$(Interactive)' == 'true'" />
+    <OnError ExecuteTargets="PauseForError" />
+  </Target>
+  <!-- END: These targets represent the public interface. -->
+
+  <Target Name="ExecDeploy">
+    <StartProcess
+      Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot;"
+      Arguments="/p:DeployBizTalkMgmtDB=$(BT_DEPLOY_MGMT_DB);ENV_SETTINGS=&quot;$(ENV_SETTINGS)&quot;;Configuration=Server;SkipUndeploy=true /target:Deploy /l:FileLogger,Microsoft.Build.Engine;logfile=..\..\DeployResults\DeployResults.txt &quot;..\$(ProjectFile)&quot;" />
+  </Target>
+
+  <Target Name="ExecRedeploy">
+    <StartProcess
+      Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot;"
+      Arguments="/p:DeployBizTalkMgmtDB=$(BT_DEPLOY_MGMT_DB);Configuration=Server /target:Deploy /l:FileLogger,Microsoft.Build.Engine;logfile=..\..\DeployResults\DeployResults.txt &quot;..\$(ProjectFile)&quot;" />
+  </Target>
+
+  <Target Name="ExecUndeploy">
+    <StartProcess
+      Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot;"
+      Arguments="/p:DeployBizTalkMgmtDB=$(BT_DEPLOY_MGMT_DB);Configuration=Server /target:Undeploy /l:FileLogger,Microsoft.Build.Engine;logfile=..\..\DeployResults\DeployResults.txt &quot;..\$(ProjectFile)&quot;" />
+  </Target>
+
+  <Target Name="ExecQuickDeploy">
+    <StartProcess
+      Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot;"
+      Arguments="/p:Configuration=Server /target:UpdateOrchestration /l:FileLogger,Microsoft.Build.Engine;logfile=..\..\DeployResults\DeployResults.txt &quot;..\$(ProjectFile)&quot;" />
+  </Target>
+
+  <Target Name="Copy">
+    <PropertyGroup>
+      <LogFilename>DeployResults_$(COMPUTERNAME)_$([System.DateTime]::Now.ToString('yyyyMMdd_HHmm')).txt</LogFilename>
+    </PropertyGroup>
+    <Copy
+      SourceFiles="..\..\DeployResults\DeployResults.txt"
+      DestinationFiles="..\..\DeployResults\$(LogFilename)"
+  	  ContinueOnError="true" />
+  </Target>
+
+  <Target Name="PauseForError" DependsOnTargets="Copy">
+    <Message Text="*************************************" />
+    <Message Text="************* FAILED! ***************" />
+    <Message Text="*************************************" />
+    <Pause Message="Press a key to continue..." Condition="'$(Interactive)' == 'true'" />
+  </Target>
+</Project>

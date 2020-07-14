@@ -289,9 +289,10 @@ __pycache__/
 
 # Deployment Framework for BizTalk
 Staging/
-src/Documentation/Src/Output/
-src/Documentation/DeploymentFrameworkForBizTalkDocs.chm
-src/Documentation/DeploymentFrameworkForBizTalkDocs.pdf
+docs/btdf-esb-resolver/_build/**/*
+docs/btdf-hnd/Output/
+docs/DeploymentFrameworkForBizTalkDocs.chm
+docs/DeploymentFrameworkForBizTalkDocs.pdf
 src/Framework/DeployTools/DeployBTRules.exe
 src/Framework/DeployTools/ElementTunnel.exe
 src/Framework/DeployTools/SetEnvUI.exe

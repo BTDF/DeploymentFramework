@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Deployment Framework for BizTalk ESB Resolver
+    Copyright (C) 2008 Thomas F. Abraham. All Rights Reserved.
+    See LICENSE.txt for licensing information.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="12.0">
+  <PropertyGroup>
+    <Version>5_8_0</Version>
+    <InstallerVersion>5.8.10.0</InstallerVersion>
+    <ProductID>57CF5927-B447-463A-9CA5-E164E9DB3615</ProductID>
+  </PropertyGroup>
+  
+  <Target Name="BuildTools">
+    <MSBuild Projects="src\btdf-esb-resolver\Tools\BuildTools.msbuild" Properties="Configuration=Release;Platform=Any CPU;ProductVersionFull=$(InstallerVersion)" UseResultsCache="false" UnloadProjectsOnCompletion="true" />
+  </Target>
+
+  <Target Name="BuildInstaller" DependsOnTargets="BuildTools">
+    <ItemGroup>
+      <MsiFile Include="src\btdf-esb-resolver\Installer\bin\release\DeploymentFrameworkForBizTalkESBResolver.msi" />
+    </ItemGroup>
+
+    <MSBuild Projects="src\btdf-esb-resolver\Installer\BizTalkDeploymentFrameworkESBResolver.sln" Properties="Configuration=Release;Platform=x86;SuppressIces=ICE30;ProductVersionFull=$(InstallerVersion);ProductID=$(ProductID)" Targets="Rebuild" />
+    <Copy SourceFiles="@(MsiFile)" DestinationFiles="@(MsiFile->'Staging\%(filename)V$(Version)%(extension)')" />
+  </Target>
+
+  <Target Name="Build" DependsOnTargets="BuildInstaller">
+  </Target>
+</Project>

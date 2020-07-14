@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Deployment Framework for BizTalk ESB Resolver
+    Copyright (C) 2008 Thomas F. Abraham. All Rights Reserved.
+    See LICENSE.txt for licensing information.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0" DefaultTargets="BuildTools">
+
+  <PropertyGroup>
+    <BuildToolsDependsOn>
+      UpdateCommonAssemblyInfo;
+      BuildESBResolvers;
+      RevertCommonAssemblyInfo
+    </BuildToolsDependsOn>
+  </PropertyGroup>
+
+  <Target Name="BuildTools" DependsOnTargets="$(BuildToolsDependsOn)" />
+
+  <Target Name="UpdateCommonAssemblyInfo">
+    <ReplaceAssemblyVersionInFile Path="CommonAssemblyInfo.cs" NewVersion="$(ProductVersionFull)" />
+  </Target>
+
+  <Target Name="RevertCommonAssemblyInfo">
+    <ReplaceAssemblyVersionInFile Path="CommonAssemblyInfo.cs" NewVersion="1.0.0.0" />
+  </Target>
+
+  <Target Name="BuildESBResolvers">
+    <ItemGroup>
+      <BuildESBResolversFilesToCopy Include="ESB.Resolvers\ESB.Resolver.Sso\bin\Release">
+        <DestFilename>DeploymentFrameworkForBizTalk.ESB.Resolver.Sso.</DestFilename>
+        <DestExt>.dll</DestExt>
+      </BuildESBResolversFilesToCopy>
+      <BuildESBResolversFilesToCopy Include="ESB.Resolvers\Services.Extenders.Resolvers.Sso\bin\Release">
+        <DestFilename>DeploymentFrameworkForBizTalk.Services.Extenders.Resolvers.Sso.</DestFilename>
+        <DestExt>.dll</DestExt>
+      </BuildESBResolversFilesToCopy>
+    </ItemGroup>
+
+    <RemoveDir Directories="ESB.Resolvers\Bin" />
+    <MakeDir Directories="ESB.Resolvers\Bin" />
+
+    <ReplaceAssemblyVersionInFile Path="ESB.Resolvers\ESB.Resolver.Sso\Properties\AssemblyInfo.cs" NewVersion="2.2.0.0" />
+    <ReplaceAssemblyVersionInFile Path="ESB.Resolvers\Services.Extenders.Resolvers.Sso\Properties\AssemblyInfo.cs" NewVersion="2.2.0.0" />
+    <MSBuild Projects="ESB.Resolvers\ESB.Resolver.Sso.sln" Properties="Configuration=Release;Platform=Any CPU;TargetFrameworkVersion=v4.5;Ver=2.2;BizTalkVersion=2013" Targets="Rebuild" />
+    <Copy SourceFiles="@(BuildESBResolversFilesToCopy->'%(Identity)\%(DestFilename)2.2%(DestExt)')" DestinationFiles="@(BuildESBResolversFilesToCopy->'ESB.Resolvers\Bin\%(DestFilename)2.2%(DestExt)')" />
+
+    <ReplaceAssemblyVersionInFile Path="ESB.Resolvers\ESB.Resolver.Sso\Properties\AssemblyInfo.cs" NewVersion="1.0.0.0" />
+    <ReplaceAssemblyVersionInFile Path="ESB.Resolvers\Services.Extenders.Resolvers.Sso\Properties\AssemblyInfo.cs" NewVersion="1.0.0.0" />
+  </Target>
+
+  <UsingTask TaskName="ReplaceAssemblyVersionInFile" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" >
+    <ParameterGroup>
+      <Path ParameterType="System.String" Required="true" />
+      <NewVersion ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Code Type="Fragment" Language="cs">
+        System.IO.File.SetAttributes(Path, System.IO.FileAttributes.Normal);
+        string contents = System.IO.File.ReadAllText(Path);
+        contents = System.Text.RegularExpressions.Regex.Replace(contents, @"\d+\.\d+\.\d+\.\d+", NewVersion);
+        System.IO.File.WriteAllText(Path, contents);
+      </Code>
+    </Task>
+  </UsingTask>
+
+</Project>

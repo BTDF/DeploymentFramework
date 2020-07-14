@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Deployment Framework for BizTalk
+    Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
+-->
+<!-- Each SetEnvUIConfigItem element defines a single page in the wizard that appears during a server deployment. -->
+<!-- The EnvironmentVarName element specifies the name of an environment variable that will contain the value of the -->
+<!-- user's selection. Each environment variable automatically becomes an MSBuild property that you may reference in -->
+<!-- your .btdfproj file. -->
+<SetEnvUIConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <DialogCaption>[PROJECTNAME]</DialogCaption>
+   <SetEnvUIConfigItem>
+      <PromptText>Enter the domain-qualified account name used by the BizTalk host instance to read/write from/to FILE port physical paths:</PromptText>
+      <PromptValue />
+      <ValueType>Text</ValueType>
+      <EnvironmentVarName>BTSACCOUNT</EnvironmentVarName>
+   </SetEnvUIConfigItem>
+  <SetEnvUIConfigItem>
+    <PromptText>Select the XML file that contains configuration information specific to this environment:</PromptText>
+    <PromptValue></PromptValue>
+    <ValueType>FileSelect</ValueType>
+    <EnvironmentVarName>ENV_SETTINGS</EnvironmentVarName>
+  </SetEnvUIConfigItem>
+  <SetEnvUIConfigItem>
+      <PromptText>Is this the LAST server in the BizTalk Group you are deploying to?
+     
+If so, BizTalk assemblies will be deployed to the BizTalk Management Database.</PromptText>
+      <Caption>This is the LAST server in the BizTalk Group</Caption>
+      <PromptValue>true</PromptValue>
+      <ValueType>Checkbox</ValueType>
+      <EnvironmentVarName>BT_DEPLOY_MGMT_DB</EnvironmentVarName>
+   </SetEnvUIConfigItem>
+</SetEnvUIConfig>
