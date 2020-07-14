@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- 
+  Deployment Framework for BizTalk
+  Copyright (C) Thomas F. Abraham, Scott Colestock. All Rights Reserved.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Installer">
+  <PropertyGroup>
+    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+    <Platform Condition="'$(Platform)' == ''">x86</Platform>
+    <SchemaVersion>1.0</SchemaVersion>
+    <ProjectName>DeploymentFramework.Samples.IIS</ProjectName>
+    <ProjectVersion>1.0</ProjectVersion>
+
+    <!-- If all of your project artifacts are contained in a single assembly, then
+        Set <IncludeSchemas> to true,
+        Add an <ItemGroup> that overrides the default <Schemas> setting to point to your DLL (see below),
+        Set <IncludeOrchestrations> and <IncludeTransforms> to false. -->
+    <IncludeSchemas>true</IncludeSchemas>
+    <IncludeOrchestrations>false</IncludeOrchestrations>
+    <IncludeTransforms>false</IncludeTransforms>
+    <IncludeSSO>True</IncludeSSO>
+    <IncludeVirtualDirectories>True</IncludeVirtualDirectories>
+    <IncludeDeploymentTest>True</IncludeDeploymentTest>
+
+    <!-- Do not require #ifdef around macros being substituted in PortBindingsMaster.xml and other XMLPreprocess'd files. -->
+    <RequireXmlPreprocessDirectives>false</RequireXmlPreprocessDirectives>
+
+    <UsingMasterBindings>true</UsingMasterBindings>
+    <ApplyXmlEscape>true</ApplyXmlEscape>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Properties related to building an MSI for server deployments -->
+    <!-- Make your MSI unique - your project should change GUIDs.  -->
+    <!-- BizTalk App Version Upgrade -->
+    <!--   For each new product release to be deployed to your BizTalk servers: -->
+    <!--     1) Increment ProductVersion -->
+    <!--     2) Generate a new GUID and update ProductId with the new GUID -->
+    <!--   This allows the new MSI to automatically uninstall (not undeploy!) the old MSI and install the new one. -->
+    <ProductId>CA982F27-001A-4319-A684-55730004957F</ProductId>
+    <ProductVersion>1.0.0</ProductVersion>
+    <!-- BizTalk App Version Upgrade -->
+
+    <ProductName>Deployment Framework for BizTalk - IIS</ProductName>
+    <Manufacturer>Deployment Framework for BizTalk Team</Manufacturer>
+    <PackageDescription>Deployment Framework for BizTalk Sample - IIS</PackageDescription>
+    <!-- NEVER change the ProductUpgradeCode. -->
+    <ProductUpgradeCode>6E70ED8A-968D-4E0E-B404-ED007B4A81EE</ProductUpgradeCode>
+  </PropertyGroup>
+
+  <!-- Under TFS Team Build, set CustomizableOutDir property to true in TFS 2005/2008/2010 UpgradeTemplate. -->
+  <!-- With a workflow build, copy the default template then modify the MSBuild task for the solution build. Set OutDir to blank and -->
+  <!-- CommandLineArguments to String.Format("/p:SkipInvalidConfigurations=true;TeamBuildOutDir=""{0}"" {1}", BinariesDirectory, MSBuildArguments). -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DeploymentFrameworkTargetsPath>$(MSBuildExtensionsPath)\DeploymentFrameworkForBizTalk\5.0\</DeploymentFrameworkTargetsPath>
+    <OutputPath Condition="'$(TeamBuildOutDir)' == ''">bin\Debug\</OutputPath>
+    <OutputPath Condition="'$(TeamBuildOutDir)' != ''">$(TeamBuildOutDir)</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DeploymentFrameworkTargetsPath>$(MSBuildExtensionsPath)\DeploymentFrameworkForBizTalk\5.0\</DeploymentFrameworkTargetsPath>
+    <OutputPath Condition="'$(TeamBuildOutDir)' == ''">bin\Release\</OutputPath>
+    <OutputPath Condition="'$(TeamBuildOutDir)' != ''">$(TeamBuildOutDir)</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Server'">
+    <DeploymentFrameworkTargetsPath>Framework\</DeploymentFrameworkTargetsPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- We are asking the Deployment Framework to create MSBuild properties from the values
+        in our environment settings spreadsheet named here. -->
+    <PropsFromEnvSettings Include="SsoAppUserGroup;SsoAppAdminGroup" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Limit host instance restart to BizTalkServerApplication -->
+    <BizTalkHosts Include="BizTalkServerApplication"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Schemas Include="IIS.dll">
+      <LocationPath>..\IIS\bin\$(Configuration)</LocationPath>
+    </Schemas>
+  </ItemGroup>
+
+  <ItemGroup>
+    <DeploymentTest Include="IIS.Test.dll">
+      <LocationPath>..\IIS.Test\bin\$(Configuration)</LocationPath>
+    </DeploymentTest>
+  </ItemGroup>
+
+  <!-- Define IIS virtual directory and AppPool -->
+  <!--
+      IMPORTANT!
+      The DeploymentFramework.Samples.IIS AppPool must use the identity of the BizTalk Isolated Host user account.
+      Otherwise, you'll probably see 500 internal server errors at runtime.
+
+      For LOCAL deployments:
+      1) Manually create an AppPool named DeploymentFramework.Samples.IIS, configured with the Isolated Host user identity,
+         and use the following XML in the ItemGroup below:
+        <IISAppPool Include="DeploymentFramework.Samples.IIS">
+          <DeployAction>None</DeployAction>
+          <UndeployAction>None</UndeployAction>
+        </IISAppPool>
+      Or 2) Let the Framework configure the AppPool using the following XML in the ItemGroup below:
+        <IISAppPool Include="DeploymentFramework.Samples.IIS">
+          <IdentityType>SpecificUser</IdentityType>
+          <UserName>[TYPE THE ISOLATED HOST ACCOUNT USERNAME HERE]</UserName>
+          <Password>[TYPE THE ISOLATED HOST ACCOUNT PASSWORD HERE]</Password>
+        </IISAppPool>
+  -->
+  <ItemGroup Condition="'$(Configuration)' != 'Server'">
+    <IISAppPool Include="DeploymentFramework.Samples.IIS">
+      <DeployAction>None</DeployAction>
+      <UndeployAction>None</UndeployAction>
+    </IISAppPool>
+  </ItemGroup>
+  <!--
+      On a server deploy (below), the properties AppPoolUserName and AppPoolPassword are collected in
+      the wizard UI (see InstallWizard.xml) and become MSBuild properties via environment variables.
+  -->
+  <ItemGroup Condition="'$(Configuration)' == 'Server'">
+    <IISAppPool Include="DeploymentFramework.Samples.IIS">
+      <IdentityType>SpecificUser</IdentityType>
+      <UserName>$(AppPoolUserName)</UserName>
+      <Password>$(AppPoolPassword)</Password>
+    </IISAppPool>
+  </ItemGroup>
+
+  <!--
+      The web service .csproj file, IIS.Service.csproj, has been modified to execute the DeploymentFramework.BuildTasks.PublishWcfServiceArtifacts
+      MSBuild task. This task automates the WCF Service Publishing Wizard.
+  -->
+  <ItemGroup>
+    <IISApp Include="DeploymentFramework.Samples.IIS">
+      <AppPoolName>DeploymentFramework.Samples.IIS</AppPoolName>
+      <PhysicalPath>..\IIS.Service</PhysicalPath>
+      <VirtualPath>/DeploymentFramework.Samples.IIS</VirtualPath>
+      <Exclusions>*.csproj;Web.Debug.config;Web.Release.config;WcfServiceDescription.xml;obj;Properties</Exclusions>
+    </IISApp>
+  </ItemGroup>
+
+  <Import Project="$(DeploymentFrameworkTargetsPath)BizTalkDeploymentFramework.targets" />
+</Project>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Deployment Framework for BizTalk
+    Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
+    
+    This source file is subject to the Microsoft Public License (Ms-PL).
+-->
+<Include xmlns:util="http://schemas.microsoft.com/wix/UtilExtension" xmlns:vs="http://schemas.microsoft.com/wix/VSExtension">
+  <Fragment>
+    <Feature Id="VS2013IntegrationFeature" Title="Visual Studio 2013 IntelliSense" Level="1" InstallDefault="local" Display="55"
+             AllowAdvertise="no" TypicalDefault="install" Description="IntelliSense for Visual Studio">
+        <ComponentRef Id="DeploymentFrameworkForBizTalk5.0.xml_VS2013"/>
+        <ComponentRef Id="DeploymentFrameworkForBizTalk5.0.xsd_VS2013"/>
+        <Condition Level="0">
+          <![CDATA[(NOT VS2013_SCHEMAS_DIR) OR (BTS_PRODUCTNAME <> "Microsoft BizTalk Server 2013 R2")]]>
+        </Condition>
+      </Feature>
+
+    <PropertyRef Id="VS2013_SCHEMAS_DIR" />
+
+    <InstallExecuteSequence>
+      <Custom Action="VS2013InstallVSTemplates" Before="InstallFinalize">
+        VS2013_IDE_VCSHARP_PROJECTSYSTEM_INSTALLED AND (BTS_PRODUCTNAME = "Microsoft BizTalk Server 2013 R2") AND (NOT Installed)
+      </Custom>
+    </InstallExecuteSequence>
+
+    <UI Id="VS2013UI">
+      <ProgressText Action="VS2013InstallVSTemplates">Reconfiguring Visual Studio templates...</ProgressText>
+    </UI>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="ProgramFilesFolder">
+      <Directory Id="VS2013_SCHEMAS_DIR" Name="VS12.0Schemas" />
+    </DirectoryRef>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="VS2013_SCHEMAS_DIR" FileSource="..\IntelliSense">
+      <Component Id="DeploymentFrameworkForBizTalk5.0.xml_VS2013" Guid="346A2E27-1451-4124-A380-FF34FB480604">
+        <File Id="DeploymentFrameworkForBizTalk5.0.xml_VS2013" Name="DeploymentFrameworkForBizTalk5.0.xml" KeyPath="yes" Source="..\IntelliSense\DeploymentFrameworkForBizTalk5.0.xml" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="VS2013_SCHEMAS_DIR" FileSource="..\IntelliSense">
+      <Component Id="DeploymentFrameworkForBizTalk5.0.xsd_VS2013" Guid="CE0127F3-889D-4B18-AC7F-4C9E3094A00B">
+        <File Id="DeploymentFrameworkForBizTalk5.0.xsd_VS2013" Name="DeploymentFrameworkForBizTalk5.0.xsd" KeyPath="yes" Source="..\IntelliSense\DeploymentFrameworkForBizTalk5.0.xsd" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+</Include>

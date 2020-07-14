@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- 
+  Deployment Framework for BizTalk
+  Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Installer">
+
+  <PropertyGroup>
+    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+    <Platform Condition="'$(Platform)' == ''">x86</Platform>
+    <SchemaVersion>1.0</SchemaVersion>
+    <ProjectName>DeploymentFramework.Samples.Advanced</ProjectName>
+    <ProjectVersion>1.0</ProjectVersion>
+
+    <!-- Set following properties to true or false to include various pieces of a BizTalk deployment. -->
+    <IncludeComponents>true</IncludeComponents>
+    <IncludeVirtualDirectories>true</IncludeVirtualDirectories>
+    <IncludeDeploymentTest>true</IncludeDeploymentTest>
+    <Includelog4net>true</Includelog4net>
+    <IncludeSSO>true</IncludeSSO>
+
+    <ApplyXmlEscape>true</ApplyXmlEscape>
+    <UsingMasterBindings>true</UsingMasterBindings>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Make your MSI unique - your project should change GUIDs.  -->
+    <!-- BizTalk App Version Upgrade -->
+    <!--   For each new product release to be deployed to your BizTalk servers: -->
+    <!--     1) Increment ProductVersion -->
+    <!--     2) Generate a new GUID and update ProductId with the new GUID -->
+    <!--   This allows the new MSI to automatically uninstall (not undeploy!) the old MSI and install the new one. -->
+    <ProductVersion>1.0.0</ProductVersion>
+    <ProductId>727071AB-7396-4b9d-8888-FEFC83FD9802</ProductId>
+    <!-- BizTalk App Version Upgrade -->
+
+    <ProductName>Deployment Framework for BizTalk - Advanced</ProductName>
+    <Manufacturer>Deployment Framework for BizTalk Team</Manufacturer>
+    <PackageDescription>Deployment Framework for BizTalk Sample - Advanced</PackageDescription>
+    <!-- NEVER change the ProductUpgradeCode. -->
+    <ProductUpgradeCode>7D9B3AF0-2292-44dd-BDC5-D6258BB08BEA</ProductUpgradeCode>
+    <!-- OPTIONAL property DefaultInstallDir can be used to override the default install path. -->
+    <!-- [ProgramFilesFolder] is a Windows Installer variable that holds the default Program Files path. -->
+    <!--<DefaultInstallDir>[ProgramFilesFolder]\BizTalkDeploymentSample</DefaultInstallDir>-->
+  </PropertyGroup>
+  <!-- Under TFS Team Build, set CustomizableOutDir property to true in TFS 2005/2008/2010 UpgradeTemplate. -->
+  <!-- With a workflow build, copy the default template then modify the MSBuild task for the solution build. Set OutDir to blank and -->
+  <!-- CommandLineArguments to String.Format("/p:SkipInvalidConfigurations=true;TeamBuildOutDir=""{0}"" {1}", BinariesDirectory, MSBuildArguments). -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DeploymentFrameworkTargetsPath>$(MSBuildExtensionsPath)\DeploymentFrameworkForBizTalk\5.0\</DeploymentFrameworkTargetsPath>
+    <OutputPath Condition="'$(TeamBuildOutDir)' == ''">bin\Debug\</OutputPath>
+    <OutputPath Condition="'$(TeamBuildOutDir)' != ''">$(TeamBuildOutDir)</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DeploymentFrameworkTargetsPath>$(MSBuildExtensionsPath)\DeploymentFrameworkForBizTalk\5.0\</DeploymentFrameworkTargetsPath>
+    <OutputPath Condition="'$(TeamBuildOutDir)' == ''">bin\Release\</OutputPath>
+    <OutputPath Condition="'$(TeamBuildOutDir)' != ''">$(TeamBuildOutDir)</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Server'">
+    <DeploymentFrameworkTargetsPath>Framework\</DeploymentFrameworkTargetsPath>
+    <!-- Get our PDBs into the GAC so we get file/line number information in stack traces. -->
+    <DeployPDBsToGac>false</DeployPDBsToGac>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- We are asking the Deployment Framework to create MSBuild properties from the values
+        in our environment settings file that are named here. ssoAppUserGroup and ssoAppAdminGroup
+        should be supplied if they need to be different for SSO app creation than the defaults
+        specified in BizTalkDeploymentFramework.targets -->
+    <PropsFromEnvSettings Include="SsoAppUserGroup;SsoAppAdminGroup" />
+  </ItemGroup>
+
+  <!-- We name our host(s) explicitly to avoid having the framework bounce them all. -->
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <BizTalkHosts Include="BizTalkServerApplication" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <BizTalkHosts Include="BizTalkServerApplication" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Server'">
+    <BizTalkHosts Include="BizTalkServerApplication" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Schemas Include="DeploymentFramework.Samples.Advanced.Schemas.dll">
+      <LocationPath>..\Schemas\bin\$(Configuration)</LocationPath>
+    </Schemas>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Transforms Include="DeploymentFramework.Samples.Advanced.Transforms.dll">
+      <LocationPath>..\Transforms\bin\$(Configuration)</LocationPath>
+    </Transforms>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Orchestrations Include="DeploymentFramework.Samples.Advanced.Orchestrations.dll">
+      <LocationPath>..\Orchestrations\bin\$(Configuration)</LocationPath>
+    </Orchestrations>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Components Include="DeploymentFramework.Samples.Advanced.Components.dll">
+      <LocationPath>..\Components\bin\$(Configuration)</LocationPath>
+    </Components>
+  </ItemGroup>
+
+  <ItemGroup>
+    <DeploymentTest Include="DeploymentFramework.Samples.Advanced.DeploymentTest.dll">
+      <LocationPath>..\DeploymentTest\bin\$(Configuration)</LocationPath>
+    </DeploymentTest>
+  </ItemGroup>
+
+  <ItemGroup>
+    <FilesToXmlPreprocess Include="AdditionalXmlToPreprocess.xml">
+      <LocationPath>..</LocationPath>
+      <OutputFilename>AdditionalXmlPreprocessed.xml</OutputFilename>
+    </FilesToXmlPreprocess>
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="AdditionalXmlToPreprocess.xml">
+      <LocationPath>..</LocationPath>
+    </AdditionalFiles>
+  </ItemGroup>
+
+  <!-- Define IIS virtual directory and AppPool -->
+  <!--
+      IMPORTANT!
+      The BTDFAdvancedSample AppPool must use the identity of the BizTalk Isolated Host user account.
+      Otherwise, you'll probably see 500 internal server errors at runtime.
+
+      For LOCAL deployments:
+      1) Manually create an AppPool named BTDFAdvancedSample, configured with the Isolated Host user identity,
+         and use the following XML in the ItemGroup below:
+        <IISAppPool Include="BTDFAdvancedSample">
+          <DeployAction>None</DeployAction>
+          <UndeployAction>None</UndeployAction>
+        </IISAppPool>
+      Or 2) Let the Framework configure the AppPool using the following XML in the ItemGroup below:
+        <IISAppPool Include="BTDFAdvancedSample">
+          <IdentityType>SpecificUser</IdentityType>
+          <UserName>[TYPE THE ISOLATED HOST ACCOUNT USERNAME HERE]</UserName>
+          <Password>[TYPE THE ISOLATED HOST ACCOUNT PASSWORD HERE]</Password>
+        </IISAppPool>
+  -->
+  <ItemGroup Condition="'$(Configuration)' != 'Server'">
+    <IISAppPool Include="BTDFAdvancedSample">
+      <DeployAction>None</DeployAction>
+      <UndeployAction>None</UndeployAction>
+    </IISAppPool>
+  </ItemGroup>
+  <!--
+      On a server deploy (below), the properties AppPoolUserName and AppPoolPassword are collected in
+      the wizard UI (see InstallWizard.xml) and become MSBuild properties via environment variables.
+  -->
+  <ItemGroup Condition="'$(Configuration)' == 'Server'">
+    <IISAppPool Include="BTDFAdvancedSample">
+      <IdentityType>SpecificUser</IdentityType>
+      <UserName>$(AppPoolUserName)</UserName>
+      <Password>$(AppPoolPassword)</Password>
+    </IISAppPool>
+  </ItemGroup>
+
+  <ItemGroup>
+    <IISApp Include="BTDFAdvancedSample">
+      <AppPoolName>BTDFAdvancedSample</AppPoolName>
+      <PhysicalPath>..\VDir_Advanced</PhysicalPath>
+      <VirtualPath>/BTDFAdvancedSample</VirtualPath>
+      <IsapiFileName>BtsHttpReceive.dll</IsapiFileName>
+    </IISApp>
+  </ItemGroup>
+
+  <Import Project="$(DeploymentFrameworkTargetsPath)BizTalkDeploymentFramework.targets" />
+
+  <!--
+    The Deployment Framework automatically packages most files into the server install MSI.
+    However, if there are special folders or files that you need to include in the MSI, you can
+    copy them to the folder $(RedistDir) in the CustomRedist target.
+  -->
+  <Target Name="CustomRedist">
+    <MakeDir Directories="$(RedistDir)\TestFiles" />
+
+    <!-- Force MSBuild to expand the item spec into physical file specs -->
+    <ItemGroup>
+      <TestFilesSourceGroup Include="..\TestFiles\**\*.*" />
+    </ItemGroup>
+
+    <Copy DestinationFolder="$(RedistDir)\TestFiles\%(RecursiveDir)" SourceFiles="@(TestFilesSourceGroup)"/>
+  </Target>
+
+</Project>

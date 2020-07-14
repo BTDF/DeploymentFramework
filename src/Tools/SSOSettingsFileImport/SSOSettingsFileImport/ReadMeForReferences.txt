@@ -1,1 +1,0 @@
-The Microsoft.BizTalk.Interop.SSOClient assembly is typically in C:\Program Files\Common Files\Enterprise Single Sign-On\Microsoft.BizTalk.Interop.SSOClient.dll

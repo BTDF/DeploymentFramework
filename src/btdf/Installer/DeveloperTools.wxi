@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Deployment Framework for BizTalk
+    Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
+    
+    This source file is subject to the Microsoft Public License (Ms-PL).
+-->
+<Include>
+  <Fragment>
+    <Feature Id="DevToolsFeature" Title="Developer Tools" Level="1" InstallDefault="local" Display="21" 
+             AllowAdvertise="no" TypicalDefault="install" Description="Developer tools, including tools for building deployment MSI, etc.">
+      <ComponentRef Id="RedistComponentGroup.xslt" />
+      <ComponentRef Id="GenericBizTalkMSI.wxs" />
+      <ComponentRef Id="candle.exe" />
+      <ComponentRef Id="candle.exe.config" />
+      <ComponentRef Id="CPL.TXT" />
+      <ComponentRef Id="light.exe" />
+      <ComponentRef Id="light.exe.config" />
+      <ComponentRef Id="heat.exe" />
+      <ComponentRef Id="heat.exe.config" />
+      <ComponentRef Id="wconsole.dll" />
+      <ComponentRef Id="winterop.dll" />
+      <ComponentRef Id="wix.dll" />
+      <ComponentRef Id="WixIIsExtension.dll" />
+      <ComponentRef Id="WixUIExtension.dll" />
+      <ComponentRef Id="WixUtilExtension.dll" />
+      <ComponentRef Id="WixVsExtension.dll" />
+      <ComponentRef Id="WixNetFxExtension.dll" />
+      <ComponentRef Id="darice.cub"/>
+      <ComponentRef Id="InstallWizard.xml"/>
+      <ComponentRef Id="License.rtf"/>
+      <ComponentRef Id="Deployment.btdfproj"/>
+      <ComponentRef Id="UnInstallWizard.xml"/>
+      <ComponentRef Id="PortBindingsMaster.xml"/>
+      <ComponentRef Id="SettingsFileGenerator.xml"/>
+    </Feature>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="Developer" FileSource="..\Developer">
+      <Component Id="RedistComponentGroup.xslt" Guid="*">
+        <File Id="RedistComponentGroup.xslt" Name="RedistComponentGroup.xslt" KeyPath="yes" Source="..\Developer\RedistComponentGroup.xslt" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="Developer" FileSource="..\Developer">
+      <Component Id="GenericBizTalkMSI.wxs" Guid="*">
+        <File Id="GenericBizTalkMSI.wxs" Name="GenericBizTalkMSI.wxs" KeyPath="yes" Source="..\Developer\GenericBizTalkMSI.wxs" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="WiX" FileSource="..\Developer\WiX">
+      <Component Id="candle.exe" Guid="*">
+        <File Id="candle.exe" Name="candle.exe" KeyPath="yes" Source="..\Developer\WiX\candle.exe" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="WiX" FileSource="..\Developer\WiX">
+      <Component Id="candle.exe.config" Guid="*">
+        <File Id="candle.exe.config" Name="candle.exe.config" KeyPath="yes" Source="..\Developer\WiX\candle.exe.config" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="WiX" FileSource="..\Developer\WiX">
+      <Component Id="CPL.TXT" Guid="*">
+        <File Id="CPL.TXT" Name="CPL.TXT" KeyPath="yes" Source="..\Developer\WiX\CPL.TXT" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="WiX" FileSource="..\Developer\WiX">
+      <Component Id="light.exe" Guid="*">
+        <File Id="light.exe" Name="light.exe" KeyPath="yes" Source="..\Developer\WiX\light.exe" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="WiX" FileSource="..\Developer\WiX">
+      <Component Id="light.exe.config" Guid="*">
+        <File Id="light.exe.config" Name="light.exe.config" KeyPath="yes" Source="..\Developer\WiX\light.exe.config" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="WiX" FileSource="..\Developer\WiX">
+      <Component Id="heat.exe" Guid="*">
+        <File Id="heat.exe" Name="heat.exe" KeyPath="yes" Source="..\Developer\WiX\heat.exe" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="WiX" FileSource="..\Developer\WiX">
+      <Component Id="heat.exe.config" Guid="*">
+        <File Id="heat.exe.config" Name="heat.exe.config" KeyPath="yes" Source="..\Developer\WiX\heat.exe.config" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="WiX" FileSource="..\Developer\WiX">
+      <Component Id="wconsole.dll" Guid="*">
+        <File Id="wconsole.dll" Name="wconsole.dll" KeyPath="yes" Source="..\Developer\WiX\wconsole.dll" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="WiX" FileSource="..\Developer\WiX">
+      <Component Id="winterop.dll" Guid="*">
+        <File Id="winterop.dll" Name="winterop.dll" KeyPath="yes" Source="..\Developer\WiX\winterop.dll" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="WiX" FileSource="..\Developer\WiX">
+      <Component Id="wix.dll" Guid="*">
+        <File Id="wix.dll" Name="wix.dll" KeyPath="yes" Source="..\Developer\WiX\wix.dll" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="WiX" FileSource="..\Developer\WiX">
+      <Component Id="WixIIsExtension.dll" Guid="*">
+        <File Id="WixIIsExtension.dll" Name="WixIIsExtension.dll" KeyPath="yes" Source="..\Developer\WiX\WixIIsExtension.dll" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="WiX" FileSource="..\Developer\WiX">
+      <Component Id="WixUIExtension.dll" Guid="*">
+        <File Id="WixUIExtension.dll" Name="WixUIExtension.dll" KeyPath="yes" Source="..\Developer\WiX\WixUIExtension.dll" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="WiX" FileSource="..\Developer\WiX">
+      <Component Id="WixUtilExtension.dll" Guid="*">
+        <File Id="WixUtilExtension.dll" Name="WixUtilExtension.dll" KeyPath="yes" Source="..\Developer\WiX\WixUtilExtension.dll" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="WiX" FileSource="..\Developer\WiX">
+      <Component Id="WixVsExtension.dll" Guid="*">
+        <File Id="WixVsExtension.dll" Name="WixVsExtension.dll" KeyPath="yes" Source="..\Developer\WiX\WixVsExtension.dll" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="WiX" FileSource="..\Developer\WiX">
+      <Component Id="WixNetFxExtension.dll" Guid="*">
+        <File Id="WixNetFxExtension.dll" Name="WixNetFxExtension.dll" KeyPath="yes" Source="..\Developer\WiX\WixNetFxExtension.dll" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="WiX" FileSource="..\Developer\WiX">
+      <Component Id="darice.cub" Guid="*">
+        <File Id="darice.cub" Name="darice.cub" KeyPath="yes" Source="..\Developer\WiX\darice.cub" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="ProjectTemplate" FileSource="..\Developer\ProjectTemplate">
+      <Component Id="InstallWizard.xml" Guid="*">
+        <File Id="InstallWizard.xml" Name="InstallWizard.xml" KeyPath="yes" Source="..\Developer\ProjectTemplate\InstallWizard.xml" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="ProjectTemplate" FileSource="..\Developer\ProjectTemplate">
+      <Component Id="License.rtf" Guid="*">
+        <File Id="License.rtf" Name="License.rtf" KeyPath="yes" Source="..\Developer\ProjectTemplate\License.rtf" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="ProjectTemplate" FileSource="..\Developer\ProjectTemplate">
+      <Component Id="Deployment.btdfproj" Guid="*">
+        <File Id="Deployment.btdfproj" Name="Deployment.btdfproj" KeyPath="yes" Source="..\Developer\ProjectTemplate\Deployment.btdfproj" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="ProjectTemplate" FileSource="..\Developer\ProjectTemplate">
+      <Component Id="UnInstallWizard.xml" Guid="*">
+        <File Id="UnInstallWizard.xml" Name="UnInstallWizard.xml" KeyPath="yes" Source="..\Developer\ProjectTemplate\UnInstallWizard.xml" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="ProjectTemplate" FileSource="..\Developer\ProjectTemplate">
+      <Component Id="PortBindingsMaster.xml" Guid="*">
+        <File Id="PortBindingsMaster.xml" Name="PortBindingsMaster.xml" KeyPath="yes" Source="..\Developer\ProjectTemplate\PortBindingsMaster.xml" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="ProjectTemplate" FileSource="..\Developer\ProjectTemplate">
+      <Component Id="SettingsFileGenerator.xml" Guid="*">
+        <File Id="SettingsFileGenerator.xml" Name="SettingsFileGenerator.xml" KeyPath="yes" Source="..\Developer\ProjectTemplate\SettingsFileGenerator.xml" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="INSTALLLOCATION">
+      <Directory Id="Developer" Name="Developer" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="Developer">
+      <Directory Id="WiX" Name="WiX" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="Developer">
+      <Directory Id="ProjectTemplate" Name="ProjectTemplate" />
+    </DirectoryRef>
+  </Fragment>
+</Include>

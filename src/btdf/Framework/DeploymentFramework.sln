@@ -1,0 +1,21 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{91E1BF08-14F2-4C90-BB4A-3AF741F0159C}"
+	ProjectSection(SolutionItems) = preProject
+		BizTalkDeploymentFramework.targets = BizTalkDeploymentFramework.targets
+		BizTalkDeploymentFramework.WiXSetup.targets = BizTalkDeploymentFramework.WiXSetup.targets
+		CopyDeployResults.msbuild = CopyDeployResults.msbuild
+		ServerDeploy.bat = ServerDeploy.bat
+		ServerDeployWizard.bat = ServerDeployWizard.bat
+		ServerRedeploy.bat = ServerRedeploy.bat
+		ServerRedeployWizard.bat = ServerRedeployWizard.bat
+		ServerUnDeploy.bat = ServerUnDeploy.bat
+		ServerUnDeployWizard.bat = ServerUnDeployWizard.bat
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

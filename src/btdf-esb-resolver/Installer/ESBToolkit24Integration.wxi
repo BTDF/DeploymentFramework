@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Deployment Framework for BizTalk
+    Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
+    
+    This source file is subject to the Microsoft Public License (Ms-PL).
+-->
+<Include xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  <Fragment>
+    <Feature Id="EsbToolkit24IntegrationFeature" Title="ESB Toolkit Integration" Level="1" InstallDefault="local" Display="51"
+             AllowAdvertise="no" TypicalDefault="install" Description="Extends the BizTalk ESB Toolkit with a custom SSO resolver">
+      <ComponentRef Id="BTDF.Services.Extenders.Resolvers.Sso.2.4.dll_BTS2016"/>
+      <ComponentRef Id="BTDF.ESB.Resolver.Sso.2.4.dll_BTS2016"/>
+      <Condition Level="0">
+        <![CDATA[(NOT ESBTOOLKIT24_DIR) OR (BTS_PRODUCTNAME <> "Microsoft BizTalk Server 2016")]]>
+      </Condition>
+    </Feature>
+
+    <PropertyRef Id="VS2015_EXTENSIONS_DIR" />
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="ProgramFilesFolder">
+      <Directory Id="ESBTOOLKIT24_DIR" Name="EsbToolkitDir24" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="ProgramFilesFolder">
+      <Directory Id="VS2015_EXTENSIONS_DIR" Name="VS14.0Extensions" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="VS2015_EXTENSIONS_DIR">
+      <Directory Id="EsbToolkitDslPackageDir24" Name="Microsoft.Practices.Services.Itinerary.DslPackage" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="EsbToolkitDslPackageDir24">
+      <Directory Id="EsbToolkitDslPackageLibDir24" Name="Lib" />
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="EsbToolkitDslPackageLibDir24" FileSource="..\Tools\ESB.Resolvers\Bin">
+      <Component Id="BTDF.Services.Extenders.Resolvers.Sso.2.4.dll_BTS2016" Guid="BB6D76CD-F8BF-4570-BEDF-59EEC08E482A">
+        <File Id="BTDF.Services.Extenders.Resolvers.Sso.2.4.dll_BTS2016" KeyPath="yes" Source="..\Tools\ESB.Resolvers\Bin\DeploymentFrameworkForBizTalk.Services.Extenders.Resolvers.Sso.2.2.dll" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="ESBTOOLKIT24_DIR" FileSource="..\Tools\ESB.Resolvers\Bin">
+      <Component Id="BTDF.ESB.Resolver.Sso.2.4.dll_BTS2016" Guid="02DD1F4C-970A-412D-B0F2-769DF87FD85B">
+        <File Id="BTDF.ESB.Resolver.Sso.2.4.dll_BTS2016" KeyPath="yes" Assembly=".net" Source="..\Tools\ESB.Resolvers\Bin\DeploymentFrameworkForBizTalk.ESB.Resolver.Sso.2.2.dll" />
+        <util:XmlConfig
+          Id="CreateResolverInEsbConfig24"
+          File="[ESBTOOLKIT24_DIR]esb.config"
+          Action="create"
+          Node="element"
+          On="install"
+          ElementPath="/configuration/esb/resolvers"
+          Name="resolver"
+          Sequence="1" />
+        <util:XmlConfig
+          Id="CreateResolverInEsbConfig_Name24"
+          File="[ESBTOOLKIT24_DIR]esb.config"
+          ElementId="CreateResolverInEsbConfig24"
+          Name="name"
+          Sequence="2"
+          Value="BTDF-SSO" />
+        <util:XmlConfig
+          Id="CreateResolverInEsbConfig_Type24"
+          File="[ESBTOOLKIT24_DIR]esb.config"
+          ElementId="CreateResolverInEsbConfig24"
+          Name="type"
+          Sequence="3"
+          Value="DeploymentFrameworkForBizTalk.ESB.Resolver.Sso.ResolveProvider, DeploymentFrameworkForBizTalk.ESB.Resolver.Sso.2.2, Version=2.2.0.0, Culture=neutral, PublicKeyToken=b9585ffc9d454e4a" />
+        <util:XmlConfig
+          Id="DeleteResolverInEsbConfig24"
+          File="[ESBTOOLKIT24_DIR]esb.config"
+          Action="delete"
+          Node="element"
+          On="uninstall"
+          VerifyPath="resolver[\[]@name='BTDF-SSO'[\]]"
+          ElementPath="/configuration/esb/resolvers"
+          Sequence="1" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+</Include>

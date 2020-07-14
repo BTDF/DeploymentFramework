@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Deployment Framework for BizTalk
+    Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
+    
+    This source file is subject to the Microsoft Public License (Ms-PL).
+-->
+<Project DefaultTargets="DesktopBuild" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+
+   <!-- Do not edit this -->
+   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\TeamBuild\Microsoft.TeamFoundation.Build.targets" />
+
+   <!-- Many items in this file have "source of truth" in Team Build, and are here for Team Explorer 2005 compatibility. -->
+   
+   <ProjectExtensions>
+      <Description></Description>
+      <BuildMachine>tfstrace</BuildMachine>
+   </ProjectExtensions>
+
+   <PropertyGroup>
+      <!-- These items vary per BizTalk project -->
+      <TeamProject>Demo</TeamProject>
+      <BuildFlavor>Debug</BuildFlavor>
+      <SolutionPath>$(SolutionRoot)\$(BranchToBuild)\$(SolutionName)\$(SolutionName).sln</SolutionPath>
+
+      <!-- These items vary by Team Build server, but are here for 2005 compat -->      
+      <BuildDirectoryPath>c:\Builds</BuildDirectoryPath>
+      <DropLocation>\\mydropserver\builds</DropLocation>
+
+      <!-- Vary by department/project -->      
+      <RunTest>false</RunTest>
+      <WorkItemFieldValues>Symptom=build break;Steps To Reproduce=Start the build using Team Build</WorkItemFieldValues>
+      <RunCodeAnalysis>Never</RunCodeAnalysis>
+      <UpdateAssociatedWorkItems>true</UpdateAssociatedWorkItems>
+      <WorkItemTitle>Build failure in build:</WorkItemTitle>
+      <DescriptionText>This work item was created by Team Build on a build failure.</DescriptionText>
+      <BuildlogText>The build log file is at:</BuildlogText>
+      <ErrorWarningLogText>The errors/warnings log file is at:</ErrorWarningLogText>
+
+      <DeploymentProjectDir>$(SolutionRoot)\$(BranchToBuild)\$(SolutionName)\Deployment</DeploymentProjectDir>
+      <DeploymentFramework>true</DeploymentFramework>
+
+      <CustomizableOutDir>true</CustomizableOutDir>
+   </PropertyGroup>
+
+   <ItemGroup>
+      <ConfigurationToBuild Include="Debug|Any CPU">
+         <FlavorToBuild>Debug</FlavorToBuild>
+         <PlatformToBuild>Any CPU</PlatformToBuild>
+      </ConfigurationToBuild>
+   </ItemGroup>
+
+   <Target Name="AfterCompile">
+      <!--Call DevEnv to build the BizTalk Solution-->
+      <Message Text="Building BizTalk solution using DevEnv"/>
+      <Exec
+        Command="&quot;c:\Program Files\Microsoft Visual Studio 8\Common7\IDE\devenv&quot; &quot;$(SolutionPath)&quot; /Build &quot;$(BuildFlavor)&quot;"/>
+
+      <CallTarget Targets="BuildMSI" Condition="'$(DeploymentFramework)' == 'true'" />
+   </Target>
+
+   <Target Name="BuildMSI">
+      <!--Call batch file to build the MSI (if using Deployment Framework) -->
+      <Message Text ="Building MSI..."/>
+      <Exec Command="MSBuild.exe /p:Configuration=Release /t:Installer MyProject.Deployment.btdfproj" WorkingDirectory="$(DeploymentProjectDir)"/>
+
+      <!-- Get the MSI to the appropriate drop location. -->
+      <MakeDir Directories="$(DropLocation)\$(BuildNumber)\$(BuildFlavor)" Condition="!Exists('$(BinariesRoot)\$(BuildFlavor)')" />
+
+      <Message Text="Copying msi from $(DeploymentProjectDir)"/>
+      <Copy SourceFiles="$(DeploymentProjectDir)\bin\$(BuildFlavor)\BizTalkSample.msi"
+            DestinationFiles="$(DropLocation)\$(BuildNumber)\$(BuildFlavor)\BizTalkSample.$(BuildNumber).msi"/>
+   </Target>
+
+</Project>

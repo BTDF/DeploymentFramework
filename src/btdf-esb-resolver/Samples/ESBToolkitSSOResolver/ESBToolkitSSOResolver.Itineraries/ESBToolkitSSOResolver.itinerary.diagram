@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<itineraryDslDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="ESBToolkitSSOResolver">
+  <itineraryModelMoniker Id="3bdf71f5-a612-4ad7-bcdd-e2122d25273c" />
+  <nestedChildShapes>
+    <onRampShape Id="f87cdabf-dd91-4650-87f7-f7c53849f2aa" absoluteBounds="0.75, 0.875, 1.5, 0.9349169921875">
+      <onRampMoniker Id="8807d2fb-a731-4a87-9990-9b55c468235c" />
+      <nestedChildShapes>
+        <elementListCompartment Id="66bd4d0c-9499-4632-8a6b-d1eef0975354" absoluteBounds="0.76499999999999968, 1.2850000000000001, 1.4700000000000002, 0.20745849609375" name="ReceiveCompartment" titleTextColor="Black" itemTextColor="Indigo" />
+        <elementListCompartment Id="c0bc3b23-40cf-41fd-9c9d-ebd336c64ef9" absoluteBounds="0.765, 1.50245849609375, 1.4700000000000002, 0.20745849609375" name="SendCompartment" titleTextColor="Black" itemTextColor="DarkViolet" />
+      </nestedChildShapes>
+    </onRampShape>
+    <itineraryServiceShape Id="63356f9a-0082-45d1-8461-425c50c8e30c" absoluteBounds="3, 1, 1.625, 0.88180582682291675" fillColor="PaleGreen" outlineDashStyle="Solid" outlineThickness="0.0125">
+      <itineraryServiceMoniker Id="e46c1167-0d82-4350-9373-e1cd43e51cd8" />
+      <nestedChildShapes>
+        <elementListCompartment Id="71a06208-65c1-427d-ac12-178463bed0e6" absoluteBounds="3.0149999999999997, 1.4100000000000001, 1.5950000000000002, 0.37180582682291663" name="Resolver" titleTextColor="Black" itemTextColor="SteelBlue" />
+      </nestedChildShapes>
+    </itineraryServiceShape>
+    <connector edgePoints="[(2.25 : 1.4468896484375); (3 : 1.4468896484375)]" fixedFrom="NotFixed" fixedTo="NotFixed" TargetRelationshipDomainClassId="c34da9c8-8c9c-4042-9a04-2b2f60ac990f">
+      <nodes>
+        <onRampShapeMoniker Id="f87cdabf-dd91-4650-87f7-f7c53849f2aa" />
+        <itineraryServiceShapeMoniker Id="63356f9a-0082-45d1-8461-425c50c8e30c" />
+      </nodes>
+    </connector>
+    <offRampShape Id="8e8f41b4-00eb-45ad-9046-278c2ab22779" absoluteBounds="7.75, 1, 1.5, 0.9349169921875">
+      <offRampMoniker Id="e8bd0b87-9656-46f1-b219-7c61fa5a96d8" />
+      <nestedChildShapes>
+        <elementListCompartment Id="98e395b2-9254-41e5-a801-c390cf17ec5c" absoluteBounds="7.7650000000000006, 1.4100000000000001, 1.4700000000000002, 0.20745849609375" name="SendCompartment" titleTextColor="Black" itemTextColor="DarkGoldenrod" />
+        <elementListCompartment Id="91eaa34f-44ee-40a5-b0c6-b1f348fa4cd3" absoluteBounds="7.765, 1.62745849609375, 1.4700000000000002, 0.20745849609375" name="ReceiveCompartment" titleTextColor="Black" itemTextColor="Goldenrod" />
+      </nestedChildShapes>
+    </offRampShape>
+    <itineraryServiceShape Id="2696e949-31c3-419a-bf6b-112c1b6be62c" absoluteBounds="5.375, 1.125, 1.625, 0.88180582682291675" fillColor="Khaki" outlineDashStyle="Solid" outlineThickness="0.0125">
+      <itineraryServiceMoniker Id="d4862111-8af8-48e4-999d-3b75b3f9b719" />
+      <nestedChildShapes>
+        <elementListCompartment Id="e0888bab-71c7-453c-9205-c423aefa9e80" absoluteBounds="5.3900000000000006, 1.5350000000000001, 1.5950000000000002, 0.37180582682291663" name="Resolver" titleTextColor="Black" itemTextColor="SteelBlue" />
+      </nestedChildShapes>
+    </itineraryServiceShape>
+    <connector edgePoints="[(4.625 : 1.53834554036458); (5.375 : 1.53834554036458)]" fixedFrom="NotFixed" fixedTo="NotFixed" TargetRelationshipDomainClassId="e111e57e-b6cb-4b54-a7e0-31a5abdc5278">
+      <nodes>
+        <itineraryServiceShapeMoniker Id="63356f9a-0082-45d1-8461-425c50c8e30c" />
+        <itineraryServiceShapeMoniker Id="2696e949-31c3-419a-bf6b-112c1b6be62c" />
+      </nodes>
+    </connector>
+    <connector edgePoints="[(7 : 1.5718896484375); (7.75 : 1.5718896484375)]" fixedFrom="NotFixed" fixedTo="NotFixed" TargetRelationshipDomainClassId="fc6cd317-188b-4002-b2c0-24aafcfd23a7">
+      <nodes>
+        <itineraryServiceShapeMoniker Id="2696e949-31c3-419a-bf6b-112c1b6be62c" />
+        <offRampShapeMoniker Id="8e8f41b4-00eb-45ad-9046-278c2ab22779" />
+      </nodes>
+    </connector>
+  </nestedChildShapes>
+</itineraryDslDiagram>
