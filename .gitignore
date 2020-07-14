@@ -293,10 +293,10 @@ docs/btdf-esb-resolver/_build/**/*
 docs/btdf-hnd/Output/
 docs/DeploymentFrameworkForBizTalkDocs.chm
 docs/DeploymentFrameworkForBizTalkDocs.pdf
-src/Framework/DeployTools/DeployBTRules.exe
-src/Framework/DeployTools/ElementTunnel.exe
-src/Framework/DeployTools/SetEnvUI.exe
-src/Framework/DeployTools/SSOSettings*
-src/Framework/DeployTools/UACElevate.exe
-src/Framework/BizTalkDeploymentFramework.Tasks*.dll
-src/Framework/Microsoft.Web.Administration.dll
+src/btdf/Framework/DeployTools/DeployBTRules.exe
+src/btdf/Framework/DeployTools/ElementTunnel.exe
+src/btdf/Framework/DeployTools/SetEnvUI.exe
+src/btdf/Framework/DeployTools/SSOSettings*
+src/btdf/Framework/DeployTools/UACElevate.exe
+src/btdf/Framework/BizTalkDeploymentFramework.Tasks*.dll
+src/btdf/Framework/Microsoft.Web.Administration.dll
