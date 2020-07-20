@@ -78,11 +78,182 @@ namespace DeploymentFramework.BuildTasks
             {
                 string currentDirectory = Environment.CurrentDirectory;
                 Environment.CurrentDirectory = this.MSBuildProjectDirectory;
-                physicalPath = new DirectoryInfo(physicalPath).FullName;
+                // bug: failure to return the correct physicalPath value 
+                //      (e.g. incorrect value of 'C:\Program Files (x86)\EAI_Core for BizTalk 1.0.0\', vs. correct value of 'C:\Program Files (x86)\EAI_Core for BizTalk 1.0.0\1.0\')
+                //physicalPath = new DirectoryInfo(physicalPath).FullName;
+
+                // fix: finds the correct physicalPath (e.g. 'C:\Program Files (x86)\EAI_Core for BizTalk 1.0.0\1.0\PacificLife.Life.eai.EAICore_Proxy')
+                //      given a starting point (e.g. 'C:\Program Files (x86)\EAI_Core for BizTalk 1.0.0\1.0\Deployment')
+                //      and the current physicalPath value provided from the btdfproj file (e.g. '..\..\EAICore_Proxy')
+                physicalPath = FindWebApplicationPath(Environment.CurrentDirectory, physicalPath).FullName;
+
                 Environment.CurrentDirectory = currentDirectory;
             }
 
             return DeployApplication(mgr, action, siteName, virtualPath, physicalPath, appPoolName, enabledProtocols);
+        }
+
+        /// <summary>
+        /// This function corrects a bug described below in the remarks.
+        /// Given starting point path and a folder name to search for, search for a child directory of the given name.  
+        /// If the search finds nothing, then the search will be repeated from the directory parent, recursively up the tree, until there are no more parents.
+        /// If the search yielded no result, a DirectoryInfo object instantiated with the value of search is returned.
+        /// A DirectoryInfo object is always returned in order to maintain compatibility with the BTDF implementation. 
+        /// If the correct directory is not found, the web application may not point to the corret folder for its bits, 
+        /// but that could be corrected after the installation.
+        /// </summary>
+        /// <param name="startingPath">Starting point path to begin the search.</param>
+        /// <param name="searchForPhysicalPath">Name of the directory to be located</param>
+        /// <returns>DirectoryInfo</returns>
+        /// <remarks>
+        /// Given the application install path of
+        ///   C:\Program Files (x86)\EAI_Core for BizTalk 1.0.0\1.0\
+        /// the Environment.CurrentDirectory and this.MSBuildProjectDirectory has a value of 
+        ///   C:\Program Files (x86)\EAI_Core for BizTalk 1.0.0\1.0\Deployment
+        /// When deploying a web application with a physical path of
+        ///   C:\Program Files (x86)\EAI_Core for BizTalk 1.0.0\1.0\EAICore_Proxy
+        /// and given a PhysicalPath in the btdfproj file of
+        ///   ..\..\EAICore_Proxy
+        /// BTDF 5.7 was incorrectly assinging the physicalPath to
+        ///   C:\Program Files (x86)\EAI_Core for BizTalk 1.0.0\EAICore_Proxy
+        /// missing '\1.0' in the middle of the path
+        /// 
+        /// public accessor was used for easier unit testing. Final code should use a private accessor.
+        /// </remarks>
+        public DirectoryInfo FindWebApplicationPath(string startingPath, string searchForPhysicalPath)
+        {
+            DirectoryInfo directoryInfo = null;
+
+            // validate startingPath
+            if (null == startingPath)
+            {
+                // searchForPhysicalPath is null.  There is no graceful way to handle this unlikely event.
+                // Log a warning and return a DirectoryInfo object that is consistent with BTDF 5.7 behavior. 
+                if (!System.Diagnostics.Debugger.IsAttached)
+                {
+                    base.Log.LogWarning("FindWebApplicationPath in ConfigureISSVirtualDirectory encountered an null value in parameter startingPath.");
+                }
+
+                throw new ArgumentNullException("startingPath");
+            }
+
+            // validate searchForPhysicalPath
+            if (string.Empty == startingPath)
+            {
+                // searchForPhysicalPath is not a valid value, so default to the value of Environment.CurrentDirectory.
+                // Log a warning and return a DirectoryInfo object that is consistent with BTDF 5.7 behavior. 
+                if (!System.Diagnostics.Debugger.IsAttached)
+                {
+                    base.Log.LogWarning(string.Format("FindWebApplicationPath in ConfigureISSVirtualDirectory encountered an invalid value in parameter startingPath.  startingPath will use '{0}'.", Environment.CurrentDirectory));
+                }
+
+                startingPath = Environment.CurrentDirectory;
+            }
+
+            // validate searchForPhysicalPath
+            if (null == searchForPhysicalPath)
+            {
+                // searchForPhysicalPath is null.  There is no graceful way to handle this unlikely event.
+                // Log a warning and return a DirectoryInfo object that is consistent with BTDF 5.7 behavior. 
+                if (!System.Diagnostics.Debugger.IsAttached)
+                {
+                    base.Log.LogWarning("FindWebApplicationPath in ConfigureISSVirtualDirectory encountered an null value in parameter searchForPhysicalPath.");
+                }
+
+                throw new ArgumentNullException("searchForPhysicalPath");
+            }
+
+            // validate searchForPhysicalPath
+            if (string.Empty == searchForPhysicalPath)
+            {
+                // searchForPhysicalPath is null.  There is no graceful way to handle this unlikely event.
+                // Log a warning and return a DirectoryInfo object that is consistent with BTDF 5.7 behavior. 
+                if (!System.Diagnostics.Debugger.IsAttached)
+                {
+                    base.Log.LogWarning("FindWebApplicationPath in ConfigureISSVirtualDirectory encountered an null value in parameter searchForPhysicalPath.");
+                }
+
+                throw new ArgumentNullException("searchForPhysicalPath");
+            }
+
+            // Clean up the search value to remove any relative path characters.
+            // Remove any backslash at the end (unlikely necessary)
+            string search = searchForPhysicalPath.Substring(searchForPhysicalPath.Length - 1) == "\\" ? searchForPhysicalPath.Substring(searchForPhysicalPath.Length - 1) : searchForPhysicalPath;
+            // Get the portion of searchForPhysicalPath that follows the last backslash
+            search = search.Substring(searchForPhysicalPath.LastIndexOf("\\"));
+            // Remove any remaining backslashes
+            search = search.Replace("\\", string.Empty);
+
+            // Validate the startingPath exists, 
+            if (Directory.Exists(startingPath))
+            {
+                // Use a conditioned string of the path provided by the file system.
+                string path = Path.GetFullPath(startingPath);
+
+                // setup a regex to search for directories
+                System.Text.RegularExpressions.Regex reg = new System.Text.RegularExpressions.Regex(@"(\d+)\.(\d+)\.(\d+)(\.\d+)*");
+
+                bool found = false;
+
+                while (!found)
+                {
+                    List<string> searchedDirectories = null;
+                    try
+                    {
+                        searchedDirectories = Directory.GetDirectories(path, "*", SearchOption.AllDirectories).Where(p => reg.IsMatch(p)).ToList<string>();
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        break;
+                    }
+
+                    var matchingDirs = searchedDirectories.Where(n => n.Contains(search));
+
+                    if (0 < matchingDirs.Count())
+                    {
+                        found = true;
+                        directoryInfo = new DirectoryInfo(matchingDirs.First());
+                        continue;
+                    }
+                    else
+                    {
+                        DirectoryInfo parent = Directory.GetParent(path);
+
+                        if (null == parent)
+                        {
+                            // the top of the directory tree has been reached without having found a folder matching the search criteria
+                            break;
+                        }
+                        else
+                        {
+                            path = parent.FullName;
+                        }
+                    }
+                }
+
+                if (null == directoryInfo)
+                {
+                    // Log a warning and return a DirectoryInfo object that is consistent with BTDF 5.7 behavior.
+                    if (!System.Diagnostics.Debugger.IsAttached)
+                    {
+                        base.Log.LogWarning(string.Format("FindWebApplicationPath in ConfigureISSVirtualDirectory failed to find '{0}' under the path '{1}'.", searchForPhysicalPath, startingPath));
+                    }
+
+                    directoryInfo = new DirectoryInfo(searchForPhysicalPath);
+                }
+            }
+            else
+            {
+                // Log a warning and return a DirectoryInfo object that is consistent with BTDF 5.7 behavior. 
+                if (!System.Diagnostics.Debugger.IsAttached)
+                {
+                    base.Log.LogWarning(string.Format("FindWebApplicationPath in ConfigureISSVirtualDirectory failed to find directory '{0}'.", startingPath));
+                }
+
+                directoryInfo = new DirectoryInfo(searchForPhysicalPath);
+            }
+
+            return directoryInfo;
         }
 
         private bool Undeploy(ServerManager mgr, ActionType action, string siteName, string virtualPath)
