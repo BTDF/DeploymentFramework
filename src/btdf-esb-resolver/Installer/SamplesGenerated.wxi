@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Include xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="INSTALLLOCATION">
+            <Directory Id="dir3AF37EFF6B69CFA7A5013836AC9766DF" Name="Samples">
+                <Directory Id="dirC97909CDD9E57CAD626612470CD2C86B" Name="ESBToolkitSSOResolver">
+                    <Component Id="cmpE44BAE53163A8AEFC87737D00C37EB14" Guid="{87B86F5B-1CA5-418C-9544-99AD7FD3613A}">
+                        <File Id="filEA05732CF1789540724C009C7089106F" KeyPath="yes" Source="..\Samples\ESBToolkitSSOResolver\ESBToolkitSSOResolver.sln" />
+                    </Component>
+                    <Component Id="cmp5CA0E12027C51D2407C4C0DB531E48F5" Guid="{F47AB423-F4A6-4499-80C6-D0F868324347}">
+                        <File Id="fil0A07FF859BB3CDAA4544D365CCA83D2F" KeyPath="yes" Source="..\Samples\ESBToolkitSSOResolver\ESBToolkitSSOResolver.snk" />
+                    </Component>
+                    <Directory Id="dir017A54E236D020A383F6559CBFF764CB" Name="ESBToolkitSSOResolver">
+                        <Component Id="cmpB97805A404C526BEA63157969EA3F357" Guid="{910BC49E-6A29-4AE5-87F8-8CD2C2B1537C}">
+                            <File Id="fil6188C6D759F8307E2983EA35E2D14AB1" KeyPath="yes" Source="..\Samples\ESBToolkitSSOResolver\ESBToolkitSSOResolver\ESBToolkitSSOResolver.btproj" />
+                        </Component>
+                        <Component Id="cmpDA780E8935E04E5D38765CE3A4574751" Guid="{C0ACE669-26B1-4FB4-B42A-B47F0137A967}">
+                            <File Id="fil371233B467D6185148EA454FBC6E89D3" KeyPath="yes" Source="..\Samples\ESBToolkitSSOResolver\ESBToolkitSSOResolver\InvoiceSchema.xsd" />
+                        </Component>
+                        <Component Id="cmp65FDDAD0134F5F71468F0781B1B74FA2" Guid="{845874B9-C698-4011-863A-B3053E6C19E9}">
+                            <File Id="fil69E999BAA8951E01F142EA67C2B94FCA" KeyPath="yes" Source="..\Samples\ESBToolkitSSOResolver\ESBToolkitSSOResolver\POSchema.xsd" />
+                        </Component>
+                        <Component Id="cmpD91E2D817A387E19F1D87F6BF7DEF153" Guid="{D3E381C7-0E21-459D-91BB-4F78C1437057}">
+                            <File Id="filE9062BC4B552BB03D555F39EBE76203C" KeyPath="yes" Source="..\Samples\ESBToolkitSSOResolver\ESBToolkitSSOResolver\POToInvoice.btm" />
+                        </Component>
+                        <Directory Id="dir7CA20A836C113B68B9330AF6A4FEA69F" Name="Properties">
+                            <Component Id="cmp91CE7715F3C266CC6B0AF4F991A5DB99" Guid="{0DA07F62-3A10-4037-9A2C-0BEA2F48D237}">
+                                <File Id="fil3F3DE24DC634A5F49584CBAFD6E07063" KeyPath="yes" Source="..\Samples\ESBToolkitSSOResolver\ESBToolkitSSOResolver\Properties\AssemblyInfo.cs" />
+                            </Component>
+                        </Directory>
+                    </Directory>
+                    <Directory Id="dir94CCD523886DAB708FC191C52F20F9E0" Name="ESBToolkitSSOResolver.Deployment">
+                        <Component Id="cmp7F340A391AC842E8B69EE89286CCC445" Guid="{5D174FCD-A3F7-403F-AECA-6054EA50663A}">
+                            <File Id="fil663C1344539F8C73FC5930D4B507F28E" KeyPath="yes" Source="..\Samples\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Deployment\ESBToolkitSSOResolver.Deployment.btdfproj" />
+                        </Component>
+                        <Component Id="cmp21AF23534B8894C6E99031473433EB59" Guid="{06B8BD31-A8F2-4C11-9550-BB07BB30B1A1}">
+                            <File Id="filB2AE5D6575963F8458964FD186B4EEB2" KeyPath="yes" Source="..\Samples\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Deployment\InstallWizard.xml" />
+                        </Component>
+                        <Component Id="cmp0505FF07EA2617B822A7287CB1692C55" Guid="{1307A982-0C74-4AC3-ADD5-BD6542784D71}">
+                            <File Id="fil10A7B8150D6997D15BD236321D242E14" KeyPath="yes" Source="..\Samples\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Deployment\License.rtf" />
+                        </Component>
+                        <Component Id="cmp6FD513890D5CE03E85D2467208EC5320" Guid="{4E00D4D8-EFF0-4D3D-8DB1-E0AF24BED486}">
+                            <File Id="filEE1F7EC67AB99D25B9B22B0078A0EBA0" KeyPath="yes" Source="..\Samples\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Deployment\PortBindingsMaster.xml" />
+                        </Component>
+                        <Component Id="cmpEDBE75044EC3DE8ED7504F9D24264812" Guid="{4A947BC7-2A12-4C30-8141-C49151D28685}">
+                            <File Id="fil3D82975F52B5966B790B32B876408B95" KeyPath="yes" Source="..\Samples\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Deployment\SettingsFileGenerator.xml" />
+                        </Component>
+                        <Component Id="cmp8C39E7CCFA4235145605836E46862AF4" Guid="{38A313D2-6E7F-4080-96F9-EAF3A126C7EC}">
+                            <File Id="fil5598CF16953C574081B474BC72DD4F7C" KeyPath="yes" Source="..\Samples\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Deployment\UnInstallWizard.xml" />
+                        </Component>
+                    </Directory>
+                    <Directory Id="dirE4AFB8578DE9BB39D7A23CC9AE0967AE" Name="ESBToolkitSSOResolver.Itineraries">
+                        <Component Id="cmp02074741ED21C0D4C70DAC22594A8050" Guid="{45C96A67-BCFE-4C27-81AB-476D0A83F891}">
+                            <File Id="filCD34303A5C7092C38B89F6E1B2655598" KeyPath="yes" Source="..\Samples\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Itineraries\ESBToolkitSSOResolver.Itineraries.csproj" />
+                        </Component>
+                        <Component Id="cmpB22B82D5EEB074EEC1EBA782E7F5A82D" Guid="{A9D222AB-339B-499C-8A7C-3B20D165D192}">
+                            <File Id="filAB5FCB7A6D1BA943E7F8F55AEA441F74" KeyPath="yes" Source="..\Samples\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Itineraries\ESBToolkitSSOResolver.itinerary" />
+                        </Component>
+                        <Component Id="cmpC92168172A88866B3969143E628D979F" Guid="{DBAD14B2-428C-484B-8CD0-05AB59333B95}">
+                            <File Id="fil18758231C0C312F0A7911BA688DBC4A4" KeyPath="yes" Source="..\Samples\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Itineraries\ESBToolkitSSOResolver.itinerary.diagram" />
+                        </Component>
+                        <Component Id="cmpFBD9F6223FB912A7873DA1A6ACBCB467" Guid="{D3B49964-7B30-49D4-9202-AFF678CB3C1C}">
+                            <File Id="fil49FA9BF0B55465155F1246518A83BF9A" KeyPath="yes" Source="..\Samples\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Itineraries\ESBToolkitSSOResolver.xml" />
+                        </Component>
+                        <Directory Id="dir5018A56F165DF66F1605A609C8DB968E" Name="Properties">
+                            <Component Id="cmp4489BC98F8E9B984068F47A82498D636" Guid="{9E8C3E38-E66D-4E5C-A6D2-E8981BD45E5F}">
+                                <File Id="fil5B701335D61A121FE0FF22B315DB0390" KeyPath="yes" Source="..\Samples\ESBToolkitSSOResolver\ESBToolkitSSOResolver.Itineraries\Properties\AssemblyInfo.cs" />
+                            </Component>
+                        </Directory>
+                    </Directory>
+                    <Directory Id="dir31E71F4EAC138E1E5F5A92ED77BD8208" Name="TestFiles">
+                        <Component Id="cmpA2E04B2B019D437CA66082EA13F56017" Guid="{430587E6-B085-4557-94A1-25DAD9BB3D21}">
+                            <File Id="filAA7244BFA9BB689FC0DBE12A9037497F" KeyPath="yes" Source="..\Samples\ESBToolkitSSOResolver\TestFiles\SamplePOInput.xml" />
+                        </Component>
+                    </Directory>
+                </Directory>
+            </Directory>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="SampleComponents">
+            <ComponentRef Id="cmpE44BAE53163A8AEFC87737D00C37EB14" />
+            <ComponentRef Id="cmp5CA0E12027C51D2407C4C0DB531E48F5" />
+            <ComponentRef Id="cmpB97805A404C526BEA63157969EA3F357" />
+            <ComponentRef Id="cmpDA780E8935E04E5D38765CE3A4574751" />
+            <ComponentRef Id="cmp65FDDAD0134F5F71468F0781B1B74FA2" />
+            <ComponentRef Id="cmpD91E2D817A387E19F1D87F6BF7DEF153" />
+            <ComponentRef Id="cmp91CE7715F3C266CC6B0AF4F991A5DB99" />
+            <ComponentRef Id="cmp7F340A391AC842E8B69EE89286CCC445" />
+            <ComponentRef Id="cmp21AF23534B8894C6E99031473433EB59" />
+            <ComponentRef Id="cmp0505FF07EA2617B822A7287CB1692C55" />
+            <ComponentRef Id="cmp6FD513890D5CE03E85D2467208EC5320" />
+            <ComponentRef Id="cmpEDBE75044EC3DE8ED7504F9D24264812" />
+            <ComponentRef Id="cmp8C39E7CCFA4235145605836E46862AF4" />
+            <ComponentRef Id="cmp02074741ED21C0D4C70DAC22594A8050" />
+            <ComponentRef Id="cmpB22B82D5EEB074EEC1EBA782E7F5A82D" />
+            <ComponentRef Id="cmpC92168172A88866B3969143E628D979F" />
+            <ComponentRef Id="cmpFBD9F6223FB912A7873DA1A6ACBCB467" />
+            <ComponentRef Id="cmp4489BC98F8E9B984068F47A82498D636" />
+            <ComponentRef Id="cmpA2E04B2B019D437CA66082EA13F56017" />
+        </ComponentGroup>
+    </Fragment>
+</Include>

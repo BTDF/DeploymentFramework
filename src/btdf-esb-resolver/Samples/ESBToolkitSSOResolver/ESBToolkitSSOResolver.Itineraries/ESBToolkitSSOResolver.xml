@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Itinerary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" uuid="" beginTime="" completeTime="" state="Pending" isRequestResponse="false" servicecount="2" name="ESBToolkitSSOResolver" version="1.0" xmlns="http://schemas.microsoft.biztalk.practices.esb.com/itinerary">
+  <BizTalkSegment interchangeId="" epmRRCorrelationToken="" receiveInstanceId="" messageId="" xmlns="" />
+  <ServiceInstance name="Microsoft.Practices.ESB.Services.Transform" type="Orchestration" state="Pending" position="0" isRequestResponse="false" xmlns="" />
+  <Services xmlns="">
+    <Service uuid="92d3b293-e6d4-44a1-b27d-c42b48aec667" beginTime="" completeTime="" name="Microsoft.Practices.ESB.Services.Transform" type="Orchestration" state="Pending" isRequestResponse="false" position="0" serviceInstanceId="" id="e46c11670d8243509373e1cd43e51cd8" nextId="d48621118af848e4999d3b75b3f9b719" businessName="TransformToInvoice" />
+  </Services>
+  <Services xmlns="">
+    <Service uuid="41b82648fffd442595857bf73753eafe" beginTime="" completeTime="" name="ESBToolkitSSOResolver" type="Messaging" state="Pending" isRequestResponse="false" position="1" serviceInstanceId="" stage="sendTransmit" id="d48621118af848e4999d3b75b3f9b719" nextId="00000000000000000000000000000000" businessName="ItineraryService" />
+  </Services>
+  <ResolverGroups xmlns="">
+    <Resolvers serviceId="Microsoft.Practices.ESB.Services.Transform0">&lt;![CDATA[STATIC:\\transportType=;transportLocation=;action=;endpointConfig=;jaxRpcResponse=false;messageExchangePattern=;targetNamespace=;transformType=DeploymentFramework.ESBToolkitSSOResolver.POToInvoice,ESBToolkitSSOResolver, Version=1.0.0.0, Culture=neutral, PublicKeyToken=491409679f400645;]]&gt;</Resolvers>
+    <Resolvers serviceId="ESBToolkitSSOResolver1">&lt;![CDATA[BTDF-SSO:\\affiliateAppName=DeploymentFramework.Samples.ESBToolkitSSOResolver;action=;endpointConfig=;jaxRpcResponse=false;messageExchangePattern=;targetNamespace=;transformType=;transportLocation=InvoiceOutputPath;transportType=InvoiceOutputTransport;]]&gt;</Resolvers>
+  </ResolverGroups>
+</Itinerary>

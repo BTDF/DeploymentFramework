@@ -1,0 +1,147 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="CreateVirtualDirectory" />
+  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="DeleteVirtualDirectory" />
+  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="AssignVirtualDirectoryToAppPool" />
+  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="CopyVirtualDirectoryFiles" />
+  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="ConfigureIISVirtualDirectory" />
+  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="ConfigureIISVirtualDirectoryNtfsPermissions" />
+  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="ConfigureAppPool" />
+  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="ConfigureIISAppPool" />
+  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="ConfigureWebServiceExtension" />
+  <UsingTask AssemblyFile="bin\debug\BizTalkDeploymentFramework.Tasks.IIS.dll" TaskName="ConfigureIISWebServiceExtension" />
+
+  <Target Name="TestCreateVirtualDirectory">
+    <CreateVirtualDirectory MetabasePath="IIS://localhost/w3svc/1/Root" Name="BizTalkSampleVdirX" Path="C:\Inetpub" />
+  </Target>
+
+  <Target Name="TestDeleteVirtualDirectory">
+    <DeleteVirtualDirectory MetabasePath="IIS://localhost/w3svc/1/Root" Name="BizTalkSampleVdirX" />
+  </Target>
+
+  <Target Name="TestAssignVirtualDirectoryToAppPool">
+    <AssignVirtualDirectoryToAppPool MetabasePath="IIS://localhost/w3svc/1/Root" VDirName="BizTalkSampleVdirX" AppPoolName="TestAppPool" />
+  </Target>
+
+  <Target Name="TestConfigureAppPool">
+    <ConfigureAppPool MetabasePath="IIS://localhost/w3svc/1/Root" AppPoolName="TestAppPool" UserName="DOMAIN\tabraham" Password="abc" />
+  </Target>
+
+  <Target Name="TestConfigureWebServiceExtension">
+    <ConfigureWebServiceExtension
+      MetabasePath="IIS://localhost/w3svc/1/Root"
+      ExtensionFile="C:\Program Files (x86)\Microsoft BizTalk Server 2013 R2\HttpReceive64\BTSHTTPReceive.dll" ExtensionName=".\bin" Remove="True" />
+  </Target>
+
+  <ItemDefinitionGroup>
+    <IISApp>
+      <SiteName>Default Web Site</SiteName>
+      <DeployAction>CreateOrUpdate</DeployAction>
+      <UndeployAction>Delete</UndeployAction>
+    </IISApp>
+  </ItemDefinitionGroup>
+
+  <Target Name="CopyVirtualDirectoryFiles">
+    <ItemGroup>
+      <IISApp Include="BizTalkTest">
+        <VirtualPath>/BizTalkTest/SubDir/v1</VirtualPath>
+        <PhysicalPath>.\TestVDir\SubDir\v1</PhysicalPath>
+        <Exclusions>*.abc;obj;bin\*.extra</Exclusions>
+      </IISApp>
+      <IISApp Include="BizTalkTest">
+        <VirtualPath>/BizTalkTest2/v2</VirtualPath>
+        <PhysicalPath>.\TestVDir2\v2</PhysicalPath>
+      </IISApp>
+    </ItemGroup>
+
+    <CopyVirtualDirectoryFiles Items="@(IISApp)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" RedistPath=".\redist" />
+  </Target>
+
+  <Target Name="ConfigureIISVirtualDirectoryDeploy">
+    <ItemGroup>
+      <IISApp Include="BizTalkTest">
+        <AppPoolName>DefaultAppPool</AppPoolName>
+        <SiteName>Default Web Site</SiteName>
+        <VirtualPath>/BizTalkTest/SubDir/v1</VirtualPath>
+        <PhysicalPath>.\TestVDir\SubDir\v1</PhysicalPath>
+        <DeployAction>CreateOrUpdate</DeployAction>
+        <UndeployAction>Delete</UndeployAction>
+      </IISApp>
+    </ItemGroup>
+
+    <ConfigureIISVirtualDirectory Items="@(IISApp)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Deploy" />
+  </Target>
+
+  <Target Name="TestConfigureIISVirtualDirectoryUndeploy">
+    <ItemGroup>
+      <IISApp Include="BizTalkTest">
+        <SiteName>Default Web Site</SiteName>
+        <VirtualPath>/BizTalkTest/SubDir/v1</VirtualPath>
+        <UndeployAction>Delete</UndeployAction>
+      </IISApp>
+    </ItemGroup>
+
+    <ConfigureIISVirtualDirectory Items="@(IISApp)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Undeploy" />
+  </Target>
+
+  <Target Name="ConfigureIISVirtualDirectoryNtfsPermissions">
+    <ItemGroup>
+      <IISApp Include="BizTalkTest">
+        <AppPoolName>BizTalkTestPool</AppPoolName>
+        <PhysicalPath>.\TestVDir</PhysicalPath>
+      </IISApp>
+    </ItemGroup>
+
+    <ConfigureIISVirtualDirectoryNtfsPermissions Items="@(IISApp)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Deploy" />
+  </Target>
+
+  <ItemDefinitionGroup>
+    <IISAppPool>
+      <DotNetFrameworkVersion>v4.0</DotNetFrameworkVersion>
+      <PipelineMode>Integrated</PipelineMode>
+      <Enable32Bit>False</Enable32Bit>
+      <IdentityType>ApplicationPoolIdentity</IdentityType>
+      <DeployAction>CreateOrUpdate</DeployAction>
+      <UndeployAction>Delete</UndeployAction>
+    </IISAppPool>
+  </ItemDefinitionGroup>
+
+  <Target Name="TestConfigureIISAppPoolDeploy">
+    <ItemGroup>
+      <IISAppPool Include="BizTalkTestPool">
+        <DotNetFrameworkVersion>v4.0</DotNetFrameworkVersion>
+        <PipelineMode>Integrated</PipelineMode>
+        <Enable32Bit>False</Enable32Bit>
+        <IdentityType>NetworkService</IdentityType>
+        <UserName>BizTalk</UserName>
+        <Password>pass@word1</Password>
+        <DeployAction>CreateOrUpdate</DeployAction>
+      </IISAppPool>
+    </ItemGroup>
+
+    <ConfigureIISAppPool Items="@(IISAppPool)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Deploy" />
+  </Target>
+
+  <Target Name="TestConfigureIISAppPoolUndeploy">
+    <ItemGroup>
+      <IISAppPool Include="BizTalkTestPool">
+        <UndeployAction>Delete</UndeployAction>
+      </IISAppPool>
+    </ItemGroup>
+
+    <ConfigureIISAppPool Items="@(IISAppPool)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Undeploy" />
+  </Target>
+
+  <Target Name="ConfigureIISWebServiceExtension">
+    <ItemGroup>
+      <IISApp Include="BizTalkTest">
+        <SiteName>Default Web Site</SiteName>
+        <VirtualPath>/BizTalkTest</VirtualPath>
+        <PhysicalPath>.\TestVDir</PhysicalPath>
+        <IsapiFileName>BtsHttpReceive.dll</IsapiFileName>
+      </IISApp>
+    </ItemGroup>
+
+    <ConfigureIISWebServiceExtension
+      Items="@(IISApp)" MSBuildProjectDirectory="$(MSBuildProjectDirectory)" Mode="Deploy" />
+  </Target>
+</Project>

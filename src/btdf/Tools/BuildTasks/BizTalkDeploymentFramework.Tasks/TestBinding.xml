@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BindingInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Assembly="Microsoft.BizTalk.Deployment, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Version="3.0.1.0" BindingStatus="FullyBound" BoundEndpoints="2" TotalEndpoints="2">
+  <ModuleRefCollection>
+    <ModuleRef Name="HelloWorld" Version="1.0.0.0" Culture="" PublicKeyToken="" FullName="HelloWorld, Version=1.0.0.0">
+      <Services>
+        <Service Name="Microsoft.Samples.BizTalk.HelloWorld.HelloSchedule">
+          <Ports>
+            <Port Name="SendInvoicePort" Modifier="1" BindingOption="1">
+              <SendPortRef Name="HelloWorldSendPort" />
+              <DistributionListRef xsi:nil="true" />
+              <ReceivePortRef xsi:nil="true" />
+            </Port>
+            <Port Name="ReceivePOPort" Modifier="2" BindingOption="1">
+              <SendPortRef xsi:nil="true" />
+              <DistributionListRef xsi:nil="true" />
+              <ReceivePortRef Name="HelloWorldReceivePort" />
+            </Port>
+          </Ports>
+          <Roles />
+        </Service>
+      </Services>
+    </ModuleRef>
+  </ModuleRefCollection>
+  <SendPortCollection>
+    <SendPort Name="HelloWorldSendPort" IsStatic="true" IsTwoWay="false">
+      <TransmitPipeline Name="XMLTransmit" FullyQualifiedName="Microsoft.BizTalk.DefaultPipelines:3.0.1.0:Microsoft.BizTalk.DefaultPipelines.XMLTransmit" Type="2" />
+      <SendPipelineData xsi:nil="true" />
+      <PrimaryTransport>
+        <Address>C:\BuildTasks\Out\%MessageID%.xml</Address>
+        <TransportType Name="FILE" Capabilities="11" ConfigurationClsid="5e49e3a6-b4fc-4077-b44c-22f34a242fdb" />
+        <TransportTypeData>&lt;CustomProps&gt;&lt;FilePath vt="8"&gt;C:\Program Files\Microsoft BizTalk Server 2009\SDK\Samples\Orchestrations\HelloWorld\Out&lt;/FilePath&gt;&lt;AllowCacheOnWrite vt="11"&gt;0&lt;/AllowCacheOnWrite&gt;&lt;FileName vt="8"&gt;%MessageID%.xml&lt;/FileName&gt;&lt;/CustomProps&gt;</TransportTypeData>
+        <RetryCount>0</RetryCount>
+        <RetryInterval>0</RetryInterval>
+        <ServiceWindowEnabled>false</ServiceWindowEnabled>
+        <FromTime>2000-01-01T00:00:00.0000000-08:00</FromTime>
+        <ToTime>2000-01-01T23:59:59.0000000-08:00</ToTime>
+        <Primary>true</Primary>
+        <OrderedDelivery>false</OrderedDelivery>
+      </PrimaryTransport>
+      <SecondaryTransport>
+        <Address />
+        <TransportType xsi:nil="true" />
+        <RetryCount>0</RetryCount>
+        <RetryInterval>0</RetryInterval>
+        <ServiceWindowEnabled>false</ServiceWindowEnabled>
+        <FromTime>2000-01-01T00:00:00.0000000-08:00</FromTime>
+        <ToTime>2000-01-01T23:59:59.0000000-08:00</ToTime>
+        <Primary>false</Primary>
+        <OrderedDelivery>false</OrderedDelivery>
+      </SecondaryTransport>
+      <EncryptionCert xsi:nil="true" />
+      <ReceivePipeline xsi:nil="true" />
+      <ReceivePipelineData xsi:nil="true" />
+      <Tracking>0</Tracking>
+      <Filter />
+      <Transforms />
+      <ApplicationName>TestValue</ApplicationName>
+    </SendPort>
+  </SendPortCollection>
+  <DistributionListCollection />
+  <ReceivePortCollection>
+    <ReceivePort Name="HelloWorldReceivePort" IsTwoWay="false">
+      <ReceiveLocations>
+        <ReceiveLocation Name="HelloWorldReceiveLocation">
+          <Address>\\localhost\In\TestPath\*.xml</Address>
+          <PublicAddress />
+          <Primary>true</Primary>
+          <ReceiveLocationTransportType Name="FILE" Capabilities="11" ConfigurationClsid="5e49e3a6-b4fc-4077-b44c-22f34a242fdb" />
+          <ReceiveLocationTransportTypeData>&lt;CustomProps&gt;&lt;FileNetFailRetryInt vt="19"&gt;5&lt;/FileNetFailRetryInt&gt;&lt;FileNetFailRetryCount vt="19"&gt;5&lt;/FileNetFailRetryCount&gt;&lt;FileMask vt="8"&gt;*.xml&lt;/FileMask&gt;&lt;BatchSize vt="19"&gt;20&lt;/BatchSize&gt;&lt;FilePath vt="8"&gt;C:\Program Files\Microsoft BizTalk Server 2009\SDK\Samples\HelloWorld\In&lt;/FilePath&gt;&lt;/CustomProps&gt;</ReceiveLocationTransportTypeData>
+          <ReceivePipeline Name="XMLReceive" FullyQualifiedName="Microsoft.BizTalk.DefaultPipelines:3.0.1.0:Microsoft.BizTalk.DefaultPipelines.XMLReceive" Type="1" />
+          <ReceivePipelineData xsi:nil="true" />
+          <Enable>true</Enable>
+        </ReceiveLocation>
+      </ReceiveLocations>
+      <SendPipelineData xsi:nil="true" />
+      <Authentication>0</Authentication>
+      <Tracking>0</Tracking>
+      <ApplicationName>TestValue</ApplicationName>
+    </ReceivePort>
+  </ReceivePortCollection>
+  <PartyCollection />
+</BindingInfo>

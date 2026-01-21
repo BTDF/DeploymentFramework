@@ -1,0 +1,231 @@
+﻿#if __DESIGNER_DATA
+#error Do not define __DESIGNER_DATA.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<om:MetaModel MajorVersion="1" MinorVersion="3" Core="2b131234-7959-458d-834f-2dc0769ce683" ScheduleModel="66366196-361d-448d-976f-cab5e87496d2" xmlns:om="http://schemas.microsoft.com/BizTalk/2003/DesignerData">
+    <om:Element Type="Module" OID="13b1231f-2668-4c9c-83a7-d7b84e271263" LowerBound="1.1" HigherBound="50.1">
+        <om:Property Name="ReportToAnalyst" Value="True" />
+        <om:Property Name="Name" Value="DeploymentFramework.BasicMasterBindings" />
+        <om:Property Name="Signal" Value="False" />
+        <om:Element Type="ServiceDeclaration" OID="2d8b1e0e-0d91-4044-b1f2-7bc4be0d31c8" ParentLink="Module_ServiceDeclaration" LowerBound="26.1" HigherBound="49.1">
+            <om:Property Name="InitializedTransactionType" Value="False" />
+            <om:Property Name="IsInvokable" Value="True" />
+            <om:Property Name="TypeModifier" Value="Private" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="HelloSchedule" />
+            <om:Property Name="Signal" Value="True" />
+            <om:Element Type="ServiceBody" OID="af7caeed-8716-4604-9670-4fb10b8734aa" ParentLink="ServiceDeclaration_ServiceBody">
+                <om:Property Name="Signal" Value="False" />
+                <om:Element Type="Receive" OID="eb2766cf-f46d-4ae8-83e7-5c7e1da98f96" ParentLink="ServiceBody_Statement" LowerBound="37.1" HigherBound="39.1">
+                    <om:Property Name="Activate" Value="True" />
+                    <om:Property Name="PortName" Value="ReceivePOPort" />
+                    <om:Property Name="MessageName" Value="POMessage" />
+                    <om:Property Name="OperationName" Value="Operation_1" />
+                    <om:Property Name="OperationMessageName" Value="Request" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="ReceivePO" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+                <om:Element Type="Construct" OID="619c4eb0-2371-4cb6-a60c-eae729be8693" ParentLink="ServiceBody_Statement" LowerBound="39.1" HigherBound="45.1">
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="ConstructInvoice" />
+                    <om:Property Name="Signal" Value="True" />
+                    <om:Element Type="Transform" OID="a32ebc95-2953-4397-b344-8c515a5a91bf" ParentLink="ComplexStatement_Statement" LowerBound="42.1" HigherBound="44.1">
+                        <om:Property Name="ClassName" Value="DeploymentFramework.BasicMasterBindings.POToInvoice" />
+                        <om:Property Name="ReportToAnalyst" Value="True" />
+                        <om:Property Name="Name" Value="POToInvoiceTransform" />
+                        <om:Property Name="Signal" Value="False" />
+                        <om:Element Type="MessagePartRef" OID="e816cde1-015c-4f5d-b95f-451edd26bbf8" ParentLink="Transform_InputMessagePartRef" LowerBound="43.104" HigherBound="43.127">
+                            <om:Property Name="MessageRef" Value="POMessage" />
+                            <om:Property Name="PartRef" Value="MessagePart_1" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="MessagePartReference_1" />
+                            <om:Property Name="Signal" Value="False" />
+                        </om:Element>
+                        <om:Element Type="MessagePartRef" OID="95d55f20-dbe1-44c0-8ad1-df3cd223d1f4" ParentLink="Transform_OutputMessagePartRef" LowerBound="43.28" HigherBound="43.56">
+                            <om:Property Name="MessageRef" Value="InvoiceMessage" />
+                            <om:Property Name="PartRef" Value="MessagePart_1" />
+                            <om:Property Name="ReportToAnalyst" Value="True" />
+                            <om:Property Name="Name" Value="MessagePartReference_2" />
+                            <om:Property Name="Signal" Value="False" />
+                        </om:Element>
+                    </om:Element>
+                    <om:Element Type="MessageRef" OID="87d3bf0f-bf55-4b44-a473-ba651d84f1ec" ParentLink="Construct_MessageRef" LowerBound="40.23" HigherBound="40.37">
+                        <om:Property Name="Ref" Value="InvoiceMessage" />
+                        <om:Property Name="ReportToAnalyst" Value="True" />
+                        <om:Property Name="Signal" Value="False" />
+                    </om:Element>
+                </om:Element>
+                <om:Element Type="Send" OID="250a4f61-33da-4a3f-b889-435efe3ba479" ParentLink="ServiceBody_Statement" LowerBound="45.1" HigherBound="47.1">
+                    <om:Property Name="PortName" Value="SendInvoicePort" />
+                    <om:Property Name="MessageName" Value="InvoiceMessage" />
+                    <om:Property Name="OperationName" Value="Operation_1" />
+                    <om:Property Name="OperationMessageName" Value="Request" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="SendInvoice" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+            </om:Element>
+            <om:Element Type="PortDeclaration" OID="0345fdf5-aca7-4e89-98d9-833c3c2d3b64" ParentLink="ServiceDeclaration_PortDeclaration" LowerBound="29.1" HigherBound="31.1">
+                <om:Property Name="PortModifier" Value="Implements" />
+                <om:Property Name="Orientation" Value="Unbound" />
+                <om:Property Name="PortIndex" Value="-1" />
+                <om:Property Name="IsWebPort" Value="False" />
+                <om:Property Name="OrderedDelivery" Value="False" />
+                <om:Property Name="DeliveryNotification" Value="None" />
+                <om:Property Name="Type" Value="DeploymentFramework.BasicMasterBindings.ReceivePOPortType" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="ReceivePOPort" />
+                <om:Property Name="Signal" Value="False" />
+                <om:Element Type="LogicalBindingAttribute" OID="7508eb65-bd18-4613-ac06-5b2642e330cd" ParentLink="PortDeclaration_CLRAttribute" LowerBound="29.1" HigherBound="30.1">
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+            <om:Element Type="PortDeclaration" OID="0aff1608-13c0-4878-bfbc-c651b5a82d53" ParentLink="ServiceDeclaration_PortDeclaration" LowerBound="31.1" HigherBound="33.1">
+                <om:Property Name="PortModifier" Value="Uses" />
+                <om:Property Name="Orientation" Value="Unbound" />
+                <om:Property Name="PortIndex" Value="-1" />
+                <om:Property Name="IsWebPort" Value="False" />
+                <om:Property Name="OrderedDelivery" Value="False" />
+                <om:Property Name="DeliveryNotification" Value="None" />
+                <om:Property Name="Type" Value="DeploymentFramework.BasicMasterBindings.SendInvoicePortType" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="SendInvoicePort" />
+                <om:Property Name="Signal" Value="False" />
+                <om:Element Type="LogicalBindingAttribute" OID="ecfdd146-f13e-46f0-9b73-8d4c1c4157f6" ParentLink="PortDeclaration_CLRAttribute" LowerBound="31.1" HigherBound="32.1">
+                    <om:Property Name="Signal" Value="False" />
+                </om:Element>
+            </om:Element>
+            <om:Element Type="MessageDeclaration" OID="e985f59f-545e-4adf-9f0c-fabc452a9173" ParentLink="ServiceDeclaration_MessageDeclaration" LowerBound="33.1" HigherBound="34.1">
+                <om:Property Name="Type" Value="DeploymentFramework.BasicMasterBindings.POMessageType" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="POMessage" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+            <om:Element Type="MessageDeclaration" OID="6c3a536e-2e75-4134-972f-3edc0773224a" ParentLink="ServiceDeclaration_MessageDeclaration" LowerBound="34.1" HigherBound="35.1">
+                <om:Property Name="Type" Value="DeploymentFramework.BasicMasterBindings.InvoiceMessageType" />
+                <om:Property Name="ParamDirection" Value="In" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="InvoiceMessage" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+        </om:Element>
+        <om:Element Type="MultipartMessageType" OID="b841c1e4-adb4-4872-b240-dd3ed096056f" ParentLink="Module_MessageType" LowerBound="4.1" HigherBound="8.1">
+            <om:Property Name="TypeModifier" Value="Private" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="POMessageType" />
+            <om:Property Name="Signal" Value="False" />
+            <om:Element Type="PartDeclaration" OID="78624921-6057-410f-8be9-00d03de4001d" ParentLink="MultipartMessageType_PartDeclaration" LowerBound="6.1" HigherBound="7.1">
+                <om:Property Name="ClassName" Value="DeploymentFramework.BasicMasterBindings.POSchema" />
+                <om:Property Name="IsBodyPart" Value="True" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="MessagePart_1" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+        </om:Element>
+        <om:Element Type="MultipartMessageType" OID="9b2a38d8-5b35-4251-85f1-d87a7479046b" ParentLink="Module_MessageType" LowerBound="8.1" HigherBound="12.1">
+            <om:Property Name="TypeModifier" Value="Private" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="InvoiceMessageType" />
+            <om:Property Name="Signal" Value="False" />
+            <om:Element Type="PartDeclaration" OID="52eafa34-5b1c-4891-bf5e-7e9c102976a0" ParentLink="MultipartMessageType_PartDeclaration" LowerBound="10.1" HigherBound="11.1">
+                <om:Property Name="ClassName" Value="DeploymentFramework.BasicMasterBindings.InvoiceSchema" />
+                <om:Property Name="IsBodyPart" Value="True" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="MessagePart_1" />
+                <om:Property Name="Signal" Value="True" />
+            </om:Element>
+        </om:Element>
+        <om:Element Type="PortType" OID="4af5fdf2-0611-4da1-91ad-b70f9bc9d27c" ParentLink="Module_PortType" LowerBound="12.1" HigherBound="19.1">
+            <om:Property Name="Synchronous" Value="False" />
+            <om:Property Name="TypeModifier" Value="Private" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="ReceivePOPortType" />
+            <om:Property Name="Signal" Value="False" />
+            <om:Element Type="OperationDeclaration" OID="0b09ecab-4adb-4d68-a3d9-bfe13688187c" ParentLink="PortType_OperationDeclaration" LowerBound="14.1" HigherBound="18.1">
+                <om:Property Name="OperationType" Value="OneWay" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="Operation_1" />
+                <om:Property Name="Signal" Value="False" />
+                <om:Element Type="MessageRef" OID="65acb59c-dc4e-4a80-90f5-6c24cb33e485" ParentLink="OperationDeclaration_RequestMessageRef" LowerBound="16.13" HigherBound="16.26">
+                    <om:Property Name="Ref" Value="DeploymentFramework.BasicMasterBindings.POMessageType" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Request" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+            </om:Element>
+        </om:Element>
+        <om:Element Type="PortType" OID="33727841-3676-42ed-9456-4d2ed0161c8d" ParentLink="Module_PortType" LowerBound="19.1" HigherBound="26.1">
+            <om:Property Name="Synchronous" Value="False" />
+            <om:Property Name="TypeModifier" Value="Private" />
+            <om:Property Name="ReportToAnalyst" Value="True" />
+            <om:Property Name="Name" Value="SendInvoicePortType" />
+            <om:Property Name="Signal" Value="False" />
+            <om:Element Type="OperationDeclaration" OID="5564bf2f-621b-498b-a11b-7e268af4ef30" ParentLink="PortType_OperationDeclaration" LowerBound="21.1" HigherBound="25.1">
+                <om:Property Name="OperationType" Value="OneWay" />
+                <om:Property Name="ReportToAnalyst" Value="True" />
+                <om:Property Name="Name" Value="Operation_1" />
+                <om:Property Name="Signal" Value="False" />
+                <om:Element Type="MessageRef" OID="a8f2e700-b870-4dec-aed6-245986348bbf" ParentLink="OperationDeclaration_RequestMessageRef" LowerBound="23.13" HigherBound="23.31">
+                    <om:Property Name="Ref" Value="DeploymentFramework.BasicMasterBindings.InvoiceMessageType" />
+                    <om:Property Name="ReportToAnalyst" Value="True" />
+                    <om:Property Name="Name" Value="Request" />
+                    <om:Property Name="Signal" Value="True" />
+                </om:Element>
+            </om:Element>
+        </om:Element>
+    </om:Element>
+</om:MetaModel>
+#endif // __DESIGNER_DATA
+[Microsoft.XLANGs.BaseTypes.BPELExportable(false)]
+module DeploymentFramework.BasicMasterBindings
+{
+    private messagetype POMessageType
+    {
+        body POSchema MessagePart_1;
+    };
+    private messagetype InvoiceMessageType
+    {
+        body InvoiceSchema MessagePart_1;
+    };
+    private porttype ReceivePOPortType
+    {
+        oneway Operation_1
+        {
+            POMessageType
+        };
+    };
+    private porttype SendInvoicePortType
+    {
+        oneway Operation_1
+        {
+            InvoiceMessageType
+        };
+    };
+    [Microsoft.XLANGs.BaseTypes.BPELExportable(false)]
+    private service HelloSchedule
+    {
+        [Microsoft.XLANGs.BaseTypes.LogicalBinding()]
+        port implements ReceivePOPortType ReceivePOPort;
+        [Microsoft.XLANGs.BaseTypes.LogicalBinding()]
+        port uses SendInvoicePortType SendInvoicePort;
+        message POMessageType POMessage;
+        message InvoiceMessageType InvoiceMessage;
+        body ()
+        {
+            [Microsoft.XLANGs.BaseTypes.DesignerPosition("eb2766cf-f46d-4ae8-83e7-5c7e1da98f96")]
+            activate receive (ReceivePOPort.Operation_1, POMessage);
+            [Microsoft.XLANGs.BaseTypes.DesignerPosition("619c4eb0-2371-4cb6-a60c-eae729be8693")]
+            construct InvoiceMessage
+            {
+                [Microsoft.XLANGs.BaseTypes.DesignerPosition("a32ebc95-2953-4397-b344-8c515a5a91bf")]
+                transform (InvoiceMessage.MessagePart_1) = DeploymentFramework.BasicMasterBindings.POToInvoice (POMessage.MessagePart_1);
+            }
+            [Microsoft.XLANGs.BaseTypes.DesignerPosition("250a4f61-33da-4a3f-b889-435efe3ba479")]
+            send (SendInvoicePort.Operation_1, InvoiceMessage);
+        }
+    }
+}
+

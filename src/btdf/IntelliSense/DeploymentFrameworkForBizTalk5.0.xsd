@@ -1,0 +1,1075 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema targetNamespace="http://schemas.microsoft.com/developer/msbuild/2003" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msb="http://schemas.microsoft.com/developer/msbuild/2003" elementFormDefault="qualified">
+
+  <xs:annotation>
+    <xs:documentation>
+      Deployment Framework for BizTalk
+      Copyright (C) 2008-2014 Thomas F. Abraham and Scott Colestock
+
+      Schema for describing Deployment Framework for BizTalk build files (btdfproj).
+    </xs:documentation>
+  </xs:annotation>
+
+  <!-- =================== INCLUDE COMMON SCHEMA =========================== -->
+  <xs:include schemaLocation="1033\MsBuild\Microsoft.Build.Core.xsd"/>
+
+  <!-- ======================== ITEMS =====================================-->
+    <!-- Possible Types include SimpleItemType (no meta-data subelements), GenericItemType (any meta-data), or something more specific.-->
+    <xs:element name="Schemas" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: Assemblies containing BizTalk schemas</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:choice>
+                            <xs:element name="LocationPath">
+                                <xs:annotation>
+                                    <xs:documentation>Path to the assembly, relative to the deployment project folder</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                        </xs:choice>
+                    </xs:sequence>
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>Assembly file name</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="Pipelines" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: Assemblies containing BizTalk pipelines</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:choice>
+                            <xs:element name="LocationPath">
+                                <xs:annotation>
+                                    <xs:documentation>Path to the assembly, relative to the deployment project folder</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                        </xs:choice>
+                    </xs:sequence>
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>Assembly file name</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="Transforms" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: Assemblies containing BizTalk transforms (maps)</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:choice>
+                            <xs:element name="LocationPath">
+                                <xs:annotation>
+                                    <xs:documentation>Path to the assembly, relative to the deployment project folder</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                        </xs:choice>
+                    </xs:sequence>
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>Assembly file name</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="Orchestrations" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: Assemblies containing BizTalk orchestrations</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:choice>
+                            <xs:element name="LocationPath">
+                                <xs:annotation>
+                                    <xs:documentation>Path to the assembly, relative to the deployment project folder</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                        </xs:choice>
+                    </xs:sequence>
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>Assembly file name</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="CustomFunctoids" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: Assemblies containing BizTalk custom functoids</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:choice>
+                            <xs:element name="LocationPath">
+                                <xs:annotation>
+                                    <xs:documentation>Path to the assembly, relative to the deployment project folder</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                        </xs:choice>
+                    </xs:sequence>
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>Assembly file name</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="Components" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: Assemblies containing .NET classes</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:choice>
+                            <xs:element name="LocationPath">
+                                <xs:annotation>
+                                    <xs:documentation>Path to the assembly, relative to the deployment project folder</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                        </xs:choice>
+                    </xs:sequence>
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>Assembly file name</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="PipelineComponents" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: Assemblies containing BizTalk custom pipeline components</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:choice>
+                            <xs:element name="LocationPath">
+                                <xs:annotation>
+                                    <xs:documentation>Path to the assembly, relative to the deployment project folder</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                        </xs:choice>
+                    </xs:sequence>
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>Assembly file name</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="BamDefinitions" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: BizTalk BAM model spreadsheets (xls/xlsx)</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:choice>
+                            <xs:element name="LocationPath">
+                                <xs:annotation>
+                                    <xs:documentation>Path to the XLS/XLSX, relative to the deployment project folder</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                        </xs:choice>
+                    </xs:sequence>
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>XLS/XLSX file name</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="BamTrackingProfiles" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: BizTalk BAM tracking profiles (btt)</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:choice>
+                            <xs:element name="LocationPath">
+                                <xs:annotation>
+                                    <xs:documentation>Path to the BTT file, relative to the deployment project folder</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                        </xs:choice>
+                    </xs:sequence>
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>BTT file name</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="DeploymentTest" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: Assembly containing NUnit tests for the BizTalk solution (max 1)</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:choice>
+                            <xs:element name="LocationPath">
+                                <xs:annotation>
+                                    <xs:documentation>Path to the assembly, relative to the deployment project folder</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                        </xs:choice>
+                    </xs:sequence>
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>Assembly file name</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="FilesToXmlPreprocess" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: XML files to be processed with XmlPreprocess (to merge environment settings spreadsheet values)</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:choice>
+                            <xs:element name="LocationPath">
+                                <xs:annotation>
+                                    <xs:documentation>Path to the XML file, relative to the deployment project folder</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                            <xs:element name="OutputFilename">
+                                <xs:annotation>
+                                    <xs:documentation>Output filename for processed file</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                        </xs:choice>
+                    </xs:sequence>
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>XML file name</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="ExternalAssemblies" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: Additional assemblies to be installed to the GAC</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:choice>
+                            <xs:element name="LocationPath">
+                                <xs:annotation>
+                                    <xs:documentation>Path to the assembly, relative to the deployment project folder</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                        </xs:choice>
+                    </xs:sequence>
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>Assembly file name</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="AdditionalFiles" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: Additional files to be included in the server install MSI</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:choice>
+                            <xs:element name="LocationPath">
+                                <xs:annotation>
+                                    <xs:documentation>Path to the file, relative to the deployment project folder</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                        </xs:choice>
+                    </xs:sequence>
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>File name</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="RuleVocabularies" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: Rule vocabulary XML files to be published into the BRE</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:choice>
+                            <xs:element name="LocationPath">
+                                <xs:annotation>
+                                    <xs:documentation>Path to the XML file, relative to the deployment project folder</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                        </xs:choice>
+                    </xs:sequence>
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>XML file name</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="RulePolicies" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: Rule policy XML files to be published into the BRE</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:choice>
+                            <xs:element name="LocationPath">
+                                <xs:annotation>
+                                    <xs:documentation>Path to the XML file, relative to the deployment project folder</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                        </xs:choice>
+                    </xs:sequence>
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>XML file name</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="EsbItineraries" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: ESB Toolkit itinerary files to be published into the EsbItinerary database</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:choice>
+                            <xs:element name="LocationPath">
+                                <xs:annotation>
+                                    <xs:documentation>Path to the itinerary file, relative to the deployment project folder</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                        </xs:choice>
+                    </xs:sequence>
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>Itinerary file name</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="IISApp" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: IIS applications to be created and configured</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:choice>
+                            <xs:element name="AppPoolName">
+                                <xs:annotation>
+                                    <xs:documentation>Name of the IIS application pool to be associated with the application</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="SiteName">
+                                <xs:annotation>
+                                    <xs:documentation>Name of the existing IIS website</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                            <xs:element name="VirtualPath">
+                                <xs:annotation>
+                                    <xs:documentation>Virtual path of the IIS application starting with forward-slash (ex.: /MyApp)</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="PhysicalPath">
+                                <xs:annotation>
+                                    <xs:documentation>Path to the application's files, relative to the deployment project folder</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                            <xs:element name="IsapiFileName">
+                                <xs:annotation>
+                                    <xs:documentation>Optional filename of an IIS ISAPI filter DLL, typically BTSHTTPReceive.dll</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                            <xs:element name="Exclusions">
+                                <xs:annotation>
+                                    <xs:documentation>Optional semicolon-separated list of directories and/or files to exclude when packaging the MSI</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                            <xs:element name="DeployAction">
+                                <xs:annotation>
+                                    <xs:documentation>Action to take on the application during deployment</xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                  <xs:restriction base="xs:string">
+                                    <xs:enumeration value="Create" />
+                                    <xs:enumeration value="Update" />
+                                    <xs:enumeration value="CreateOrUpdate" />
+                                    <xs:enumeration value="None" />
+                                  </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>                                  
+                            <xs:element name="UndeployAction">
+                                <xs:annotation>
+                                    <xs:documentation>Action to take on the application during undeployment</xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                  <xs:restriction base="xs:string">
+                                    <xs:enumeration value="Delete" />
+                                    <xs:enumeration value="None" />
+                                  </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>                                  
+                        </xs:choice>
+                    </xs:sequence>
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>Name of the IIS application</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="IISAppPool" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: IIS application pools to be created and configured</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:choice>
+                            <xs:element name="DotNetFrameworkVersion">
+                                <xs:annotation>
+                                    <xs:documentation>Version of .NET runtime to be associated with the IIS app pool (like v2.0 or v4.0)</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="PipelineMode">
+                                <xs:annotation>
+                                    <xs:documentation>One of the values Classic or Integrated</xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                  <xs:restriction base="xs:string">
+                                    <xs:enumeration value="Classic" />
+                                    <xs:enumeration value="Integrated" />
+                                  </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="Enable32Bit">
+                                <xs:annotation>
+                                    <xs:documentation>True to run the app pool as a 32-bit process, False otherwise</xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                  <xs:restriction base="xs:boolean" />
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="IdentityType">
+                                <xs:annotation>
+                                    <xs:documentation>One of the values LocalService, LocalSystem, NetworkService, ApplicationPoolIdentity or SpecificUser</xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                  <xs:restriction base="xs:string">
+                                    <xs:enumeration value="LocalService" />
+                                    <xs:enumeration value="LocalSystem" />
+                                    <xs:enumeration value="NetworkService" />
+                                    <xs:enumeration value="ApplicationPoolIdentity" />
+                                    <xs:enumeration value="SpecificUser" />
+                                  </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="UserName">
+                                <xs:annotation>
+                                    <xs:documentation>For SpecificUser only, username for the app pool identity</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="Password">
+                                <xs:annotation>
+                                    <xs:documentation>For SpecificUser only, password for the app pool identity</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="DeployAction">
+                                <xs:annotation>
+                                    <xs:documentation>Action to take on the application pool during deployment</xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                  <xs:restriction base="xs:string">
+                                    <xs:enumeration value="Create" />
+                                    <xs:enumeration value="Update" />
+                                    <xs:enumeration value="CreateOrUpdate" />
+                                    <xs:enumeration value="None" />
+                                  </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>                                  
+                            <xs:element name="UndeployAction">
+                                <xs:annotation>
+                                    <xs:documentation>Action to take on the application pool during undeployment</xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                  <xs:restriction base="xs:string">
+                                    <xs:enumeration value="Delete" />
+                                    <xs:enumeration value="None" />
+                                  </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>                                  
+                        </xs:choice>
+                    </xs:sequence>
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>Name of the IIS application pool</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="VDirList" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: IIS virtual directories to be created and configured</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:choice>
+                            <xs:element name="Vdir">
+                                <xs:annotation>
+                                    <xs:documentation>Name of the virtual directory</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                            <xs:element name="Physdir">
+                                <xs:annotation>
+                                    <xs:documentation>Path to the virtual directory's files, relative to the deployment project folder</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                            <xs:element name="AppPool">
+                                <xs:annotation>
+                                    <xs:documentation>Name of the IIS application pool to be associated with the virtual directory</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="AppPoolNetVersion">
+                                <xs:annotation>
+                                    <xs:documentation>Version of .NET runtime to be associated with the IIS app pool; IIS7+ (values: v2.0, v4.0)</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                        </xs:choice>
+                    </xs:sequence>
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>Always set value to an asterisk (*)</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="BizTalkHosts" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: Names of BizTalk hosts to be restarted</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>BizTalk host name</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="AppsToReference" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: Names of BizTalk applications referenced by the current application</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>Other BizTalk application name</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="PropsFromEnvSettings" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: Names of MSBuild properties to be created based on values pulled from the settings spreadsheet</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>Name matching a row in SettingsFileGenerator.xml spreadsheet</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="IisAppPools" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: Names of IIS6+ application pools to be restarted in lieu of a full IISRESET</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>IIS application pool name</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="BizTalkAppDomain" substitutionGroup="msb:Item">
+        <xs:annotation>
+            <xs:documentation>BTDF: Custom .NET AppDomain(s) to be configured in BTSNTSvc.exe.config</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="msb:SimpleItemType">
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:choice>
+                            <xs:element name="ApplicationBase">
+                                <xs:annotation>
+                                    <xs:documentation>Path to the base directory for the AppDomain</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                            <xs:element name="AssemblyNameRegexes">
+                                <xs:annotation>
+                                    <xs:documentation>RegEx(es) matching on full assembly name(s) to load into this AppDomain (semicolon-delimited)</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>                                  
+                            <xs:element name="AssemblyNames">
+                                <xs:annotation>
+                                    <xs:documentation>Full assembly name(s) to load into this AppDomain (semicolon-delimited)</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="ConfigurationFilePath">
+                                <xs:annotation>
+                                    <xs:documentation>Path to a custom app config file for the AppDomain, overriding BTSNTSvc[64].exe.config</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="PrivateBinPath">
+                                <xs:annotation>
+                                    <xs:documentation>Subfolder of ApplicationBase to search for private assemblies</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="SecondsEmptyBeforeShutdown">
+                                <xs:annotation>
+                                    <xs:documentation>Seconds after the AppDomain is empty before BizTalk shuts it down</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="SecondsIdleBeforeShutdown">
+                                <xs:annotation>
+                                    <xs:documentation>Seconds after the AppDomain is idle before BizTalk shuts it down</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                        </xs:choice>
+                    </xs:sequence>
+                    <!-- redefine Include just to give a specific description -->
+                    <xs:attribute name="Include" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>Name of the AppDomain</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>    
+
+    <!-- ======================== PROPERTIES =====================================-->
+    <!-- Possible Types include StringPropertyType (text with no subelements), GenericPropertyType (any content), or something more specific.-->
+    <xs:element name="IncludeSchemas" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Deploy one or more projects containing schemas specified in &lt;Schemas&gt; ItemGroup (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="IncludeOrchestrations" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Deploy one or more projects containing orchestrations specified in &lt;Orchestrations&gt; ItemGroup (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="IncludeTransforms" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Deploy one or more projects containing transforms (maps) specified in &lt;Transforms&gt; ItemGroup (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="IncludePipelines" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Deploy one or more projects containing custom pipelines specified in &lt;Pipelines&gt; ItemGroup (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="IncludeComponents" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Deploy one or more projects containing custom .NET classes specified in &lt;Components&gt; ItemGroup (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="IncludeInstallUtilForComponents" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Run InstallUtil.exe on each .NET assembly specified in &lt;Components&gt; (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="IncludePipelineComponents" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Deploy one or more projects containing custom pipeline components specified in &lt;PipelineComponents&gt; ItemGroup (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="IncludeCustomFunctoids" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Deploy one or more projects containing custom functoids specified in &lt;CustomFunctoids&gt; ItemGroup (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="IncludeVocabAndRules" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Deploy one or more projects containing BRE policies and vocabularies specified in &lt;RulePolicies&gt; and &lt;RuleVocabularies&gt; ItemGroups (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="IncludeVirtualDirectories" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Deploy one or more IIS virtual directories specified in &lt;VDirList&gt; or &lt;IISApp&gt; ItemGroup (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="IncludeMessagingBindings" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Deploy BizTalk binding XML file specified in &lt;PortBindings&gt; property (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="IncludeDeploymentTest" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Deploy a single NUnit test assembly specified in &lt;DeploymentTest&gt; ItemGroup (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="Includelog4net" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Deploy $(ProjectName).log4net file and log4net assemblies to the GAC, and add log4net registry key (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="IncludeSSO" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Deploy environment settings from settings spreadsheet into SSO database (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="IncludeEsbItineraries" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Deploy one or more ESB Toolkit itineraries specified in &lt;EsbItineraries&gt; ItemGroup (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="IncludeBAM" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Deploy one or more BAM models specified in &lt;BamDefinitions&gt; ItemGroup (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="EnableXmlPreprocess" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Indicates whether to enable XML pre-processing, where settings from the SettingsFileGenerator.xml are merged into the binding XML file and/or other specified XML files (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="RequireXmlPreprocessDirectives" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies whether or not to require ifdef directives in XMLPreprocess macro substitution. Defaults to true</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="EnableSideBySide" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Enable support for side-by-side deployment of multiple versions of the solution (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="DisableAutomaticPortNameVersioning" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Prevents the Deployment Framework from appending the ProjectVersion to port names when side-by-side support is enabled (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="DeployPDBsToGac" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Deploy debug info files (PDB's) to the GAC alongside each assembly (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="UsingMasterBindings" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Use a template (master) bindings file that is processed to create the final bindings file (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="ApplyXmlEscape" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: When using a master bindings file, re-encode nested XML fragments (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="IncludeSettingsSpreadsheetInMsi" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Include the SettingsFileGenerator.xml spreadsheet into the server install MSI (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="SkipIISReset" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Do not perform an IIS reset during deployment (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="SkipHostInstancesRestart" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Do not restart BizTalk host instances during deployment (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="StartApplicationOnDeploy" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Indicates whether to start the BizTalk application after application deployment (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="EnableAllReceiveLocationsOnDeploy" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Indicates whether to enable all receive locations after application deployment (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="StartReferencedApplicationsOnDeploy" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Indicates whether to fully start all referenced BizTalk applications during application deployment (boolean)</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="ManageFileAdapterPhysicalPaths" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Indicates whether all physical file paths in the binding file that are associated with FILE adapters should be automatically created and/or assigned file system permissions</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="DeleteFileAdapterPhysicalPathsOnUndeploy" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Indicates whether all physical file paths in the binding file that are associated with FILE adapters should be deleted when the application is undeployed.  Acceptable values: Never, DeleteIfEmpty, DeleteRecursive</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="RemoveRulePoliciesFromAppOnUndeploy" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Indicates whether rule policies should be removed from the BizTalk application (visible in Policies node in BizTalk Admin) when the application is undeployed. Regardless of this setting value, the policies will always be removed from the rule store.</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="ExplicitlyDeployRulePoliciesOnDeploy" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Indicates whether rule policies should be explicitly deployed during deployment. Regardless of this setting value, the policies will always be published, but are normally deployed automatically by BizTalk when the BizTalk application starts.</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="UseIsolatedAppDomain" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Indicates whether the app should be configured to run in its own .NET AppDomain (configured in BTSNTSvc.exe.config).</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="EnableBizTalkExtendedLogging" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Indicates whether to enable BizTalk's extended logging debugging option (configured in BTSNTSvc.exe.config).</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="EnableBizTalkAssemblyValidation" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Indicates whether to enable BizTalk's assembly validation debugging option (configured in BTSNTSvc.exe.config).</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="EnableBizTalkCorrelationValidation" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Indicates whether to enable BizTalk's correlation validation debugging option (configured in BTSNTSvc.exe.config).</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="EnableBizTalkSchemaValidation" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Indicates whether to enable BizTalk's schema validation debugging option (configured in BTSNTSvc.exe.config).</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="ConfigureBizTalkDebuggingFeatures" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Indicates whether to enable configuration of BizTalk's debugging options (configured in BTSNTSvc.exe.config).</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="UndeployIISArtifacts" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Indicates whether to undeploy IIS vdirs during undeployment.</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="IISMetabasePath" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies the IIS metabase path to be used when deploying vdirs and app pools. Default is IIS://localhost/w3svc/1/Root</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="SettingsSpreadsheetPath" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies the path to the environment settings workbook file. Default is EnvironmentSettings\SettingsFileGenerator.xml</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="SettingsFilesExportPath" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies the path where files are exported from the environment settings workbook. Default is .\EnvironmentSettings</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="BizTalkAppDescription" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies the description that appears on the application in BizTalk Admin. Default is the value of ProjectName.</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="ModifyNTFSPermissionsOnVDirPaths" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies whether to grant NTFS permissions on IIS VDir folders (boolean). Default is true.</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="SkipBamUndeploy" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies whether to undeploy BAM profile definitions (and lose data). (boolean). Default is false on server deploy.</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="MsiName" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies the name of the generated Windows Installer MSI file, without extension.</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="XmlEscapeXPathsFile" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies the name of and optional relative path to a custom XPaths file used to re-encode bindings XML fragments when ApplyXmlEscape = true</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="DeploymentFrameworkRootDir" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies the root path of the Deployment Framework system files, including MSBuild targets, binary files, etc.</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="SuppressMSIValidation" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies whether to suppress WiX validation of generated MSI's (boolean). Default is false.</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="AutoTerminateInstances" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies whether to terminate all msg instances associated with the app during deployment (boolean). Default is false.</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="WiXRegistryKey" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies the registry key path for the current Windows Installer XML (WiX) installation</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="WixProjectFile" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies the name of a custom WiX project (WXS) file that overrides the default, relative to the deployment project folder</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="WixHeatTransformFile" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies the name of a custom XSLT file for WiX that overrides the default Heat transform, relative to the deployment project folder</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="WiXHeatArguments" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Overrides the default argument list for the WiX Heat tool</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="WiXCandleArguments" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Overrides the default argument list for the WiX Candle tool</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="WiXLightArguments" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Overrides the default argument list for the WiX Light tool</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="WiXDir" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies the path to the WiX binaries, relative to the deployment project folder</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="CreateStartMenuShortcuts" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies whether to create Start menu shortcuts on MSI install. Default is true.</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+    <xs:element name="DefaultInstallDir" type="msb:StringPropertyType" substitutionGroup="msb:Property">
+        <xs:annotation>
+            <xs:documentation>BTDF: Specifies the default installation path used in the MSI. Default is [ProgramFiles]\[ProductName]\[ProjectVersion].</xs:documentation>
+        </xs:annotation>
+	</xs:element>
+</xs:schema>

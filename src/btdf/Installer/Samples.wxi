@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Deployment Framework for BizTalk
+    Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
+    
+    This source file is subject to the Microsoft Public License (Ms-PL).
+-->
+<Include>
+  <Fragment>
+    <Feature Id="SamplesFeature" Title="Samples" Level="1" InstallDefault="local" Display="25" 
+             AllowAdvertise="no" TypicalDefault="install" Description="Sample solutions demonstrating the use of the Deployment Framework">
+      <ComponentGroupRef Id="SampleComponents" />
+    </Feature>
+  </Fragment>
+
+  <!--
+  SamplesGenerated.wxi is created by WiX's Heat.exe with a few manual updates:
+  1) Change current directory to Installer
+  2) Run "\Program Files\Windows Installer XML v3.5\bin\heat.exe" dir "..\Samples" -gg -scom -sreg -sfrag -ke -cg SampleComponents -out SamplesGenerated.wxi
+  3) Change <Wix> element to <Include>
+  4) Change TARGETDIR to INSTALLLOCATION
+  5) Replace "SourceDir\" with "..\Samples\"
+  -->
+  <?include SamplesGenerated.wxi ?>
+
+</Include>

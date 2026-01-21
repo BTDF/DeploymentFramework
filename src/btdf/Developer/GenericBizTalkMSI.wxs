@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Deployment Framework for BizTalk
+    Copyright (C) 2008-14 Thomas F. Abraham, 2004-08 Scott Colestock
+    
+    This source file is subject to the Microsoft Public License (Ms-PL).
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+  <Product UpgradeCode="$(var.ProductUpgradeCode)"
+           Name="$(var.ProductName)"
+           Id="$(var.ProductId)"
+           Version="$(var.ProductVersion)"
+           Manufacturer="$(var.Manufacturer)"
+           Language="1033">
+
+    <?if $(var.PackageComments) = ""?>
+    <Package Description="$(var.PackageDescription)"
+             InstallerVersion="200" Compressed="yes" InstallScope="perMachine"/>
+    <?else?>
+    <Package Description="$(var.PackageDescription)"
+             Comments="$(var.PackageComments)"
+             InstallerVersion="200" Compressed="yes" InstallScope="perMachine"/>
+    <?endif?>
+
+    <Media Id="1" EmbedCab="yes" Cabinet="BizTalkSolution.cab" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <?if $(var.CreateStartMenuShortcuts) ~= True?>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="BizShortCuts" Name="$(var.ProductName) $(var.ProjectVersion)">
+          <Directory Id="BizShortCutsTools" Name="Deployment Tools" />
+        </Directory>
+      </Directory>
+      <?endif?>
+      <Directory Id="ProgramFilesFolder" Name="ProgramFiles">
+        <Directory Id="ProductDir" Name="$(var.ProductName)">
+          <Directory Id="INSTALLDIR" Name="$(var.ProjectVersion)"/>
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <Feature Id="DefaultFeature" Level="1">
+      <ComponentGroupRef Id="RedistComponentGroup" />
+      <ComponentRef Id="Cleanup" />
+    </Feature>
+
+    <DirectoryRef Id="TARGETDIR">
+      <Component Id="Cleanup" Guid="*">
+        <?if $(var.CreateStartMenuShortcuts) ~= True?>
+        <RemoveFolder Id="RemoveBizShortCuts" On="uninstall" Directory="BizShortCuts" />
+        <RemoveFolder Id="RemoveBizShortCutsTools" On="uninstall" Directory="BizShortCutsTools" />
+        <?endif?>
+        <RegistryKey Root="HKMU" Key="SOFTWARE\[Manufacturer]\$(var.ProductName)" ForceDeleteOnUninstall="yes">
+          <RegistryValue Type="string" Name="InstalledVersion" Value="$(var.ProductVersion)" KeyPath="yes" />
+          <RegistryValue Type="string" Name="InstallPath" Value="[INSTALLDIR]" />
+        </RegistryKey>
+      </Component>
+    </DirectoryRef>
+
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+    <WixVariable Id="WixUISupportPerUser" Value="0" />
+
+    <?if $(var.ExplicitInstallDir) != ""?>
+    <SetProperty Id="INSTALLDIR" Value="$(var.ExplicitInstallDir)" Sequence="both" Before="AppSearch" />
+    <?endif?>
+
+    <Property Id="LicenseAccepted" Value="1" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+    <Property Id='DISABLEADVTSHORTCUTS' Value='1' />
+    <Property Id="MSBUILDPATH" Secure="yes" />
+    <Property Id="BTS_PRODUCTNAME" Secure="yes">
+      <RegistrySearch Id="SearchForBTSProductName" Root="HKLM" Key="SOFTWARE\Microsoft\BizTalk Server\3.0" Name="ProductName" Type="raw" />
+    </Property>
+
+    <PropertyRef Id="NETFRAMEWORK40FULLINSTALLROOTDIR" />
+
+    <SetProperty Id="DEPLOYMENTDIR" Value="[INSTALLDIR]\Deployment" Sequence="both" After="CostFinalize"/>
+
+    <SetProperty Id="MSBUILDPATH" Action="SetMSBUILDPATH2010" Value="[NETFRAMEWORK40FULLINSTALLROOTDIR]\MSBuild.exe" Sequence="both" After="CostFinalize" />
+    <SetProperty Id="MSBUILDTOOLSVER" Action="SetMSBUILDTOOLSVER2010" Value="/tv:4.0" Sequence="both" After="SetMSBUILDPATH2010" />
+
+    <!-- Set up for checkbox to auto-start deploy script at end of install wizard -->
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Start deploying to BizTalk when I click Finish" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALTEXT" Value="***IMPORTANT***: Application deployment IS NOT COMPLETE. The application must be deployed into BizTalk. Check the box below to begin deployment immediately, or use the link on the Start menu." />
+
+    <CustomAction
+      Id="LaunchApplication"
+      ExeCommand='cmd.exe /C "Deployment\Framework\DeployTools\UacElevate.exe &quot;[MSBUILDPATH]&quot; &quot;/p:Configuration=Server /t:LaunchServerDeployWizard Deployment\$(var.ProjectFilename) [MSBUILDTOOLSVER]&quot;"'
+      Directory="INSTALLDIR" Impersonate="yes" Return="check" />
+
+    <UI>
+      <UIRef Id="WixUI_InstallDir" />
+
+      <Publish Dialog="ExitDialog"
+          Control="Finish"
+          Event="DoAction"
+          Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
+    </UI>
+
+    <!-- Version Upgrade Logic -->
+    <MajorUpgrade
+      DowngradeErrorMessage="A later version of $(var.ProductName) is already installed. Setup will now exit." />
+  </Product>
+</Wix>
